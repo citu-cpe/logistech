@@ -41,6 +41,6 @@ export class E2EService {
       $$ LANGUAGE plpgsql;
     `;
 
-    await this.prismaService.$executeRaw`SELECT truncate_tables('template')`;
+    await this.prismaService.$executeRaw`SELECT truncate_tables('logistech')`;
   }
 }

@@ -39,8 +39,8 @@ async function bootstrap() {
   };
 
   const config = new DocumentBuilder()
-    .setTitle('NestJS/NextJS Template')
-    .setDescription('API for NestJS/NextJS Template')
+    .setTitle('LogisTech')
+    .setDescription('API for LogisTech')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config, options);

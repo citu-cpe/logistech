@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * NestJS/NextJS Template
- * API for NestJS/NextJS Template
+ * LogisTech
+ * API for LogisTech
  *
  * The version of the OpenAPI document: 1.0
  *
@@ -54,6 +54,42 @@ export const DefaultApiAxiosParamCreator = function (
   configuration?: Configuration
 ) {
   return {
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    authorizationTest: async (options: any = {}): Promise<RequestArgs> => {
+      const localVarPath = `/api/v1/authorization-test`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
     /**
      *
      * @param {*} [options] Override http request option.
@@ -301,6 +337,25 @@ export const DefaultApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
+    async authorizationTest(
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.authorizationTest(options);
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
     async getHello(
       options?: any
     ): Promise<
@@ -433,6 +488,16 @@ export const DefaultApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
+    authorizationTest(options?: any): AxiosPromise<string> {
+      return localVarFp
+        .authorizationTest(options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
     getHello(options?: any): AxiosPromise<string> {
       return localVarFp
         .getHello(options)
@@ -498,6 +563,18 @@ export const DefaultApiFactory = function (
  * @extends {BaseAPI}
  */
 export class DefaultApi extends BaseAPI {
+  /**
+   *
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof DefaultApi
+   */
+  public authorizationTest(options?: any) {
+    return DefaultApiFp(this.configuration)
+      .authorizationTest(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
   /**
    *
    * @param {*} [options] Override http request option.
