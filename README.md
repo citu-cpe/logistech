@@ -1,9 +1,13 @@
-# NestJS/NextJS Template
+# LogisTech
 
-![NestJS/NextJS](https://miro.medium.com/max/984/1*ymfz_KKMuGJpIPyvdlGnHA.png)
+![LogisTech](https://miro.medium.com/max/984/1*ymfz_KKMuGJpIPyvdlGnHA.png)
 
-The goal of this project is to create a template for full stack web development
-using [NestJS](https://nestjs.com/) as the backend framework and
-[NextJS](https://nextjs.org/) as the frontend framework
+Web app for CPE thesis
 
-See [Confluence Page](https://princhcanal.atlassian.net/wiki/spaces/NNT/overview) for instructions on how to run the app as well as other documentation
+[Confluence Page](https://princhcanal.atlassian.net/wiki/spaces/LGST/overview)
+
+## Members
+[Bascos, John Earl P.](https://github.com/thebascos)
+[Cañ̃al, Princh Harold](https://github.com/princhcanal)
+[Dela Torre, Ma. Dina Gene](https://github.com/geneTickss)
+[Llenos, Seth Angelo](https://github.com/seth-angelo)
