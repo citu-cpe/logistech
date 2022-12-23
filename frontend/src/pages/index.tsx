@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import { useGlobalStore } from '../shared/stores';
 import { Landing } from '../modules/index/components/Landing';
-import { Home } from '../modules/index/components/Home';
+import { Home } from '../modules/index/components/Home/Home';
 import { useEffect, useState } from 'react';
 import { UserDTO } from 'generated-api';
 
@@ -13,7 +13,7 @@ const Index: NextPage = () => {
     setUser(getUser());
   }, [getUser]);
 
-  return user ? <Home /> : <Landing />;
+  return user ? <Home role='STORAGE_FACILITY' /> : <Landing />;
 };
 
 export default Index;
