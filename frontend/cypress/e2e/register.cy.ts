@@ -55,8 +55,6 @@ describe('register.spec.ts - Register Form', () => {
 
   it('should successfully register', () => {
     cy.register('test2', 'test2@test.com', 'test');
-
-    cy.get('.chakra-heading').contains('Home').should('exist');
   });
 
   it('should not register with existing username and email', () => {
