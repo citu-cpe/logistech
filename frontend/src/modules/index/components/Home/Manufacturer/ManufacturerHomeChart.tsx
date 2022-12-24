@@ -1,5 +1,6 @@
 import { Box, ChakraProps } from '@chakra-ui/react';
 import { Bar } from 'react-chartjs-2';
+import { getCssVariable } from '../../../../../shared/utils/cssVariables';
 
 interface ChartData {
   date: string;
@@ -16,27 +17,6 @@ const data: ChartData[] = [
 
 const labels = data.map((d) => d.date);
 
-const chartjsData = {
-  labels,
-  datasets: [
-    {
-      label: 'Ordered',
-      data: data.map((d) => d.ordered),
-      backgroundColor: '#38B2AC',
-    },
-    {
-      label: 'Manufactured',
-      data: data.map((d) => d.manufactured),
-      backgroundColor: '#285E61',
-    },
-    {
-      label: 'Sold',
-      data: data.map((d) => d.sold),
-      backgroundColor: '#1D4044',
-    },
-  ],
-};
-
 const options = {
   responsive: true,
   width: '100%',
@@ -51,6 +31,27 @@ const options = {
 };
 
 export const ManufacturerHomeChart = (props: ChakraProps) => {
+  const chartjsData = {
+    labels,
+    datasets: [
+      {
+        label: 'Ordered',
+        data: data.map((d) => d.ordered),
+        backgroundColor: getCssVariable('--chakra-colors-teal-400'),
+      },
+      {
+        label: 'Manufactured',
+        data: data.map((d) => d.manufactured),
+        backgroundColor: getCssVariable('--chakra-colors-teal-700'),
+      },
+      {
+        label: 'Sold',
+        data: data.map((d) => d.sold),
+        backgroundColor: getCssVariable('--chakra-colors-teal-900'),
+      },
+    ],
+  };
+
   return (
     <Box {...props}>
       <Bar options={options} data={chartjsData} />

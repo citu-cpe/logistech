@@ -25,14 +25,14 @@ export const Manufacturer = () => {
         </Button>
       </Flex>
 
-      <Flex justifyContent='space-between' mb='8' gap='14'>
+      <Flex justify='space-between' mb='8' gap='14'>
         <LinkCard title='On Hold' n='nn' href='/on-hold' />
         <LinkCard title='New Arrival' n='n' href='/new-arrival' />
         <LinkCard title='In Transit' n='n' href='/in-transit' />
         <LinkCard title='Couriers' n='n' href='/couriers' />
       </Flex>
 
-      <Flex gap='4' h='sm' alignItems='center'>
+      <Flex gap='4' h='sm' align='center'>
         <ManufacturerHomeChart flexBasis='65%' />
 
         <Box
@@ -53,7 +53,7 @@ export const Manufacturer = () => {
           <UnorderedList>
             {Array.from(Array(20)).map((_, i) => (
               <ListItem key={i}>
-                <Flex justifyContent='space-between'>
+                <Flex justify='space-between'>
                   <Text>RFIDxxx</Text> <Text>------------</Text>
                 </Flex>
               </ListItem>

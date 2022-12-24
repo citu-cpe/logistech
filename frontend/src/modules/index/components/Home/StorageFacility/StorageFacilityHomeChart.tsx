@@ -1,5 +1,6 @@
 import { Box } from '@chakra-ui/react';
 import { Bar } from 'react-chartjs-2';
+import { getCssVariable } from '../../../../../shared/utils/cssVariables';
 
 interface ChartData {
   date: string;
@@ -49,23 +50,23 @@ const options = {
 
 const labels = data.map((d) => d.date);
 
-const chartjsData = {
-  labels,
-  datasets: [
-    {
-      label: 'Shipped',
-      data: data.map((d) => d.shipped),
-      backgroundColor: '#38B2AC',
-    },
-    {
-      label: 'Stored',
-      data: data.map((d) => d.stored),
-      backgroundColor: '#285E61',
-    },
-  ],
-};
-
 export const StorageFacilityHomeChart = () => {
+  const chartjsData = {
+    labels,
+    datasets: [
+      {
+        label: 'Shipped',
+        data: data.map((d) => d.shipped),
+        backgroundColor: getCssVariable('--chakra-colors-teal-400'),
+      },
+      {
+        label: 'Stored',
+        data: data.map((d) => d.stored),
+        backgroundColor: getCssVariable('--chakra-colors-teal-700'),
+      },
+    ],
+  };
+
   return (
     <Box w='full'>
       <Bar options={options} data={chartjsData} height={100} />

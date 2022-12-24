@@ -5,13 +5,7 @@ import { StorageFacilityHomeChart } from './StorageFacilityHomeChart';
 export const StorageFacility = () => {
   return (
     <Box>
-      <Flex
-        flexWrap='wrap'
-        justifyContent='center'
-        rowGap='8'
-        columnGap='8'
-        mb='10'
-      >
+      <Flex flexWrap='wrap' justify='center' rowGap='8' columnGap='8' mb='10'>
         <LinkCard title='On Hold' n='nn' href='/on-hold' />
         <LinkCard title='New Arrival' n='n' href='/new-arrival' />
         <LinkCard title='To Be Picked' n='nn' href='/to-be-picked' />
