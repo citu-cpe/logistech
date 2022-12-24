@@ -8,7 +8,7 @@ export const Supplier = () => {
 
       <Box borderRadius='md' p='10' backgroundColor='gray.700'>
         <Flex
-          justifyContent='space-between'
+          justify='space-between'
           flexWrap='wrap'
           rowGap='6'
           borderColor='gray.900'
@@ -19,13 +19,13 @@ export const Supplier = () => {
             <Flex
               key={i}
               direction='column'
-              alignItems='center'
+              align='center'
               flexGrow='1'
               flexBasis='21%'
             >
               <Flex
-                justifyContent='center'
-                alignItems='center'
+                justify='center'
+                align='center'
                 w='20'
                 h='20'
                 textAlign='center'
@@ -40,7 +40,7 @@ export const Supplier = () => {
           ))}
         </Flex>
 
-        <Flex justifyContent='space-around'>
+        <Flex justify='space-around'>
           <Button colorScheme='gray'>On hold</Button>
           <Button colorScheme='gray'>In Transit</Button>
           <Button colorScheme='gray'>Bulked</Button>

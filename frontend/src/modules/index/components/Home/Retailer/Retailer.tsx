@@ -15,7 +15,7 @@ export const Retailer = () => {
       <RetailerHomeChart mb='8' />
 
       <Box borderRadius='md' backgroundColor='gray.700' p='6'>
-        <Flex justifyContent='space-between' mb='8'>
+        <Flex justify='space-between' mb='8'>
           <LinkCard
             backgroundColor='gray.800'
             title='On Hold'
@@ -68,7 +68,7 @@ export const Retailer = () => {
             <UnorderedList>
               {Array.from(Array(10)).map((_, i) => (
                 <ListItem key={i}>
-                  <Flex justifyContent='space-between'>
+                  <Flex justify='space-between'>
                     <Text>RFIDxxx</Text> <Text>------------</Text>
                   </Flex>
                 </ListItem>
@@ -94,7 +94,7 @@ export const Retailer = () => {
             <UnorderedList>
               {Array.from(Array(10)).map((_, i) => (
                 <ListItem key={i}>
-                  <Flex justifyContent='space-between'>
+                  <Flex justify='space-between'>
                     <Text>RFIDxxx</Text> <Text>------------</Text>
                   </Flex>
                 </ListItem>

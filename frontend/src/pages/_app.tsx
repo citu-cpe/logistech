@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import { ReactElement, ReactNode, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { Layout } from '../shared/components/ui/Layout';
+import { theme } from '../shared/theme';
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -40,7 +41,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   }, [getUser, pageProps, router]);
 
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <ApiProvider>
         <QueryClientProvider client={queryClient}>
           {showPage && getLayout(<Component {...pageProps} />)}

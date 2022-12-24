@@ -22,7 +22,6 @@ export const LinkCard = ({
         flexDirection='column'
         alignItems='center'
         borderRadius='md'
-        border='1px solid black'
         px='10'
         py='4'
         {...props}
