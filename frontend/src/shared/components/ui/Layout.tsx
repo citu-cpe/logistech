@@ -6,11 +6,7 @@ import { Navbar } from './Navbar';
 export const Layout = (page: ReactElement) => {
   return (
     <Flex direction='row' minHeight='100vh'>
-      <Navbar
-        backgroundColor='blackAlpha.400'
-        width='xs'
-        color='whiteAlpha.900'
-      />
+      <Navbar width='xs' display={{ base: 'none', lg: 'flex' }} />
 
       <Box
         as='main'
@@ -20,7 +16,8 @@ export const Layout = (page: ReactElement) => {
         h='100vh'
         overflowY='auto'
         px='6'
-        py='6'
+        pt='6'
+        pb='24'
       >
         <Header />
 

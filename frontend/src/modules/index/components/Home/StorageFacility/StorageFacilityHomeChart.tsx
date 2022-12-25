@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react';
+import { Box, useBreakpointValue } from '@chakra-ui/react';
 import { Bar } from 'react-chartjs-2';
 import { getCssVariable } from '../../../../../shared/utils/cssVariables';
 
@@ -51,6 +51,7 @@ const options = {
 const labels = data.map((d) => d.date);
 
 export const StorageFacilityHomeChart = () => {
+  const height = useBreakpointValue({ base: 300, md: 100 }, { ssr: false });
   const chartjsData = {
     labels,
     datasets: [
@@ -69,7 +70,7 @@ export const StorageFacilityHomeChart = () => {
 
   return (
     <Box w='full'>
-      <Bar options={options} data={chartjsData} height={100} />
+      <Bar options={options} data={chartjsData} height={height} />
     </Box>
   );
 };
