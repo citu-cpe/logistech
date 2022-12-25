@@ -1,4 +1,4 @@
-import { Box, ChakraProps } from '@chakra-ui/react';
+import { Box, ChakraProps, useBreakpointValue } from '@chakra-ui/react';
 import { Line } from 'react-chartjs-2';
 import { getCssVariable } from '../../../../../shared/utils/cssVariables';
 
@@ -25,6 +25,7 @@ const options = {
 };
 
 export const RetailerHomeChart = (props: ChakraProps) => {
+  const height = useBreakpointValue({ base: 300, md: 100 }, { ssr: false });
   const chartjsData = {
     labels,
     datasets: [
@@ -45,7 +46,7 @@ export const RetailerHomeChart = (props: ChakraProps) => {
 
   return (
     <Box w='full' {...props}>
-      <Line options={options} data={chartjsData} height={50} />
+      <Line options={options} data={chartjsData} height={height} />
     </Box>
   );
 };

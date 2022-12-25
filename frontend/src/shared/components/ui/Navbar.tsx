@@ -20,9 +20,10 @@ export const Navbar = (props: ChakraProps) => {
   return (
     <Flex
       direction='column'
-      justify='space-between'
+      justifyContent='space-between'
       h='100vh'
       as='nav'
+      backgroundColor='blackAlpha.400'
       {...props}
     >
       <Heading py='8' mx='12' h='10%'>

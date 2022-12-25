@@ -1,6 +1,8 @@
-import { Box, ChakraProps, Text } from '@chakra-ui/react';
+import { chakra, ChakraProps, Flex, Text } from '@chakra-ui/react';
 import { UrlObject } from 'url';
-import NextLink from 'next/link';
+import Link from 'next/link';
+
+const NextLink = chakra(Link);
 
 interface LinkCardProps {
   title: string;
@@ -15,22 +17,26 @@ export const LinkCard = ({
   ...props
 }: LinkCardProps & ChakraProps) => {
   return (
-    <NextLink href={href}>
-      <Box
+    <NextLink href={href} {...props}>
+      <Flex
         backgroundColor='gray.700'
-        display='flex'
-        flexDirection='column'
-        alignItems='center'
+        direction='column'
+        align='center'
+        justify='center'
         borderRadius='md'
         px='10'
         py='4'
-        {...props}
+        h='full'
       >
-        <Text fontSize='2xl' fontWeight='bold'>
+        <Text
+          fontSize={{ base: 'md', md: 'lg' }}
+          fontWeight='bold'
+          textAlign='center'
+        >
           {title}
         </Text>
         <Text fontSize='xl'>{n}</Text>
-      </Box>
+      </Flex>
     </NextLink>
   );
 };

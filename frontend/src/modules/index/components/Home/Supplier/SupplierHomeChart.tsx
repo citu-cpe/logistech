@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react';
+import { Box, useBreakpointValue } from '@chakra-ui/react';
 import { Bar } from 'react-chartjs-2';
 import { getCssVariable } from '../../../../../shared/utils/cssVariables';
 
@@ -23,6 +23,7 @@ export const options = {
 const n = 50;
 
 export const SupplierHomeChart = () => {
+  const height = useBreakpointValue({ base: 200, md: 100 }, { ssr: false });
   const data = {
     labels: Array.from(Array(n)).map(() => ''),
     datasets: [
@@ -36,7 +37,7 @@ export const SupplierHomeChart = () => {
 
   return (
     <Box w='full'>
-      <Bar data={data} options={options} height={70}></Bar>
+      <Bar data={data} options={options} height={height}></Bar>
     </Box>
   );
 };

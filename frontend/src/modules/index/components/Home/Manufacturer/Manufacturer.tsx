@@ -1,16 +1,11 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  ListItem,
-  Text,
-  UnorderedList,
-} from '@chakra-ui/react';
+import { Box, Button, Flex, Heading } from '@chakra-ui/react';
 import { LinkCard } from '../../../../../shared/components/LinkCard';
+import { StatusList } from '../../../../../shared/components/StatusList';
 import { ManufacturerHomeChart } from './ManufacturerHomeChart';
 
 export const Manufacturer = () => {
+  const flexBasis = { base: '40%', md: '25%' };
+
   return (
     <Box>
       <Flex gap='4' mb='8'>
@@ -25,40 +20,42 @@ export const Manufacturer = () => {
         </Button>
       </Flex>
 
-      <Flex justify='space-between' mb='8' gap='14'>
-        <LinkCard title='On Hold' n='nn' href='/on-hold' />
-        <LinkCard title='New Arrival' n='n' href='/new-arrival' />
-        <LinkCard title='In Transit' n='n' href='/in-transit' />
-        <LinkCard title='Couriers' n='n' href='/couriers' />
+      <Flex justify='center' mb='8' gap='14' flexWrap='wrap'>
+        <LinkCard
+          title='On Hold'
+          n='nn'
+          href='/on-hold'
+          flexBasis={flexBasis}
+        />
+        <LinkCard
+          title='New Arrival'
+          n='n'
+          href='/new-arrival'
+          flexBasis={flexBasis}
+        />
+        <LinkCard
+          title='In Transit'
+          n='n'
+          href='/in-transit'
+          flexBasis={flexBasis}
+        />
+        <LinkCard
+          title='Couriers'
+          n='n'
+          href='/couriers'
+          flexBasis={flexBasis}
+        />
       </Flex>
 
-      <Flex gap='4' h='sm' align='center'>
-        <ManufacturerHomeChart flexBasis='65%' />
+      <Flex gap='4' h='sm' align='center' flexWrap='wrap'>
+        <ManufacturerHomeChart flexBasis={{ base: '100%', md: '65%' }} />
 
-        <Box
-          borderRadius='md'
-          backgroundColor='gray.700'
-          flexGrow='1'
-          p='6'
-          h='full'
-          overflowY='auto'
-        >
+        <Box rounded='md' backgroundColor='gray.700' p='6' flexGrow='1'>
           <Heading size='md' textAlign='center' mb='4'>
             Return Handling
           </Heading>
-          <Text align='right' fontWeight='bold'>
-            Status
-          </Text>
 
-          <UnorderedList>
-            {Array.from(Array(20)).map((_, i) => (
-              <ListItem key={i}>
-                <Flex justify='space-between'>
-                  <Text>RFIDxxx</Text> <Text>------------</Text>
-                </Flex>
-              </ListItem>
-            ))}
-          </UnorderedList>
+          <StatusList />
         </Box>
       </Flex>
     </Box>
