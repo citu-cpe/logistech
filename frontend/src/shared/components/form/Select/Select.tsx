@@ -2,21 +2,24 @@ import type { FieldProps } from 'formik';
 import {
   FormControl,
   FormLabel,
-  Input as ChakraInput,
+  Select as ChakraSelect,
   FormErrorMessage,
-  InputProps as ChakraInputProps,
+  SelectProps as ChakraSelectProps,
 } from '@chakra-ui/react';
+import { ReactNode } from 'react';
 
-interface InputProps {
+interface SelectProps {
   fieldProps: FieldProps;
   label?: string;
+  children: ReactNode;
 }
 
-export const Input = ({
+export const Select = ({
   fieldProps: { field, form },
   label,
+  children,
   ...props
-}: InputProps & ChakraInputProps) => (
+}: SelectProps & ChakraSelectProps) => (
   <FormControl
     isInvalid={!!form.errors[props.name!] && !!form.touched[props.name!]}
     isRequired
@@ -32,7 +35,9 @@ export const Input = ({
         {label}
       </FormLabel>
     )}
-    <ChakraInput {...field} {...props} />
+    <ChakraSelect {...field} {...props}>
+      {children}
+    </ChakraSelect>
     <FormErrorMessage>{form.errors[props.name!] as string}</FormErrorMessage>
   </FormControl>
 );

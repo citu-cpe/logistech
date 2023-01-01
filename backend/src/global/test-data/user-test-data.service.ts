@@ -4,26 +4,70 @@ import bcrypt from 'bcrypt';
 import { CustomLogger } from '../../shared/custom-logger';
 import { User, Role } from '@prisma/client';
 
-export const testUser: User = {
+export const testCustomer: User = {
   id: '2f54ca0b-e389-4e17-a978-0cb98e0f7a46',
   createdAt: new Date(),
   updatedAt: new Date(),
-  email: 'test@test.com',
-  username: 'test',
+  email: 'test_customer@test.com',
+  username: 'test_customer',
   password: 'test',
   currentHashedRefreshToken: undefined,
-  roles: [Role.USER],
+  role: Role.CUSTOMER,
 };
 
-export const testAdmin: User = {
+export const testSupplier: User = {
   id: '2cf38670-0a8a-41e9-9018-e8b8a9b36486',
   createdAt: new Date(),
   updatedAt: new Date(),
-  email: 'test_admin@test.com',
-  username: 'test_admin',
+  email: 'test_supplier@test.com',
+  username: 'test_supplier',
   password: 'test',
   currentHashedRefreshToken: undefined,
-  roles: [Role.USER, Role.ADMIN],
+  role: Role.SUPPLIER,
+};
+
+export const testStorageFacility: User = {
+  id: 'bb552f70-c234-4ec2-9bc0-d0bc2893f0d2',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  email: 'test_storage_facility@test.com',
+  username: 'test_storage_facility',
+  password: 'test',
+  currentHashedRefreshToken: undefined,
+  role: Role.STORAGE_FACILITY,
+};
+
+export const testCourier: User = {
+  id: '8bd959d2-1a9b-4597-af6b-869a30d4a792',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  email: 'test_courier@test.com',
+  username: 'test_courier',
+  password: 'test',
+  currentHashedRefreshToken: undefined,
+  role: Role.COURIER,
+};
+
+export const testManufacturer: User = {
+  id: '43e1f6d5-34b8-4870-85b1-8fc66d14f4c4',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  email: 'test_manufacturer@test.com',
+  username: 'test_manufacturer',
+  password: 'test',
+  currentHashedRefreshToken: undefined,
+  role: Role.MANUFACTURER,
+};
+
+export const testRetailer: User = {
+  id: '959f23ef-21ee-42e9-a28e-c8899d417286',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  email: 'test_retailer@test.com',
+  username: 'test_retailer',
+  password: 'test',
+  currentHashedRefreshToken: undefined,
+  role: Role.RETAILER,
 };
 
 @Injectable()
@@ -35,20 +79,48 @@ export class UserTestDataService {
   public async generateTestData() {
     this.logger.log('GENERATING USER TEST DATA');
 
-    const foundUser = await this.prismaService.user.findUnique({
-      where: { id: testUser.id },
+    const foundCustomer = await this.prismaService.user.findUnique({
+      where: { id: testCustomer.id },
     });
-    const foundAdmin = await this.prismaService.user.findUnique({
-      where: { id: testAdmin.id },
+    const foundSupplier = await this.prismaService.user.findUnique({
+      where: { id: testSupplier.id },
+    });
+    const foundStorageFacility = await this.prismaService.user.findUnique({
+      where: { id: testStorageFacility.id },
+    });
+    const foundCourier = await this.prismaService.user.findUnique({
+      where: { id: testCourier.id },
+    });
+    const foundManufacturer = await this.prismaService.user.findUnique({
+      where: { id: testManufacturer.id },
+    });
+    const foundRetailer = await this.prismaService.user.findUnique({
+      where: { id: testRetailer.id },
     });
 
-    if (!foundUser) {
-      this.logger.log('GENERATING TEST USER');
-      await this.createUser(testUser);
+    if (!foundCustomer) {
+      this.logger.log('GENERATING TEST CUSTOMER');
+      await this.createUser(testCustomer);
     }
-    if (!foundAdmin) {
-      this.logger.log('GENERATING TEST ADMIN');
-      await this.createUser(testAdmin);
+    if (!foundSupplier) {
+      this.logger.log('GENERATING TEST SUPPLIER');
+      await this.createUser(testSupplier);
+    }
+    if (!foundStorageFacility) {
+      this.logger.log('GENERATING TEST STORAGE_FACILITY');
+      await this.createUser(testStorageFacility);
+    }
+    if (!foundCourier) {
+      this.logger.log('GENERATING TEST COURIER');
+      await this.createUser(testCourier);
+    }
+    if (!foundManufacturer) {
+      this.logger.log('GENERATING TEST MANUFACTURER');
+      await this.createUser(testManufacturer);
+    }
+    if (!foundRetailer) {
+      this.logger.log('GENERATING TEST RETAILER');
+      await this.createUser(testRetailer);
     }
 
     this.logger.log('DONE GENERATING USER TEST DATA');

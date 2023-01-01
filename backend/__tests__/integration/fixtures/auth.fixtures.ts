@@ -6,6 +6,7 @@ import { HttpStatus } from '@nestjs/common';
 import { LoginResponseDTO } from '../../../src/authentication/dto/login-response.dto';
 import { AuthenticationController } from '../../../src/authentication/authentication.controller';
 import { request } from '../setup';
+import { RoleEnum } from '../../../src/user/dto/user.dto';
 
 const authRoute = AuthenticationController.AUTH_API_ROUTE;
 const registerRoute = authRoute + AuthenticationController.REGISTER_API_ROUTE;
@@ -15,6 +16,7 @@ export const testRegisterUser: RegisterUserDTO = {
   username: 'test_register',
   email: 'test_register@test.com',
   password: 'test',
+  role: RoleEnum.RETAILER,
 };
 
 export const createUser = async (
@@ -28,7 +30,7 @@ export const createUser = async (
     updatedAt: new Date(),
     password: await bcrypt.hash(user.password, 10),
     currentHashedRefreshToken: null,
-    roles: [Role.USER],
+    role: Role.CUSTOMER,
   };
 
   if (user instanceof RegisterUserDTO) {

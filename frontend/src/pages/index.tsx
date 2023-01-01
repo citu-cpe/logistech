@@ -4,9 +4,13 @@ import { AppPropsWithLayout, NextPageWithLayout } from './_app';
 import { ReactElement } from 'react';
 import { Layout } from '../shared/components/ui/Layout';
 import { CenterLayout } from '../shared/components/ui/CenterLayout';
+import { useGlobalStore } from '../shared/stores';
 
 const Index: NextPageWithLayout = ({ isAuth }: AppPropsWithLayout) => {
-  return isAuth ? <Home role='STORAGE_FACILITY' /> : <Landing />;
+  const getUser = useGlobalStore((state) => state.getUser);
+  const role = getUser()?.role;
+
+  return isAuth && !!role ? <Home role={role} /> : <Landing />;
 };
 
 Index.getLayout = (page: ReactElement<AppPropsWithLayout>) => {

@@ -50,8 +50,21 @@ export interface UserDTO {
   username: string;
   /**
    *
-   * @type {Array<object>}
+   * @type {string}
    * @memberof UserDTO
    */
-  roles: Array<object>;
+  role: UserDTORoleEnum;
+}
+
+/**
+ * @export
+ * @enum {string}
+ */
+export enum UserDTORoleEnum {
+  StorageFacility = 'STORAGE_FACILITY',
+  Courier = 'COURIER',
+  Supplier = 'SUPPLIER',
+  Manufacturer = 'MANUFACTURER',
+  Retailer = 'RETAILER',
+  Customer = 'CUSTOMER',
 }

@@ -10,7 +10,7 @@ describe('login.spec.ts - Login Form', () => {
   });
 
   it('should successfully log out', () => {
-    cy.login('test@test.com', 'test');
+    cy.login('test_customer@test.com', 'test');
 
     cy.getBySel('user-profile-btn').click();
     cy.getBySel('logout-btn').click();

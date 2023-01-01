@@ -1,33 +1,28 @@
 import { Box } from '@chakra-ui/react';
+import { UserDTORoleEnum } from 'generated-api';
 import React, { ReactNode } from 'react';
 import { Manufacturer } from './Manufacturer/Manufacturer';
 import { Retailer } from './Retailer/Retailer';
 import { StorageFacility } from './StorageFacility/StorageFacility';
 import { Supplier } from './Supplier/Supplier';
 
-export type Role =
-  | 'STORAGE_FACILITY'
-  | 'SUPPLIER'
-  | 'MANUFACTURER'
-  | 'RETAILER';
-
 interface HomeProps {
-  role: Role;
+  role: UserDTORoleEnum;
 }
 
 export const Home = ({ role }: HomeProps) => {
   let dashboard: ReactNode;
 
-  if (role === 'MANUFACTURER') {
+  if (role === UserDTORoleEnum.Manufacturer) {
     dashboard = <Manufacturer />;
   }
-  if (role === 'SUPPLIER') {
+  if (role === UserDTORoleEnum.Supplier) {
     dashboard = <Supplier />;
   }
-  if (role === 'RETAILER') {
+  if (role === UserDTORoleEnum.Retailer) {
     dashboard = <Retailer />;
   }
-  if (role === 'STORAGE_FACILITY') {
+  if (role === UserDTORoleEnum.StorageFacility) {
     dashboard = <StorageFacility />;
   }
 

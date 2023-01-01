@@ -1,12 +1,19 @@
-import { Role } from '@prisma/client';
 import {
-  IsArray,
   IsDateString,
   IsEmail,
   IsEnum,
   IsNotEmpty,
   IsString,
 } from 'class-validator';
+
+export enum RoleEnum {
+  STORAGE_FACILITY = 'STORAGE_FACILITY',
+  COURIER = 'COURIER',
+  SUPPLIER = 'SUPPLIER',
+  MANUFACTURER = 'MANUFACTURER',
+  RETAILER = 'RETAILER',
+  CUSTOMER = 'CUSTOMER',
+}
 
 export class UserDTO {
   @IsString()
@@ -28,8 +35,6 @@ export class UserDTO {
   @IsNotEmpty()
   public username: string;
 
-  @IsEnum(Role, { each: true })
-  @IsNotEmpty()
-  @IsArray()
-  public roles: Role[];
+  @IsEnum(RoleEnum)
+  public role: RoleEnum;
 }
