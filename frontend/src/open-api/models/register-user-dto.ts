@@ -36,4 +36,23 @@ export interface RegisterUserDTO {
    * @memberof RegisterUserDTO
    */
   password: string;
+  /**
+   *
+   * @type {string}
+   * @memberof RegisterUserDTO
+   */
+  role: RegisterUserDTORoleEnum;
+}
+
+/**
+ * @export
+ * @enum {string}
+ */
+export enum RegisterUserDTORoleEnum {
+  StorageFacility = 'STORAGE_FACILITY',
+  Courier = 'COURIER',
+  Supplier = 'SUPPLIER',
+  Manufacturer = 'MANUFACTURER',
+  Retailer = 'RETAILER',
+  Customer = 'CUSTOMER',
 }

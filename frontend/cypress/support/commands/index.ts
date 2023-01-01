@@ -35,13 +35,14 @@ declare global {
 
       /**
        * Custom command to register
-       * @example cy.register('test', 'test@test.com', 'test')
-       * @example cy.register('test', 'test@test.com', 'test', true)
+       * @example cy.register('test', 'test@test.com', 'test', 'Customer')
+       * @example cy.register('test', 'test@test.com', 'test', 'Customer', true)
        */
       register(
         username: string,
         email: string,
         password: string,
+        role: string,
         shouldFail?: boolean
       ): void;
 

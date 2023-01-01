@@ -3,7 +3,7 @@ import { RegisterUserDTO } from '../authentication/dto/register-user.dto';
 import bcrypt from 'bcrypt';
 import { PrismaService } from '../global/prisma/prisma.service';
 import { User } from '@prisma/client';
-import { UserDTO } from './dto/user.dto';
+import { RoleEnum, UserDTO } from './dto/user.dto';
 
 @Injectable()
 export class UserService {
@@ -69,7 +69,7 @@ export class UserService {
   }
 
   public convertToDTO(user: User): UserDTO {
-    const { id, createdAt, updatedAt, email, username, roles } = user;
+    const { id, createdAt, updatedAt, email, username, role } = user;
 
     const userDTO: UserDTO = {
       id,
@@ -77,7 +77,7 @@ export class UserService {
       updatedAt,
       email,
       username,
-      roles,
+      role: role as RoleEnum,
     };
 
     return userDTO;

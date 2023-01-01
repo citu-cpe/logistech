@@ -1,4 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
+import { RoleEnum } from '../../../src/user/dto/user.dto';
 import { AuthenticationController } from '../../../src/authentication/authentication.controller';
 import { LoginResponseDTO } from '../../../src/authentication/dto/login-response.dto';
 import { LoginUserDTO } from '../../../src/authentication/dto/login-user.dto';
@@ -24,7 +25,7 @@ describe('auth.spec.ts - Authentication Controller', () => {
   describe('POST /login', () => {
     it('should log in successfully', async () => {
       const loginUserDTO: LoginUserDTO = {
-        email: 'test@test.com',
+        email: 'test_customer@test.com',
         password: 'test',
       };
 
@@ -89,6 +90,7 @@ describe('auth.spec.ts - Authentication Controller', () => {
         username: 'mock',
         email: 'not an email',
         password: 'mock',
+        role: RoleEnum.RETAILER,
       };
 
       await request.post(registerRoute).expect(HttpStatus.BAD_REQUEST);

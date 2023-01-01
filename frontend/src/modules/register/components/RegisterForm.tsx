@@ -5,7 +5,8 @@ import { FieldProps, Field, Form, Formik } from 'formik';
 import React from 'react';
 import { Box, Button, Flex, Link } from '@chakra-ui/react';
 import { useRegister } from '../hooks/useRegister';
-import { RegisterUserDTO } from 'generated-api';
+import { RegisterUserDTO, RegisterUserDTORoleEnum } from 'generated-api';
+import { Select } from '../../../shared/components/form/Select/Select';
 
 export const RegisterForm = () => {
   const mutation = useRegister();
@@ -14,7 +15,12 @@ export const RegisterForm = () => {
     mutation.mutate(registerDTO);
   };
 
-  const initialValues = { email: '', username: '', password: '' };
+  const initialValues = {
+    email: '',
+    username: '',
+    password: '',
+    role: RegisterUserDTORoleEnum.Customer,
+  };
 
   const validationSchema = Yup.object({
     email: Yup.string().email('Invalid email').required('Required'),
@@ -22,6 +28,7 @@ export const RegisterForm = () => {
     password: Yup.string()
       .min(4, 'Password must be at least 4 characters')
       .required('Required'),
+    role: Yup.string().required('Required'),
   });
 
   return (
@@ -74,6 +81,46 @@ export const RegisterForm = () => {
                     bgColor='gray.50'
                     color='gray.800'
                   />
+                )}
+              </Field>
+              <Field name='role'>
+                {(
+                  fieldProps: FieldProps<
+                    RegisterUserDTORoleEnum,
+                    RegisterUserDTO
+                  >
+                ) => (
+                  <Select
+                    fieldProps={fieldProps}
+                    name='role'
+                    label='Role'
+                    id='role'
+                    borderColor='gray.300'
+                    bgColor='gray.50'
+                    color='gray.800'
+                  >
+                    <option selected hidden disabled value=''>
+                      Choose a role
+                    </option>
+                    <option value={RegisterUserDTORoleEnum.Courier}>
+                      Courier
+                    </option>
+                    <option value={RegisterUserDTORoleEnum.Customer}>
+                      Customer
+                    </option>
+                    <option value={RegisterUserDTORoleEnum.Retailer}>
+                      Retailer
+                    </option>
+                    <option value={RegisterUserDTORoleEnum.Manufacturer}>
+                      Manufacturer
+                    </option>
+                    <option value={RegisterUserDTORoleEnum.StorageFacility}>
+                      Storage Facility
+                    </option>
+                    <option value={RegisterUserDTORoleEnum.Supplier}>
+                      Supplier
+                    </option>
+                  </Select>
                 )}
               </Field>
             </Box>

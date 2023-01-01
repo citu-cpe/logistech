@@ -11,11 +11,16 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+import { UserDTORoleEnum } from 'generated-api';
 import { useLogout } from '../../../modules/index/hooks/useLogout';
+import { useGlobalStore } from '../../stores';
 import { NavLink } from './NavLink';
 
 export const Navbar = (props: ChakraProps) => {
   const logout = useLogout().mutate;
+  const getUser = useGlobalStore((state) => state.getUser);
+  const user = getUser();
+  const role = user?.role;
 
   return (
     <Flex
@@ -33,11 +38,47 @@ export const Navbar = (props: ChakraProps) => {
       <Box h='80%' overflowY='auto' my='4' ml='12'>
         <VStack as='ul' alignItems='flex-start' w='80%'>
           <NavLink href='/'>Home</NavLink>
-          <NavLink href='/inventory'>Inventory</NavLink>
+
+          {(role === UserDTORoleEnum.Supplier ||
+            role === UserDTORoleEnum.Manufacturer ||
+            role === UserDTORoleEnum.Retailer) && (
+            <NavLink href='/products'>Products</NavLink>
+          )}
+
+          {(role === UserDTORoleEnum.StorageFacility ||
+            role === UserDTORoleEnum.Manufacturer) && (
+            <NavLink href='/inventory'>Inventory</NavLink>
+          )}
+
           <NavLink href='/red-flags'>Red Flags</NavLink>
+
           <NavLink href='/reports'>Reports</NavLink>
-          <NavLink href='/invoice'>Invoice</NavLink>
-          <NavLink href='/completed'>Completed</NavLink>
+
+          {(role === UserDTORoleEnum.Supplier ||
+            role === UserDTORoleEnum.Retailer) && (
+            <NavLink href='/contacts'>Contacts</NavLink>
+          )}
+
+          {(role === UserDTORoleEnum.Manufacturer ||
+            role === UserDTORoleEnum.Retailer) && (
+            <NavLink href='/sold'>Sold</NavLink>
+          )}
+
+          {role === UserDTORoleEnum.Manufacturer && (
+            <NavLink href='/ordered'>Ordered</NavLink>
+          )}
+
+          {role === UserDTORoleEnum.Supplier && (
+            <NavLink href='/received'>Received</NavLink>
+          )}
+
+          {role === UserDTORoleEnum.StorageFacility && (
+            <NavLink href='/invoice'>Invoice</NavLink>
+          )}
+
+          {role === UserDTORoleEnum.StorageFacility && (
+            <NavLink href='/completed'>Completed</NavLink>
+          )}
           <NavLink href='/settings'>Settings</NavLink>
         </VStack>
       </Box>
