@@ -4,7 +4,7 @@ describe('register.spec.ts - Register Form', () => {
     cy.visit('/register');
   });
 
-  it('should have username, email, and password fields and submit button', () => {
+  it('should have username, email, password, and role fields and submit button', () => {
     cy.get('input').first().should('have.attr', 'name', 'username');
 
     cy.get('input').eq(1).should('have.attr', 'name', 'email');
@@ -12,6 +12,8 @@ describe('register.spec.ts - Register Form', () => {
 
     cy.get('input').eq(2).should('have.attr', 'name', 'password');
     cy.get('input').eq(2).should('have.attr', 'type', 'password');
+
+    cy.get('select').should('exist');
 
     cy.getBySel('register-submit-btn').should('exist');
   });
@@ -54,10 +56,10 @@ describe('register.spec.ts - Register Form', () => {
   });
 
   it('should successfully register', () => {
-    cy.register('test2', 'test2@test.com', 'test');
+    cy.register('test2', 'test2@test.com', 'test', 'Customer');
   });
 
   it('should not register with existing username and email', () => {
-    cy.register('test', 'test@test.com', 'test', true);
+    cy.register('test', 'test@test.com', 'test', 'Customer', true);
   });
 });
