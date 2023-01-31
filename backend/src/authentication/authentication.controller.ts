@@ -3,9 +3,9 @@ import { AuthenticationService } from './authentication.service';
 import { RegisterUserDTO } from './dto/register-user.dto';
 import { LoginUserDTO } from './dto/login-user.dto';
 import { LoginResponseDTO } from './dto/login-response.dto';
-import { UserDTO } from '../user/dto/user.dto';
 import { Public } from '../shared/decorators/public.decorator';
 import { TokensDTO } from './dto/tokens.dto';
+import { LogoutUserDTO } from './dto/logout-user.dto';
 
 @Controller(AuthenticationController.AUTH_API_ROUTE)
 export class AuthenticationController {
@@ -35,7 +35,7 @@ export class AuthenticationController {
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post(AuthenticationController.LOGOUT_API_ROUTE)
-  public logOut(@Body() user: UserDTO): void {
+  public logOut(@Body() user: LogoutUserDTO): void {
     this.authenticationService.logout(user.id);
   }
 

@@ -2,15 +2,19 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { RegisterUserDTO } from '../authentication/dto/register-user.dto';
 import bcrypt from 'bcrypt';
 import { PrismaService } from '../global/prisma/prisma.service';
-import { User } from '@prisma/client';
-import { RoleEnum, UserDTO } from './dto/user.dto';
+import { Company, User } from '@prisma/client';
+import { UserDTO, UserRoleEnum } from './dto/user.dto';
+import { CompanyTypeEnum } from '../company/dto/company.dto';
 
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   public async findByEmail(email: string): Promise<User> {
-    const user = await this.prisma.user.findUnique({ where: { email } });
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+      include: { company: true },
+    });
 
     if (user) {
       return user;
@@ -68,8 +72,8 @@ export class UserService {
     });
   }
 
-  public convertToDTO(user: User): UserDTO {
-    const { id, createdAt, updatedAt, email, username, role } = user;
+  public convertToDTO(user: User & { company?: Company }): UserDTO {
+    const { id, createdAt, updatedAt, email, username, role, company } = user;
 
     const userDTO: UserDTO = {
       id,
@@ -77,7 +81,13 @@ export class UserService {
       updatedAt,
       email,
       username,
-      role: role as RoleEnum,
+      company: !!company
+        ? {
+            ...company,
+            type: company.type as CompanyTypeEnum,
+          }
+        : undefined,
+      role: role as UserRoleEnum,
     };
 
     return userDTO;

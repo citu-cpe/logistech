@@ -11,7 +11,7 @@ export const useLogout = () => {
   const router = useRouter();
   const user = useGlobalStore((state) => state.getUser)()!;
 
-  return useMutation(() => api.logOut(user), {
+  return useMutation(() => api.logOut({ id: user.id }), {
     onSuccess: () => {
       removeUser();
 

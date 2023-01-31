@@ -3,10 +3,9 @@ import * as Yup from 'yup';
 import NextLink from 'next/link';
 import { FieldProps, Field, Form, Formik } from 'formik';
 import React from 'react';
-import { Box, Button, Flex, Link } from '@chakra-ui/react';
+import { Box, Button, Flex } from '@chakra-ui/react';
 import { useRegister } from '../hooks/useRegister';
 import { RegisterUserDTO, RegisterUserDTORoleEnum } from 'generated-api';
-import { Select } from '../../../shared/components/form/Select/Select';
 
 export const RegisterForm = () => {
   const mutation = useRegister();
@@ -83,46 +82,45 @@ export const RegisterForm = () => {
                   />
                 )}
               </Field>
-              <Field name='role'>
-                {(
-                  fieldProps: FieldProps<
-                    RegisterUserDTORoleEnum,
-                    RegisterUserDTO
-                  >
-                ) => (
-                  <Select
-                    fieldProps={fieldProps}
-                    name='role'
-                    label='Role'
-                    id='role'
-                    borderColor='gray.300'
-                    bgColor='gray.50'
-                    color='gray.800'
-                  >
-                    <option selected hidden disabled value=''>
-                      Choose a role
-                    </option>
-                    <option value={RegisterUserDTORoleEnum.Courier}>
-                      Courier
-                    </option>
-                    <option value={RegisterUserDTORoleEnum.Customer}>
-                      Customer
-                    </option>
-                    <option value={RegisterUserDTORoleEnum.Retailer}>
-                      Retailer
-                    </option>
-                    <option value={RegisterUserDTORoleEnum.Manufacturer}>
-                      Manufacturer
-                    </option>
-                    <option value={RegisterUserDTORoleEnum.StorageFacility}>
-                      Storage Facility
-                    </option>
-                    <option value={RegisterUserDTORoleEnum.Supplier}>
-                      Supplier
-                    </option>
-                  </Select>
-                )}
-              </Field>
+              {/* FIXME */}
+              {/* <Field name='role'> */}
+              {/*   {( */}
+              {/*     fieldProps: FieldProps< */}
+              {/*       RegisterUserDTORoleEnum, */}
+              {/*       RegisterUserDTO */}
+              {/*     > */}
+              {/*   ) => ( */}
+              {/*     <Select */}
+              {/*       fieldProps={fieldProps} */}
+              {/*       name='role' */}
+              {/*       label='Role' */}
+              {/*       id='role' */}
+              {/*       borderColor='gray.300' */}
+              {/*       bgColor='gray.50' */}
+              {/*       color='gray.800' */}
+              {/*     > */}
+              {/*       <option selected hidden disabled value=''> */}
+              {/*         Choose a company type */}
+              {/*       </option> */}
+              {/*       <option value={CompanyDTOTypeEnum.Courier}>Courier</option> */}
+              {/*       <option value={CompanyDTOTypeEnum.Customer}> */}
+              {/*         Customer */}
+              {/*       </option> */}
+              {/*       <option value={CompanyDTOTypeEnum.Retailer}> */}
+              {/*         Retailer */}
+              {/*       </option> */}
+              {/*       <option value={CompanyDTOTypeEnum.Manufacturer}> */}
+              {/*         Manufacturer */}
+              {/*       </option> */}
+              {/*       <option value={CompanyDTOTypeEnum.StorageFacility}> */}
+              {/*         Storage Facility */}
+              {/*       </option> */}
+              {/*       <option value={CompanyDTOTypeEnum.Supplier}> */}
+              {/*         Supplier */}
+              {/*       </option> */}
+              {/*     </Select> */}
+              {/*   )} */}
+              {/* </Field> */}
             </Box>
             <Box mb='4'>
               <Button
@@ -143,7 +141,7 @@ export const RegisterForm = () => {
       </Formik>
       <Flex justify='right' color='gray.500'>
         <NextLink href='/login' passHref>
-          <Link>Log In</Link>
+          Log In
         </NextLink>
       </Flex>
     </Box>

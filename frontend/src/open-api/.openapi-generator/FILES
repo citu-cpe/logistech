@@ -9,9 +9,16 @@ common.ts
 configuration.ts
 git_push.sh
 index.ts
+models/company-dto.ts
+models/create-many-product-items-dto.ts
+models/create-product-dto.ts
+models/create-product-item-dto.ts
 models/index.ts
 models/login-response-dto.ts
 models/login-user-dto.ts
+models/logout-user-dto.ts
+models/product-dto.ts
+models/product-item-dto.ts
 models/register-user-dto.ts
 models/tokens-dto.ts
 models/user-dto.ts

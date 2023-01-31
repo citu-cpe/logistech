@@ -6,6 +6,10 @@ import {
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD, Reflector, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import Joi from 'joi';
+import { CompanyModule } from '../company/company.module';
+import { ProductModule } from '../product/product.module';
+import { ReportModule } from '../report/report.module';
+import { TransactionModule } from '../transaction/transaction.module';
 import { AppController } from '../app.controller';
 import { AppService } from '../app.service';
 import { AuthenticationModule } from '../authentication/authentication.module';
@@ -39,6 +43,10 @@ export const appModule: ModuleMetadata = {
     ActiveProfilesModule,
     TestDataModule,
     E2EModule,
+    CompanyModule,
+    ProductModule,
+    ReportModule,
+    TransactionModule,
   ],
   controllers: [AppController],
   providers: [

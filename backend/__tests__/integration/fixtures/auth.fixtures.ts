@@ -1,4 +1,4 @@
-import { Role, User } from '@prisma/client';
+import { User, UserRole } from '@prisma/client';
 import { LoginUserDTO } from '../../../src/authentication/dto/login-user.dto';
 import { RegisterUserDTO } from '../../../src/authentication/dto/register-user.dto';
 import bcrypt from 'bcrypt';
@@ -6,7 +6,8 @@ import { HttpStatus } from '@nestjs/common';
 import { LoginResponseDTO } from '../../../src/authentication/dto/login-response.dto';
 import { AuthenticationController } from '../../../src/authentication/authentication.controller';
 import { request } from '../setup';
-import { RoleEnum } from '../../../src/user/dto/user.dto';
+import { testSupplierCompany } from '../../../src/global/test-data/company-test-data.service';
+import { UserRoleEnum } from '../../../src/user/dto/user.dto';
 
 const authRoute = AuthenticationController.AUTH_API_ROUTE;
 const registerRoute = authRoute + AuthenticationController.REGISTER_API_ROUTE;
@@ -16,7 +17,8 @@ export const testRegisterUser: RegisterUserDTO = {
   username: 'test_register',
   email: 'test_register@test.com',
   password: 'test',
-  role: RoleEnum.RETAILER,
+  companyId: testSupplierCompany.id,
+  role: UserRoleEnum.SUPPLIER_SUPERVISOR,
 };
 
 export const createUser = async (
@@ -30,7 +32,8 @@ export const createUser = async (
     updatedAt: new Date(),
     password: await bcrypt.hash(user.password, 10),
     currentHashedRefreshToken: null,
-    role: Role.CUSTOMER,
+    companyId: testSupplierCompany.id,
+    role: UserRole.SUPPLIER_SUPERVISOR,
   };
 
   if (user instanceof RegisterUserDTO) {

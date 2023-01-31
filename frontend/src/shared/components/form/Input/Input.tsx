@@ -5,6 +5,8 @@ import {
   Input as ChakraInput,
   FormErrorMessage,
   InputProps as ChakraInputProps,
+  Checkbox,
+  Box,
 } from '@chakra-ui/react';
 
 interface InputProps {
@@ -22,17 +24,25 @@ export const Input = ({
     isRequired
     mb='4'
   >
-    {!!label && (
-      <FormLabel
-        htmlFor={props.id}
-        mb='2'
-        color='white.900'
-        fontWeight='semibold'
-      >
+    {props.type === 'checkbox' ? (
+      <Checkbox {...field} defaultChecked={field.value}>
         {label}
-      </FormLabel>
+      </Checkbox>
+    ) : (
+      <Box>
+        {!!label && (
+          <FormLabel
+            htmlFor={props.id}
+            mb='2'
+            color='white.900'
+            fontWeight='semibold'
+          >
+            {label}
+          </FormLabel>
+        )}
+        <ChakraInput {...field} {...props} />
+      </Box>
     )}
-    <ChakraInput {...field} {...props} />
     <FormErrorMessage>{form.errors[props.name!] as string}</FormErrorMessage>
   </FormControl>
 );

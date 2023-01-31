@@ -18,14 +18,115 @@ model User {
   username                  String   @unique
   password                  String
   currentHashedRefreshToken String?
-  role                     Role
+  companyId                 String?
+  company                   Company? @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  role                      UserRole
 }
 
-enum Role {
+enum UserRole {
+  CUSTOMER
+  SUPPLIER_PACKAGING_PERSONNEL
+  SUPPLIER_SALES_IN_CHARGE
+  SUPPLIER_LOGISTICS_IN_CHARGE
+  SUPPLIER_SUPERVISOR
+  STORAGE_FACILITY_COURIER_PERSONNEL
+  STORAGE_FACILITY_LOGISTICS_IN_CHARGE
+  STORAGE_FACILITY_SUPERVISOR
+  MANUFACTURER_PACKAGING_PERSONNEL
+  MANUFACTURER_SALES_IN_CHARGE
+  MANUFACTURER_LOGISTICS_IN_CHARGE
+  MANUFACTURER_COURIER_PERSONNEL
+  MANUFACTURER_SUPERVISOR
+  COURIER
+  RETAILER_SUPERVISOR
+}
+
+model Company {
+  id        String      @id @default(uuid())
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  type      CompanyType
+  name      String
+
+  products              Product[]
+  employees             User[]
+  sendingTransactions   Transaction[] @relation("sendingCompany")
+  receivingTransactions Transaction[] @relation("receivingCompany")
+}
+
+enum CompanyType {
   STORAGE_FACILITY
   COURIER
   SUPPLIER
   MANUFACTURER
   RETAILER
-  CUSTOMER
+}
+
+model Product {
+  id           String   @id @default(uuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  name         String
+  price        Float
+  bulk         Boolean
+  bulkQuantity Int?
+
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  productItems ProductItem[]
+}
+
+model ProductItem {
+  id        String            @id @default(uuid())
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  rfid      String            @unique
+  status    ProductItemStatus
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  transactions Transaction[]
+  reports      Report[]
+}
+
+enum ProductItemStatus {
+  IN_STORAGE
+  ON_HOLD
+  TO_BE_PICKED_UP
+  IN_TRANSIT
+  COMPLETE
+  CANCELED
+  RED_FLAG
+}
+
+model Report {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  description String
+
+  productItemId String
+  productItem   ProductItem @relation(fields: [productItemId], references: [id], onDelete: Cascade)
+}
+
+model Transaction {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  total     Float
+
+  sendingCompanyId   String
+  sendingCompany     Company @relation("sendingCompany", fields: [sendingCompanyId], references: [id])
+  receivingCompanyId String
+  receivingCompany   Company @relation("receivingCompany", fields: [receivingCompanyId], references: [id])
+
+  productItems ProductItem[]
+}
+
+model Cart {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
