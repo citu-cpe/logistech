@@ -12,6 +12,8 @@
  * Do not edit the class manually.
  */
 
+import { CompanyDTO } from './company-dto';
+
 /**
  *
  * @export
@@ -50,6 +52,12 @@ export interface UserDTO {
   username: string;
   /**
    *
+   * @type {CompanyDTO}
+   * @memberof UserDTO
+   */
+  company?: CompanyDTO;
+  /**
+   *
    * @type {string}
    * @memberof UserDTO
    */
@@ -61,10 +69,19 @@ export interface UserDTO {
  * @enum {string}
  */
 export enum UserDTORoleEnum {
-  StorageFacility = 'STORAGE_FACILITY',
-  Courier = 'COURIER',
-  Supplier = 'SUPPLIER',
-  Manufacturer = 'MANUFACTURER',
-  Retailer = 'RETAILER',
   Customer = 'CUSTOMER',
+  SupplierPackagingPersonnel = 'SUPPLIER_PACKAGING_PERSONNEL',
+  SupplierSalesInCharge = 'SUPPLIER_SALES_IN_CHARGE',
+  SupplierLogisticsInCharge = 'SUPPLIER_LOGISTICS_IN_CHARGE',
+  SupplierSupervisor = 'SUPPLIER_SUPERVISOR',
+  StorageFacilityCourierPersonnel = 'STORAGE_FACILITY_COURIER_PERSONNEL',
+  StorageFacilityLogisticsInCharge = 'STORAGE_FACILITY_LOGISTICS_IN_CHARGE',
+  StorageFacilitySupervisor = 'STORAGE_FACILITY_SUPERVISOR',
+  ManufacturerPackagingPersonnel = 'MANUFACTURER_PACKAGING_PERSONNEL',
+  ManufacturerSalesInCharge = 'MANUFACTURER_SALES_IN_CHARGE',
+  ManufacturerLogisticsInCharge = 'MANUFACTURER_LOGISTICS_IN_CHARGE',
+  ManufacturerCourierPersonnel = 'MANUFACTURER_COURIER_PERSONNEL',
+  ManufacturerSupervisor = 'MANUFACTURER_SUPERVISOR',
+  Courier = 'COURIER',
+  RetailerSupervisor = 'RETAILER_SUPERVISOR',
 }

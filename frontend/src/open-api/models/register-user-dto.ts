@@ -41,6 +41,12 @@ export interface RegisterUserDTO {
    * @type {string}
    * @memberof RegisterUserDTO
    */
+  companyId?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof RegisterUserDTO
+   */
   role: RegisterUserDTORoleEnum;
 }
 
@@ -49,10 +55,19 @@ export interface RegisterUserDTO {
  * @enum {string}
  */
 export enum RegisterUserDTORoleEnum {
-  StorageFacility = 'STORAGE_FACILITY',
-  Courier = 'COURIER',
-  Supplier = 'SUPPLIER',
-  Manufacturer = 'MANUFACTURER',
-  Retailer = 'RETAILER',
   Customer = 'CUSTOMER',
+  SupplierPackagingPersonnel = 'SUPPLIER_PACKAGING_PERSONNEL',
+  SupplierSalesInCharge = 'SUPPLIER_SALES_IN_CHARGE',
+  SupplierLogisticsInCharge = 'SUPPLIER_LOGISTICS_IN_CHARGE',
+  SupplierSupervisor = 'SUPPLIER_SUPERVISOR',
+  StorageFacilityCourierPersonnel = 'STORAGE_FACILITY_COURIER_PERSONNEL',
+  StorageFacilityLogisticsInCharge = 'STORAGE_FACILITY_LOGISTICS_IN_CHARGE',
+  StorageFacilitySupervisor = 'STORAGE_FACILITY_SUPERVISOR',
+  ManufacturerPackagingPersonnel = 'MANUFACTURER_PACKAGING_PERSONNEL',
+  ManufacturerSalesInCharge = 'MANUFACTURER_SALES_IN_CHARGE',
+  ManufacturerLogisticsInCharge = 'MANUFACTURER_LOGISTICS_IN_CHARGE',
+  ManufacturerCourierPersonnel = 'MANUFACTURER_COURIER_PERSONNEL',
+  ManufacturerSupervisor = 'MANUFACTURER_SUPERVISOR',
+  Courier = 'COURIER',
+  RetailerSupervisor = 'RETAILER_SUPERVISOR',
 }

@@ -1,11 +1,13 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ActiveProfilesService } from '../active-profiles/active-profiles.service';
+import { CompanyTestDataService } from './company-test-data.service';
 import { UserTestDataService } from './user-test-data.service';
 
 @Injectable()
 export class TestDataService implements OnModuleInit {
   constructor(
     private readonly userTestDataService: UserTestDataService,
+    private readonly companyTestDataService: CompanyTestDataService,
     private readonly activeProfilesService: ActiveProfilesService
   ) {}
 
@@ -19,6 +21,7 @@ export class TestDataService implements OnModuleInit {
   }
 
   public async generateTestData() {
+    await this.companyTestDataService.generateTestData();
     await this.userTestDataService.generateTestData();
   }
 }

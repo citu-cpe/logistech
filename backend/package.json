@@ -23,6 +23,9 @@
     "prisma:migrate:dev:test": "prisma migrate dev -- --name",
     "prisma:migrate:dev": "dotenv -e local.env prisma migrate dev -- --name",
     "prisma:migrate:deploy": "prisma migrate deploy",
+    "prisma:migrate:deploy:local": "dotenv -e local.env prisma migrate deploy",
+    "prisma:studio": "dotenv -e local.env prisma studio",
+    "prisma:db:push": "dotenv -e local.env prisma db push",
     "prepare": "cd ../ && husky install ./backend/.husky",
     "generate:api": "nest build && rm -rf ../frontend/src/open-api && openapi-generator-cli generate -i http://localhost:5001/api-json -g typescript-axios -o ../frontend/src/open-api --config api.json && prettier --write \"../frontend/src/open-api/**/*.{ts,json,md}\" && cd ../frontend && npm install generated-api"
   },

@@ -11,7 +11,7 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { UserDTORoleEnum } from 'generated-api';
+import { CompanyDTOTypeEnum } from 'generated-api';
 import { useLogout } from '../../../modules/index/hooks/useLogout';
 import { useGlobalStore } from '../../stores';
 import { NavLink } from './NavLink';
@@ -20,7 +20,7 @@ export const Navbar = (props: ChakraProps) => {
   const logout = useLogout().mutate;
   const getUser = useGlobalStore((state) => state.getUser);
   const user = getUser();
-  const role = user?.role;
+  const companyType = user?.company?.type;
 
   return (
     <Flex
@@ -39,14 +39,18 @@ export const Navbar = (props: ChakraProps) => {
         <VStack as='ul' alignItems='flex-start' w='80%'>
           <NavLink href='/'>Home</NavLink>
 
-          {(role === UserDTORoleEnum.Supplier ||
-            role === UserDTORoleEnum.Manufacturer ||
-            role === UserDTORoleEnum.Retailer) && (
+          {(companyType === CompanyDTOTypeEnum.Supplier ||
+            companyType === CompanyDTOTypeEnum.Manufacturer ||
+            companyType === CompanyDTOTypeEnum.Retailer) && (
             <NavLink href='/products'>Products</NavLink>
           )}
 
-          {(role === UserDTORoleEnum.StorageFacility ||
-            role === UserDTORoleEnum.Manufacturer) && (
+          {companyType === CompanyDTOTypeEnum.Manufacturer && (
+            <NavLink href='/commerce'>Commerce</NavLink>
+          )}
+
+          {(companyType === CompanyDTOTypeEnum.StorageFacility ||
+            companyType === CompanyDTOTypeEnum.Manufacturer) && (
             <NavLink href='/inventory'>Inventory</NavLink>
           )}
 
@@ -54,29 +58,29 @@ export const Navbar = (props: ChakraProps) => {
 
           <NavLink href='/reports'>Reports</NavLink>
 
-          {(role === UserDTORoleEnum.Supplier ||
-            role === UserDTORoleEnum.Retailer) && (
+          {(companyType === CompanyDTOTypeEnum.Supplier ||
+            companyType === CompanyDTOTypeEnum.Retailer) && (
             <NavLink href='/contacts'>Contacts</NavLink>
           )}
 
-          {(role === UserDTORoleEnum.Manufacturer ||
-            role === UserDTORoleEnum.Retailer) && (
+          {(companyType === CompanyDTOTypeEnum.Manufacturer ||
+            companyType === CompanyDTOTypeEnum.Retailer) && (
             <NavLink href='/sold'>Sold</NavLink>
           )}
 
-          {role === UserDTORoleEnum.Manufacturer && (
+          {companyType === CompanyDTOTypeEnum.Manufacturer && (
             <NavLink href='/ordered'>Ordered</NavLink>
           )}
 
-          {role === UserDTORoleEnum.Supplier && (
+          {companyType === CompanyDTOTypeEnum.Supplier && (
             <NavLink href='/received'>Received</NavLink>
           )}
 
-          {role === UserDTORoleEnum.StorageFacility && (
+          {companyType === CompanyDTOTypeEnum.StorageFacility && (
             <NavLink href='/invoice'>Invoice</NavLink>
           )}
 
-          {role === UserDTORoleEnum.StorageFacility && (
+          {companyType === CompanyDTOTypeEnum.StorageFacility && (
             <NavLink href='/completed'>Completed</NavLink>
           )}
           <NavLink href='/settings'>Settings</NavLink>

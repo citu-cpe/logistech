@@ -2,7 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../global/prisma/prisma.service';
 import bcrypt from 'bcrypt';
 import { CustomLogger } from '../../shared/custom-logger';
-import { User, Role } from '@prisma/client';
+import { User, UserRole } from '@prisma/client';
+import {
+  testCourierCompany,
+  testManufacturerCompany,
+  testRetailerCompany,
+  testStorageFacilityCompany,
+  testSupplierCompany,
+} from './company-test-data.service';
 
 export const testCustomer: User = {
   id: '2f54ca0b-e389-4e17-a978-0cb98e0f7a46',
@@ -12,7 +19,8 @@ export const testCustomer: User = {
   username: 'test_customer',
   password: 'test',
   currentHashedRefreshToken: undefined,
-  role: Role.CUSTOMER,
+  companyId: undefined,
+  role: UserRole.CUSTOMER,
 };
 
 export const testSupplier: User = {
@@ -23,7 +31,8 @@ export const testSupplier: User = {
   username: 'test_supplier',
   password: 'test',
   currentHashedRefreshToken: undefined,
-  role: Role.SUPPLIER,
+  role: UserRole.SUPPLIER_SUPERVISOR,
+  companyId: testSupplierCompany.id,
 };
 
 export const testStorageFacility: User = {
@@ -34,7 +43,8 @@ export const testStorageFacility: User = {
   username: 'test_storage_facility',
   password: 'test',
   currentHashedRefreshToken: undefined,
-  role: Role.STORAGE_FACILITY,
+  role: UserRole.STORAGE_FACILITY_SUPERVISOR,
+  companyId: testStorageFacilityCompany.id,
 };
 
 export const testCourier: User = {
@@ -45,7 +55,8 @@ export const testCourier: User = {
   username: 'test_courier',
   password: 'test',
   currentHashedRefreshToken: undefined,
-  role: Role.COURIER,
+  role: UserRole.COURIER,
+  companyId: testCourierCompany.id,
 };
 
 export const testManufacturer: User = {
@@ -56,7 +67,8 @@ export const testManufacturer: User = {
   username: 'test_manufacturer',
   password: 'test',
   currentHashedRefreshToken: undefined,
-  role: Role.MANUFACTURER,
+  role: UserRole.MANUFACTURER_SUPERVISOR,
+  companyId: testManufacturerCompany.id,
 };
 
 export const testRetailer: User = {
@@ -67,7 +79,8 @@ export const testRetailer: User = {
   username: 'test_retailer',
   password: 'test',
   currentHashedRefreshToken: undefined,
-  role: Role.RETAILER,
+  role: UserRole.RETAILER_SUPERVISOR,
+  companyId: testRetailerCompany.id,
 };
 
 @Injectable()

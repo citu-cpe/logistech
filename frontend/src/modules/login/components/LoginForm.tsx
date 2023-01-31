@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Link } from '@chakra-ui/react';
+import { Box, Button, Flex } from '@chakra-ui/react';
 import { FieldProps, Field, Form, Formik } from 'formik';
 import { Input } from '../../../shared/components/form/Input/Input';
 import React from 'react';
@@ -79,7 +79,7 @@ export const LoginForm = () => {
       </Formik>
       <Flex justify='right' color='gray.500'>
         <NextLink href='/register' passHref>
-          <Link>Register</Link>
+          Register
         </NextLink>
       </Flex>
     </Box>

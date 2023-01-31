@@ -1,5 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
-import { RoleEnum } from '../../../src/user/dto/user.dto';
+import { UserRoleEnum } from '../../../src/user/dto/user.dto';
 import { AuthenticationController } from '../../../src/authentication/authentication.controller';
 import { LoginResponseDTO } from '../../../src/authentication/dto/login-response.dto';
 import { LoginUserDTO } from '../../../src/authentication/dto/login-user.dto';
@@ -90,7 +90,7 @@ describe('auth.spec.ts - Authentication Controller', () => {
         username: 'mock',
         email: 'not an email',
         password: 'mock',
-        role: RoleEnum.RETAILER,
+        role: UserRoleEnum.CUSTOMER,
       };
 
       await request.post(registerRoute).expect(HttpStatus.BAD_REQUEST);
