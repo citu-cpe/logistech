@@ -63,36 +63,20 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
                 />
               )}
             </Field>
-            <Field name='bulk' type='boolean'>
-              {(fieldProps: FieldProps<boolean, CreateProductDTO>) => (
+            <Field name='bulkQuantity' type='number'>
+              {(fieldProps: FieldProps<string, CreateProductDTO>) => (
                 <Input
                   fieldProps={fieldProps}
-                  name='bulk'
-                  label='Bulk'
-                  type='checkbox'
-                  id='bulk'
+                  name='bulkQuantity'
+                  label='Bulk Quantity'
+                  type='number'
+                  id='bulkQuantity'
                   borderColor='gray.300'
                   bgColor='gray.50'
                   color='gray.800'
                 />
               )}
             </Field>
-            {props.values.bulk && (
-              <Field name='bulkQuantity' type='number'>
-                {(fieldProps: FieldProps<string, CreateProductDTO>) => (
-                  <Input
-                    fieldProps={fieldProps}
-                    name='bulkQuantity'
-                    label='Bulk Quantity'
-                    type='number'
-                    id='bulkQuantity'
-                    borderColor='gray.300'
-                    bgColor='gray.50'
-                    color='gray.800'
-                  />
-                )}
-              </Field>
-            )}
           </Box>
           <Box mb='4'>
             <Button

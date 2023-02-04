@@ -31,7 +31,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     name: '',
     price: 0,
     bulk: false,
-    bulkQuantity: 0,
+    bulkQuantity: undefined,
   };
 
   const onSubmit = (dto: CreateProductDTO) => {
@@ -81,36 +81,20 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 />
               )}
             </Field>
-            <Field name='bulk' type='boolean'>
-              {(fieldProps: FieldProps<boolean, CreateProductDTO>) => (
+            <Field name='bulkQuantity' type='number'>
+              {(fieldProps: FieldProps<string, CreateProductDTO>) => (
                 <Input
                   fieldProps={fieldProps}
-                  name='bulk'
-                  label='Bulk'
-                  type='checkbox'
-                  id='bulk'
+                  name='bulkQuantity'
+                  label='Bulk Quantity'
+                  type='number'
+                  id='bulkQuantity'
                   borderColor='gray.300'
                   bgColor='gray.50'
                   color='gray.800'
                 />
               )}
             </Field>
-            {props.values.bulk && (
-              <Field name='bulkQuantity' type='number'>
-                {(fieldProps: FieldProps<string, CreateProductDTO>) => (
-                  <Input
-                    fieldProps={fieldProps}
-                    name='bulkQuantity'
-                    label='Bulk Quantity'
-                    type='number'
-                    id='bulkQuantity'
-                    borderColor='gray.300'
-                    bgColor='gray.50'
-                    color='gray.800'
-                  />
-                )}
-              </Field>
-            )}
           </Box>
           <Box mb='4'>
             <Button
