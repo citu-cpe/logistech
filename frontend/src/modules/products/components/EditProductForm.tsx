@@ -4,6 +4,8 @@ import { CreateProductDTO, ProductDTO } from 'generated-api';
 import { Input } from '../../../shared/components/form/Input/Input';
 import { useEditProduct } from '../hooks/useEditProduct';
 import { productFormValidationSchema } from './ProductForm';
+import { useGlobalStore } from '../../../shared/stores';
+import { CompanyDTOTypeEnum } from 'generated-api';
 
 interface EditProductFormProps {
   product: ProductDTO;
@@ -24,6 +26,19 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
         }
       },
     });
+  };
+  const getUser = useGlobalStore((state) => state.getUser);
+  const companyType = getUser()?.company?.type;
+
+  const isSuppManu = () => {
+    if (
+      companyType === CompanyDTOTypeEnum.Supplier ||
+      CompanyDTOTypeEnum.Manufacturer
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   return (
@@ -63,21 +78,7 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
                 />
               )}
             </Field>
-            <Field name='bulk' type='boolean'>
-              {(fieldProps: FieldProps<boolean, CreateProductDTO>) => (
-                <Input
-                  fieldProps={fieldProps}
-                  name='bulk'
-                  label='Bulk'
-                  type='checkbox'
-                  id='bulk'
-                  borderColor='gray.300'
-                  bgColor='gray.50'
-                  color='gray.800'
-                />
-              )}
-            </Field>
-            {props.values.bulk && (
+            {isSuppManu() && (
               <Field name='bulkQuantity' type='number'>
                 {(fieldProps: FieldProps<string, CreateProductDTO>) => (
                   <Input

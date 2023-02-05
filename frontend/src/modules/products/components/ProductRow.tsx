@@ -2,7 +2,6 @@ import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import {
   Tr,
   Td,
-  Checkbox,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -46,9 +45,6 @@ export const ProductRow: React.FC<ProductRowProps> = ({ product }) => {
         <Link href={`/products/${product.id}`}>{product.name}</Link>
       </Td>
       <Td isNumeric>{product.price}</Td>
-      <Td>
-        <Checkbox defaultChecked={product.bulk} disabled />
-      </Td>
       <Td isNumeric>{product.bulkQuantity ?? 'n/a'}</Td>
       <Td>
         <HStack spacing='4'>
