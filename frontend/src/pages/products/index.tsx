@@ -53,7 +53,6 @@ const Products = () => {
             <Tr>
               <Th>Product name</Th>
               <Th isNumeric>Price</Th>
-              <Th>Bulk</Th>
               <Th isNumeric>Bulk Quantity</Th>
               <Th>Actions</Th>
             </Tr>

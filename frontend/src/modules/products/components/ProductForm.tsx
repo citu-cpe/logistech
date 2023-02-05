@@ -4,6 +4,8 @@ import { CreateProductDTO } from 'generated-api';
 import * as Yup from 'yup';
 import { Input } from '../../../shared/components/form/Input/Input';
 import { useCreateProduct } from '../hooks/useCreateProduct';
+import { CompanyDTOTypeEnum } from 'generated-api';
+import { useGlobalStore } from '../../../shared/stores';
 
 interface ProductFormProps {
   companyId: string;
@@ -30,8 +32,21 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   const initialValues: CreateProductDTO = {
     name: '',
     price: 0,
-    bulk: false,
-    bulkQuantity: 0,
+    bulk: true,
+    bulkQuantity: undefined,
+  };
+  const getUser = useGlobalStore((state) => state.getUser);
+  const companyType = getUser()?.company?.type;
+
+  const isSuppManu = () => {
+    if (
+      companyType === CompanyDTOTypeEnum.Supplier ||
+      CompanyDTOTypeEnum.Manufacturer
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   const onSubmit = (dto: CreateProductDTO) => {
@@ -81,21 +96,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 />
               )}
             </Field>
-            <Field name='bulk' type='boolean'>
-              {(fieldProps: FieldProps<boolean, CreateProductDTO>) => (
-                <Input
-                  fieldProps={fieldProps}
-                  name='bulk'
-                  label='Bulk'
-                  type='checkbox'
-                  id='bulk'
-                  borderColor='gray.300'
-                  bgColor='gray.50'
-                  color='gray.800'
-                />
-              )}
-            </Field>
-            {props.values.bulk && (
+            {isSuppManu() && (
               <Field name='bulkQuantity' type='number'>
                 {(fieldProps: FieldProps<string, CreateProductDTO>) => (
                   <Input
