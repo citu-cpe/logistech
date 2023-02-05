@@ -2,8 +2,10 @@ import { Button, Box } from '@chakra-ui/react';
 import { Formik, Form, Field, FieldProps } from 'formik';
 import { CreateProductDTO } from 'generated-api';
 import * as Yup from 'yup';
+import { CompanyDTOTypeEnum } from 'generated-api';
 import { Input } from '../../../shared/components/form/Input/Input';
 import { useCreateProduct } from '../hooks/useCreateProduct';
+import { useGlobalStore } from '../../../shared/stores';
 
 interface ProductFormProps {
   companyId: string;
@@ -25,12 +27,25 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   companyId,
   onClose,
 }) => {
+  const getUser = useGlobalStore((state) => state.getUser);
+  const companyType = getUser()?.company?.type;
+
+  const isSuppManu = () => {
+    if (
+      companyType === CompanyDTOTypeEnum.Supplier ||
+      CompanyDTOTypeEnum.Manufacturer
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
   const createProduct = useCreateProduct(companyId);
 
   const initialValues: CreateProductDTO = {
     name: '',
     price: 0,
-    bulk: false,
+    bulk: true,
     bulkQuantity: undefined,
   };
 
@@ -81,20 +96,22 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 />
               )}
             </Field>
-            <Field name='bulkQuantity' type='number'>
-              {(fieldProps: FieldProps<string, CreateProductDTO>) => (
-                <Input
-                  fieldProps={fieldProps}
-                  name='bulkQuantity'
-                  label='Bulk Quantity'
-                  type='number'
-                  id='bulkQuantity'
-                  borderColor='gray.300'
-                  bgColor='gray.50'
-                  color='gray.800'
-                />
-              )}
-            </Field>
+            {isSuppManu() && (
+              <Field name='bulkQuantity' type='number'>
+                {(fieldProps: FieldProps<string, CreateProductDTO>) => (
+                  <Input
+                    fieldProps={fieldProps}
+                    name='bulkQuantity'
+                    label='Bulk Quantity'
+                    type='number'
+                    id='bulkQuantity'
+                    borderColor='gray.300'
+                    bgColor='gray.50'
+                    color='gray.800'
+                  />
+                )}
+              </Field>
+            )}
           </Box>
           <Box mb='4'>
             <Button

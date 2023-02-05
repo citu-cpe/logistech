@@ -42,13 +42,15 @@ export const ProductRow: React.FC<ProductRowProps> = ({ product }) => {
   return (
     <Tr key={product.id}>
       <Td>
-        <Link href={`/products/${product.id}`}>{product.name}</Link>
+        <Link data-cy='product-name' href={`/products/${product.id}`}>
+          {product.name}
+        </Link>
       </Td>
       <Td isNumeric>{product.price}</Td>
       <Td isNumeric>{product.bulkQuantity ?? 'n/a'}</Td>
       <Td>
         <HStack spacing='4'>
-          <Button onClick={onEditProductOpen}>
+          <Button data-cy='edit-product' onClick={onEditProductOpen}>
             <EditIcon />
           </Button>
           <Button onClick={onDeleteProductOpen}>
