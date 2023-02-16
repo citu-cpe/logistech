@@ -9,7 +9,7 @@ import {
   Box,
 } from '@chakra-ui/react';
 
-interface InputProps {
+export interface InputProps {
   fieldProps: FieldProps;
   label?: string;
 }

@@ -14,7 +14,8 @@
     "no-unused-expression": true,
     "no-async-without-await": true,
     "no-unused-variable": true,
-    "curly": true
+    "curly": true,
+    "max-classes-per-file": false
   },
   "jsRules": {
     "max-line-length": {

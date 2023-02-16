@@ -96,5 +96,8 @@ export class CompanyTestDataService {
     await this.prismaService.company.create({
       data: company,
     });
+    await this.prismaService.cart.create({
+      data: { total: 0, companyId: company.id },
+    });
   }
 }

@@ -31,7 +31,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     name: '',
     price: 0,
     bulk: false,
-    bulkQuantity: 0,
+    bulkQuantity: undefined,
   };
 
   const onSubmit = (dto: CreateProductDTO) => {

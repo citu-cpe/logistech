@@ -28,6 +28,9 @@ export class ProductDTO {
   @IsNumber()
   public price: number;
 
+  @IsNumber()
+  public numInStock: number;
+
   @IsBoolean()
   public bulk: boolean;
 
@@ -36,6 +39,7 @@ export class ProductDTO {
   @Min(1)
   public bulkQuantity?: number;
 
+  @IsOptional()
   @ValidateNested()
   public company?: CompanyDTO;
 }

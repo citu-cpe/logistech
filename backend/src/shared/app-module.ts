@@ -20,6 +20,8 @@ import { E2EModule } from '../global/e2e/e2e.module';
 import { PrismaModule } from '../global/prisma/prisma.module';
 import { TestDataModule } from '../global/test-data/test-data.module';
 import { UserModule } from '../user/user.module';
+import { CartModule } from '../cart/cart.module';
+import { OrderModule } from '../order/order.module';
 
 export const appModule: ModuleMetadata = {
   imports: [
@@ -47,6 +49,8 @@ export const appModule: ModuleMetadata = {
     ProductModule,
     ReportModule,
     TransactionModule,
+    CartModule,
+    OrderModule,
   ],
   controllers: [AppController],
   providers: [
