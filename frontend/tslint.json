@@ -14,7 +14,8 @@
     "no-unused-expression": true,
     "no-async-without-await": true,
     "no-unused-variable": true,
-    "curly": true
+    "curly": true,
+    "radix": false
   },
   "jsRules": {
     "max-line-length": {

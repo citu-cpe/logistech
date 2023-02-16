@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ProductItem } from '@prisma/client';
+import { PostgresErrorCode } from '../shared/constants/postgress-error-codes.enum';
 import { PrismaService } from '../global/prisma/prisma.service';
 import { CreateProductItemDTO } from './dto/create-product-item.dto';
 import { ProductItemDTO, ProductItemStatusEnum } from './dto/product-item.dto';
@@ -21,14 +22,22 @@ export class ProductItemService {
     productItem: CreateProductItemDTO,
     productId: string
   ) {
-    const newProductItem = await this.prismaService.productItem.create({
-      data: {
-        ...productItem,
-        productId,
-      },
-    });
+    try {
+      const newProductItem = await this.prismaService.productItem.create({
+        data: {
+          ...productItem,
+          productId,
+        },
+      });
 
-    return ProductItemService.convertToDTO(newProductItem);
+      return ProductItemService.convertToDTO(newProductItem);
+    } catch (e) {
+      if (e?.code === PostgresErrorCode.UniqueViolation) {
+        throw new BadRequestException(
+          'Product item with this RFID already exists'
+        );
+      }
+    }
   }
 
   public async createManyProductItems(
@@ -56,6 +65,16 @@ export class ProductItemService {
   }
 
   public async deleteProductItem(productItemId: string) {
+    const productItem = await this.prismaService.productItem.findUnique({
+      where: { id: productItemId },
+    });
+
+    if (productItem.status !== ProductItemStatusEnum.IN_STORAGE) {
+      throw new BadRequestException(
+        'Product items not "IN STORAGE" cannot be deleted'
+      );
+    }
+
     await this.prismaService.productItem.delete({
       where: { id: productItemId },
     });

@@ -52,6 +52,10 @@ model Company {
   employees             User[]
   sendingTransactions   Transaction[] @relation("sendingCompany")
   receivingTransactions Transaction[] @relation("receivingCompany")
+  cart                  Cart?
+  orderItems            OrderItem[]
+  outgoingOrders        Order[]       @relation("fromCompany")
+  incomingOrders        Order[]       @relation("toCompany")
 }
 
 enum CompanyType {
@@ -75,6 +79,7 @@ model Product {
   company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
   productItems ProductItem[]
+  orderItems   OrderItem[]
 }
 
 model ProductItem {
@@ -87,8 +92,13 @@ model ProductItem {
   productId String
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
-  transactions Transaction[]
-  reports      Report[]
+  transactionId String?
+  transaction   Transaction? @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+
+  orderItemId String?
+  orderItem   OrderItem? @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+
+  reports Report[]
 }
 
 enum ProductItemStatus {
@@ -115,7 +125,6 @@ model Transaction {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  total     Float
 
   sendingCompanyId   String
   sendingCompany     Company @relation("sendingCompany", fields: [sendingCompanyId], references: [id])
@@ -129,4 +138,52 @@ model Cart {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  total     Float
+
+  companyId String  @unique
+  company   Company @relation(fields: [companyId], references: [id])
+
+  orderItems OrderItem[]
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  quantity  Float
+
+  cartId String?
+  cart   Cart?   @relation(fields: [cartId], references: [id], onDelete: Cascade)
+
+  orderId String?
+  order   Order?  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  owningCompanyId String
+  owningCompany   Company @relation(fields: [owningCompanyId], references: [id], onDelete: Cascade)
+
+  productItems ProductItem[]
+}
+
+model Order {
+  id        String      @id @default(uuid())
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt()
+  status    OrderStatus
+  total     Float
+
+  orderItems OrderItem[]
+
+  fromCompanyId String
+  fromCompany   Company @relation("fromCompany", fields: [fromCompanyId], references: [id], onDelete: Cascade)
+  toCompanyId   String
+  toCompany     Company @relation("toCompany", fields: [toCompanyId], references: [id], onDelete: Cascade)
+}
+
+enum OrderStatus {
+  PENDING
+  INVOICED
+  PAID
 }

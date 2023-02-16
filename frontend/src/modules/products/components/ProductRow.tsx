@@ -18,6 +18,7 @@ import { ProductDTO } from 'generated-api';
 import { useDeleteProduct } from '../hooks/useDeleteProduct';
 import { EditProductForm } from './EditProductForm';
 import Link from 'next/link';
+import { Peso } from '../../../shared/components/Peso';
 
 interface ProductRowProps {
   product: ProductDTO;
@@ -45,7 +46,9 @@ export const ProductRow: React.FC<ProductRowProps> = ({ product }) => {
       <Td>
         <Link href={`/products/${product.id}`}>{product.name}</Link>
       </Td>
-      <Td isNumeric>{product.price}</Td>
+      <Td isNumeric>
+        <Peso amount={product.price} />
+      </Td>
       <Td>
         <Checkbox defaultChecked={product.bulk} disabled />
       </Td>

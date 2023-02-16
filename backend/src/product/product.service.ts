@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { Company, Product } from '@prisma/client';
+import {
+  Company,
+  Product,
+  ProductItem,
+  ProductItemStatus,
+} from '@prisma/client';
 import { CompanyTypeEnum } from '../company/dto/company.dto';
 import { PrismaService } from '../global/prisma/prisma.service';
 import { CreateProductDTO } from './dto/create-product.dto';
@@ -13,16 +18,25 @@ export class ProductService {
     const products = await this.prismaService.product.findMany({
       where: { companyId },
       orderBy: { createdAt: 'desc' },
+      include: {
+        company: true,
+        productItems: { where: { status: ProductItemStatus.IN_STORAGE } },
+      },
     });
 
     return products.map((i) => ProductService.convertToDTO(i));
   }
 
-  public async getCommerceProducts(type: CompanyTypeEnum) {
+  public async getCommerceProducts(
+    companyTypes: CompanyTypeEnum[]
+  ): Promise<ProductDTO[]> {
     const products = await this.prismaService.product.findMany({
-      where: { company: { type } },
+      where: { company: { type: { in: companyTypes } } },
       orderBy: { createdAt: 'desc' },
-      include: { company: true },
+      include: {
+        company: true,
+        productItems: { where: { status: ProductItemStatus.IN_STORAGE } },
+      },
     });
 
     return products.map((p) => ProductService.convertToDTO(p));
@@ -50,11 +64,12 @@ export class ProductService {
   }
 
   public static convertToDTO(
-    product: Product & { company?: Company }
+    product: Product & { company?: Company; productItems?: ProductItem[] }
   ): ProductDTO {
     return {
       ...product,
-      company: !!product.company && {
+      numInStock: product.productItems ? product.productItems.length : 0,
+      company: product.company && {
         ...product.company,
         type: product.company.type as CompanyTypeEnum,
       },

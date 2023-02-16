@@ -7,7 +7,7 @@ export const useDeleteProductItem = (productId: string) => {
   const api = useContext(ApiContext);
   const queryClient = useQueryClient();
 
-  return useMutation((id: string) => api.deleteProductItem(id, productId), {
+  return useMutation((id: string) => api.deleteProductItem(productId, id), {
     onSuccess: () => {
       queryClient.invalidateQueries(PRODUCT_ITEMS_QUERY_KEY(productId));
     },

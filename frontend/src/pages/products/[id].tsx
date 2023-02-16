@@ -20,6 +20,7 @@ import {
 import { useRouter } from 'next/router';
 import { ProductItemForm } from '../../modules/products/components/ProductItemForm';
 import { ProductItemRow } from '../../modules/products/components/ProductItemRow';
+import { ProductItemTable } from '../../modules/products/components/ProductItemTable';
 import { useGetProductItems } from '../../modules/products/hooks/useGetProductItems';
 
 // TODO: create many
@@ -51,26 +52,9 @@ const ProductItem = () => {
         </ModalContent>
       </Modal>
 
-      <TableContainer>
-        <Table variant='simple'>
-          <Thead>
-            <Tr>
-              <Th>RFID</Th>
-              <Th>Status</Th>
-              <Th>Actions</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {data?.data.map((productItem) => (
-              <ProductItemRow
-                key={productItem.id}
-                productItem={productItem}
-                productId={productId as string}
-              />
-            ))}
-          </Tbody>
-        </Table>
-      </TableContainer>
+      {data?.data && (
+        <ProductItemTable productItems={data?.data} allowActions />
+      )}
     </Box>
   );
 };

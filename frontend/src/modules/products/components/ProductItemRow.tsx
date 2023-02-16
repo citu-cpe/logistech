@@ -12,20 +12,23 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
+  Tooltip,
 } from '@chakra-ui/react';
-import { ProductItemDTO } from 'generated-api';
-import { StatusBadge } from '../../../shared/components/StatusBadge';
+import { ProductItemDTO, ProductItemDTOStatusEnum } from 'generated-api';
+import { ProductItemStatusBadge } from '../../../shared/components/ProductItemStatusBadge';
 import { useDeleteProductItem } from '../hooks/useDeleteProductItem';
 import { EditProductItemForm } from './EditProductItemForm';
 
 interface ProductItemRowProps {
   productItem: ProductItemDTO;
-  productId: string;
+  productId?: string;
+  allowActions?: boolean;
 }
 
 export const ProductItemRow: React.FC<ProductItemRowProps> = ({
   productItem,
   productId,
+  allowActions,
 }) => {
   const {
     isOpen: isEditProductItemOpen,
@@ -37,29 +40,48 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
     onOpen: onDeleteProductItemOpen,
     onClose: onDeleteProductItemClose,
   } = useDisclosure();
-  const deleteProductItemMutation = useDeleteProductItem(productId);
+  const deleteProductItemMutation = useDeleteProductItem(productId!);
 
   const deleteProductItem = () => {
-    deleteProductItemMutation.mutate(productItem.id);
+    deleteProductItemMutation.mutate(productItem.id, {
+      onSettled: () => {
+        onDeleteProductItemClose();
+      },
+    });
   };
 
   return (
     <Tr key={productItem.id}>
       <Td>{productItem.rfid}</Td>
       <Td>
-        <StatusBadge status={productItem.status} />
+        <ProductItemStatusBadge status={productItem.status} />
       </Td>
 
-      <Td>
-        <HStack spacing='4'>
-          <Button onClick={onEditProductItemOpen}>
-            <EditIcon />
-          </Button>
-          <Button onClick={onDeleteProductItemOpen}>
-            <DeleteIcon />
-          </Button>
-        </HStack>
-      </Td>
+      {allowActions && (
+        <Td>
+          <HStack spacing='4'>
+            <Button onClick={onEditProductItemOpen}>
+              <EditIcon />
+            </Button>
+            <Tooltip
+              label='Product items not "IN STORAGE" cannot be deleted'
+              hasArrow
+              isDisabled={
+                productItem.status === ProductItemDTOStatusEnum.InStorage
+              }
+            >
+              <Button
+                onClick={onDeleteProductItemOpen}
+                disabled={
+                  productItem.status !== ProductItemDTOStatusEnum.InStorage
+                }
+              >
+                <DeleteIcon />
+              </Button>
+            </Tooltip>
+          </HStack>
+        </Td>
+      )}
 
       <Modal isOpen={isEditProductItemOpen} onClose={onEditProductItemClose}>
         <ModalOverlay />

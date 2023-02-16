@@ -3,11 +3,13 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
   Put,
 } from '@nestjs/common';
-import { CompanyTypeEnum } from '../company/dto/company.dto';
+import { CommerceProductDTO } from './dto/commerce-product.dto';
 import { CreateManyProductItemsDTO } from './dto/create-many-product-items.dto';
 import { CreateProductItemDTO } from './dto/create-product-item.dto';
 import { CreateProductDTO } from './dto/create-product.dto';
@@ -19,7 +21,7 @@ import { ProductService } from './product.service';
 @Controller(ProductController.PRODUCT_API_ROUTE)
 export class ProductController {
   public static readonly PRODUCT_API_ROUTE = '/product';
-  public static readonly COMMERCE_API_ROUTE = '/product/commerce';
+  public static readonly COMMERCE_API_ROUTE = '/commerce';
   public static readonly ID_API_ROUTE = '/:id';
   public static readonly COMPANY_API_ROUTE = '/company/:companyId';
   public static readonly PRODUCT_ITEM_API_ROUTE = '/:productId/product-item';
@@ -38,11 +40,12 @@ export class ProductController {
     return this.productService.getProductsForCompany(companyId);
   }
 
-  @Get(ProductController.COMMERCE_API_ROUTE)
+  @Post(ProductController.COMMERCE_API_ROUTE)
+  @HttpCode(HttpStatus.OK)
   public getCommerceProducts(
-    @Param('companyType') companyType: CompanyTypeEnum
+    @Body() dto: CommerceProductDTO
   ): Promise<ProductDTO[]> {
-    return this.productService.getCommerceProducts(companyType);
+    return this.productService.getCommerceProducts(dto.companyTypes);
   }
 
   @Post(ProductController.COMPANY_API_ROUTE)

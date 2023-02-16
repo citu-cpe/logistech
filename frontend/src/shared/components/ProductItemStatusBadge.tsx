@@ -1,11 +1,13 @@
 import { Badge } from '@chakra-ui/react';
 import { ProductItemDTOStatusEnum } from 'generated-api';
 
-interface StatusBadgeProps {
+interface ProductItemStatusBadgeProps {
   status: ProductItemDTOStatusEnum;
 }
 
-export const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
+export const ProductItemStatusBadge: React.FC<ProductItemStatusBadgeProps> = ({
+  status,
+}) => {
   let colorScheme = '';
 
   switch (status) {

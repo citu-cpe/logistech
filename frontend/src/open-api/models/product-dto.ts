@@ -52,6 +52,12 @@ export interface ProductDTO {
   price: number;
   /**
    *
+   * @type {number}
+   * @memberof ProductDTO
+   */
+  numInStock: number;
+  /**
+   *
    * @type {boolean}
    * @memberof ProductDTO
    */
