@@ -19,12 +19,12 @@ export const testStorageFacilityCompany: Company = {
   name: 'STORAGE FACILITY CO.',
 };
 
-export const testCourierCompany: Company = {
-  id: '5f90de3d-ca51-4f23-81ec-a70d5374bf36',
+export const testNewStorageFacilityCompany: Company = {
+  id: '821e1032-73e7-4427-97f7-bb5abd4cd685',
   createdAt: new Date(),
   updatedAt: new Date(),
-  type: CompanyType.COURIER,
-  name: 'COURIER CO.',
+  type: CompanyType.STORAGE_FACILITY,
+  name: 'NEW STORAGE FACILITY CO.',
 };
 
 export const testManufacturerCompany: Company = {
@@ -52,14 +52,14 @@ export class CompanyTestDataService {
   public async generateTestData() {
     this.logger.log('GENERATING COMPANY TEST DATA');
 
-    const foundSupplier = await this.prismaService.company.findUnique({
-      where: { id: testSupplierCompany.id },
-    });
     const foundStorageFacility = await this.prismaService.company.findUnique({
       where: { id: testStorageFacilityCompany.id },
     });
-    const foundCourier = await this.prismaService.company.findUnique({
-      where: { id: testCourierCompany.id },
+    const foundNewStorageCompany = await this.prismaService.company.findUnique({
+      where: { id: testNewStorageFacilityCompany.id },
+    });
+    const foundSupplier = await this.prismaService.company.findUnique({
+      where: { id: testSupplierCompany.id },
     });
     const foundManufacturer = await this.prismaService.company.findUnique({
       where: { id: testManufacturerCompany.id },
@@ -68,33 +68,64 @@ export class CompanyTestDataService {
       where: { id: testRetailerCompany.id },
     });
 
-    if (!foundSupplier) {
-      this.logger.log('GENERATING TEST SUPPLIER COMPANY');
-      await this.createCompany(testSupplierCompany);
-    }
     if (!foundStorageFacility) {
       this.logger.log('GENERATING TEST STORAGE_FACILITY COMPANY');
       await this.createCompany(testStorageFacilityCompany);
     }
-    if (!foundCourier) {
-      this.logger.log('GENERATING TEST COURIER COMPANY');
-      await this.createCompany(testCourierCompany);
+    if (!foundNewStorageCompany) {
+      this.logger.log('GENERATING NEW TEST STORAGE_FACILITY COMPANY');
+      await this.createCompany(testNewStorageFacilityCompany);
+    }
+    if (!foundSupplier) {
+      this.logger.log('GENERATING TEST SUPPLIER COMPANY');
+      await this.createCompany(
+        testSupplierCompany,
+        [],
+        [testStorageFacilityCompany.id]
+      );
     }
     if (!foundManufacturer) {
       this.logger.log('GENERATING TEST MANUFACTURER COMPANY');
-      await this.createCompany(testManufacturerCompany);
+      await this.createCompany(
+        testManufacturerCompany,
+        [],
+        [testStorageFacilityCompany.id]
+      );
     }
     if (!foundRetailer) {
       this.logger.log('GENERATING TEST RETAILER COMPANY');
-      await this.createCompany(testRetailerCompany);
+      await this.createCompany(
+        testRetailerCompany,
+        [],
+        [testStorageFacilityCompany.id]
+      );
     }
 
     this.logger.log('DONE GENERATING COMPANY TEST DATA');
   }
 
-  private async createCompany(company: Company) {
+  private async createCompany(
+    company: Company,
+    sellerPartnerIds?: string[],
+    storageFacilityPartnerIds?: string[]
+  ) {
+    const sellerPartners = sellerPartnerIds
+      ? sellerPartnerIds?.map((id) => ({
+          id,
+        }))
+      : [];
+    const storageFacilityPartners = storageFacilityPartnerIds
+      ? storageFacilityPartnerIds.map((id) => ({
+          id,
+        }))
+      : [];
+
     await this.prismaService.company.create({
-      data: company,
+      data: {
+        ...company,
+        sellerPartners: { connect: sellerPartners },
+        storageFacilityPartners: { connect: storageFacilityPartners },
+      },
     });
     await this.prismaService.cart.create({
       data: { total: 0, companyId: company.id },

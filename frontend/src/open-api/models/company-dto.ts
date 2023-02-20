@@ -56,7 +56,6 @@ export interface CompanyDTO {
  */
 export enum CompanyDTOTypeEnum {
   StorageFacility = 'STORAGE_FACILITY',
-  Courier = 'COURIER',
   Supplier = 'SUPPLIER',
   Manufacturer = 'MANUFACTURER',
   Retailer = 'RETAILER',

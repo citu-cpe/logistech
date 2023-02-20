@@ -1,3 +1,4 @@
+export * from './add-storage-facility-partner-dto';
 export * from './cart-dto';
 export * from './commerce-product-dto';
 export * from './company-dto';

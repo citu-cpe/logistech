@@ -56,11 +56,13 @@ model Company {
   orderItems            OrderItem[]
   outgoingOrders        Order[]       @relation("fromCompany")
   incomingOrders        Order[]       @relation("toCompany")
+
+  storageFacilityPartners Company[] @relation("storageFacilitySellerPartners")
+  sellerPartners          Company[] @relation("storageFacilitySellerPartners")
 }
 
 enum CompanyType {
   STORAGE_FACILITY
-  COURIER
   SUPPLIER
   MANUFACTURER
   RETAILER

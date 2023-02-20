@@ -32,7 +32,6 @@ export interface CommerceProductDTO {
  */
 export enum CommerceProductDTOCompanyTypesEnum {
   StorageFacility = 'STORAGE_FACILITY',
-  Courier = 'COURIER',
   Supplier = 'SUPPLIER',
   Manufacturer = 'MANUFACTURER',
   Retailer = 'RETAILER',

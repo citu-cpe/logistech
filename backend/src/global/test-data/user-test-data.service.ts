@@ -4,8 +4,8 @@ import bcrypt from 'bcrypt';
 import { CustomLogger } from '../../shared/custom-logger';
 import { User, UserRole } from '@prisma/client';
 import {
-  testCourierCompany,
   testManufacturerCompany,
+  testNewStorageFacilityCompany,
   testRetailerCompany,
   testStorageFacilityCompany,
   testSupplierCompany,
@@ -47,6 +47,18 @@ export const testStorageFacility: User = {
   companyId: testStorageFacilityCompany.id,
 };
 
+export const testNewStorageFacility: User = {
+  id: 'c905734d-4770-4338-8694-b1ccf154d523',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  email: 'test_new_storage_facility@test.com',
+  username: 'test_new_storage_facility',
+  password: 'test',
+  currentHashedRefreshToken: undefined,
+  role: UserRole.STORAGE_FACILITY_SUPERVISOR,
+  companyId: testNewStorageFacilityCompany.id,
+};
+
 export const testCourier: User = {
   id: '8bd959d2-1a9b-4597-af6b-869a30d4a792',
   createdAt: new Date(),
@@ -56,7 +68,7 @@ export const testCourier: User = {
   password: 'test',
   currentHashedRefreshToken: undefined,
   role: UserRole.COURIER,
-  companyId: testCourierCompany.id,
+  companyId: testStorageFacilityCompany.id,
 };
 
 export const testManufacturer: User = {
@@ -101,6 +113,9 @@ export class UserTestDataService {
     const foundStorageFacility = await this.prismaService.user.findUnique({
       where: { id: testStorageFacility.id },
     });
+    const foundNewStorageFacility = await this.prismaService.user.findUnique({
+      where: { id: testNewStorageFacility.id },
+    });
     const foundCourier = await this.prismaService.user.findUnique({
       where: { id: testCourier.id },
     });
@@ -122,6 +137,10 @@ export class UserTestDataService {
     if (!foundStorageFacility) {
       this.logger.log('GENERATING TEST STORAGE_FACILITY');
       await this.createUser(testStorageFacility);
+    }
+    if (!foundNewStorageFacility) {
+      this.logger.log('GENERATING TEST NEW STORAGE_FACILITY');
+      await this.createUser(testNewStorageFacility);
     }
     if (!foundCourier) {
       this.logger.log('GENERATING TEST COURIER');

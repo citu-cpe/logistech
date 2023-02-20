@@ -9,6 +9,7 @@ common.ts
 configuration.ts
 git_push.sh
 index.ts
+models/add-storage-facility-partner-dto.ts
 models/cart-dto.ts
 models/commerce-product-dto.ts
 models/company-dto.ts
