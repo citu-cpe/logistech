@@ -11,35 +11,60 @@ import {
   Tr,
   useDisclosure,
 } from '@chakra-ui/react';
-import { OrderDTO } from 'generated-api';
+import { CompanyDTO, CompanyDTOTypeEnum, OrderDTO } from 'generated-api';
 import { OrderForm } from './OrderForm';
 import Link from 'next/link';
 import { Peso } from '../../../shared/components/Peso';
 import { OrderStatusBadge } from '../../../shared/components/OrderStatusBadge';
+import { useGetStorageFacilityPartners } from '../../storage-facilities/hooks/useGetStorageFacilityPartnersQuery';
+import { useGetCouriers } from '../../storage-facilities/hooks/useGetCouriers';
 
 interface OrderRowProps {
   order: OrderDTO;
+  allowActions: boolean;
   incoming: boolean;
+  company: CompanyDTO;
 }
 
-export const OrderRow: React.FC<OrderRowProps> = ({ order, incoming }) => {
+export const OrderRow: React.FC<OrderRowProps> = ({
+  order,
+  allowActions,
+  incoming,
+  company,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const storageFacilityPartnersQuery = useGetStorageFacilityPartners(
+    company.id
+  );
+  const couriersQuery = useGetCouriers(company.id);
 
   return (
     <Tr key={order.id}>
-      <Td>
-        <Link href={`/orders/${order.id}`}>
-          {incoming ? order.fromCompany?.name : order.toCompany?.name}
-        </Link>
-      </Td>
+      {company.type !== CompanyDTOTypeEnum.StorageFacility && (
+        <Td>
+          <Link href={`/orders/${order.id}`}>
+            {incoming ? order.fromCompany?.name : order.toCompany?.name}
+          </Link>
+        </Td>
+      )}
+      {company.type === CompanyDTOTypeEnum.StorageFacility && (
+        <>
+          <Td>
+            <Link href={`/orders/${order.id}`}>{order.fromCompany?.name}</Link>
+          </Td>
+          <Td>{order.toCompany?.name}</Td>
+        </>
+      )}
       <Td>{new Date(order.createdAt).toLocaleDateString()}</Td>
       <Td>
         <OrderStatusBadge status={order.status} />
       </Td>
+      <Td>{order.storageFacility?.name}</Td>
+      <Td>{order.courier?.username}</Td>
       <Td isNumeric>
         <Peso amount={order.total} />
       </Td>
-      {incoming && (
+      {allowActions && (
         <Td>
           <Button onClick={onOpen}>
             <EditIcon />
@@ -53,7 +78,20 @@ export const OrderRow: React.FC<OrderRowProps> = ({ order, incoming }) => {
           <ModalHeader>Update Order Status</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <OrderForm order={order} onClose={onClose} />
+            <OrderForm
+              order={order}
+              onClose={onClose}
+              partnerStorageFacilities={
+                company.type !== CompanyDTOTypeEnum.StorageFacility
+                  ? storageFacilityPartnersQuery.data?.data
+                  : undefined
+              }
+              couriers={
+                company.type === CompanyDTOTypeEnum.StorageFacility
+                  ? couriersQuery.data?.data
+                  : undefined
+              }
+            />
           </ModalBody>
         </ModalContent>
       </Modal>

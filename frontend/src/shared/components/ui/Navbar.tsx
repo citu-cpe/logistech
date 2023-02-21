@@ -79,11 +79,7 @@ export const Navbar = (props: ChakraProps) => {
             <NavLink href='/sellers'>Sellers</NavLink>
           )}
 
-          {(companyType === CompanyDTOTypeEnum.Manufacturer ||
-            companyType === CompanyDTOTypeEnum.Supplier ||
-            companyType === CompanyDTOTypeEnum.Retailer) && (
-            <NavLink href='/orders'>Orders</NavLink>
-          )}
+          <NavLink href='/orders'>Orders</NavLink>
 
           {companyType === CompanyDTOTypeEnum.Supplier && (
             <NavLink href='/received'>Received</NavLink>

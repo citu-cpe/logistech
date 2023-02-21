@@ -72,7 +72,7 @@ export class UserService {
     });
   }
 
-  public convertToDTO(user: User & { company?: Company }): UserDTO {
+  public static convertToDTO(user: User & { company?: Company }): UserDTO {
     const { id, createdAt, updatedAt, email, username, role, company } = user;
 
     const userDTO: UserDTO = {

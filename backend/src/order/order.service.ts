@@ -7,11 +7,15 @@ import {
   Product,
   ProductItem,
   ProductItemStatus,
+  User,
+  UserRole,
 } from '@prisma/client';
 import { CartDTO } from '../cart/dto/cart.dto';
 import { CompanyService } from '../company/company.service';
 import { PrismaService } from '../global/prisma/prisma.service';
+import { UserService } from '../user/user.service';
 import { OrderDTO, OrderStatusEnum } from './dto/order.dto';
+import { UpdateOrderDTO } from './dto/update-order.dto';
 import { OrderItemService } from './order-item.service';
 
 @Injectable()
@@ -34,6 +38,8 @@ export class OrderService {
         toCompanyId: group.company.id,
         status: OrderStatusEnum.PENDING,
         orderItemIds: group.orderItems.map((o) => ({ id: o.id })),
+        storageFacilityId: null,
+        courierId: null,
       });
     }
 
@@ -107,6 +113,8 @@ export class OrderService {
       include: {
         orderItems: { include: { product: true } },
         fromCompany: true,
+        storageFacility: true,
+        courier: true,
       },
     });
 
@@ -114,15 +122,17 @@ export class OrderService {
   }
 
   public async getOutgoingOrders(companyId: string) {
-    const incomingOrders = await this.prismaService.order.findMany({
+    const outgoingOrders = await this.prismaService.order.findMany({
       where: { fromCompanyId: companyId },
       include: {
         orderItems: { include: { product: true } },
         toCompany: true,
+        storageFacility: true,
+        courier: true,
       },
     });
 
-    return incomingOrders.map((o) => OrderService.convertToDTO(o));
+    return outgoingOrders.map((o) => OrderService.convertToDTO(o));
   }
 
   public async getOrderById(orderId: string) {
@@ -132,16 +142,54 @@ export class OrderService {
         orderItems: { include: { product: true, productItems: true } },
         toCompany: true,
         fromCompany: true,
+        storageFacility: true,
+        courier: true,
       },
     });
 
     return OrderService.convertToDTO(order);
   }
 
+  public async getOrdersForStorageFacility(companyId: string) {
+    const orders = await this.prismaService.order.findMany({
+      where: { storageFacilityId: companyId },
+      include: {
+        orderItems: { include: { product: true } },
+        toCompany: true,
+        fromCompany: true,
+        storageFacility: true,
+        courier: true,
+      },
+    });
+
+    return orders.map((o) => OrderService.convertToDTO(o));
+  }
+
   public async updateOrderStatus(orderId: string, status: OrderStatus) {
     await this.prismaService.order.update({
       where: { id: orderId },
       data: { status },
+    });
+  }
+
+  public async updateOrder(orderId: string, dto: UpdateOrderDTO) {
+    if (!!dto.courierId) {
+      const courier = await this.prismaService.user.findFirst({
+        where: { id: dto.courierId, role: UserRole.COURIER },
+      });
+
+      if (!courier) {
+        throw new BadRequestException('User id provided is not a courier');
+      }
+    }
+
+    await this.prismaService.order.update({
+      where: { id: orderId },
+      data: {
+        status: dto.status,
+        storageFacilityId: dto.storageFacilityId,
+        courierId: dto.courierId,
+      },
     });
   }
 
@@ -153,18 +201,27 @@ export class OrderService {
       })[];
       toCompany?: Company;
       fromCompany?: Company;
+      storageFacility?: Company;
+      courier?: User;
     }
   ): OrderDTO {
     const toCompany =
       !!order.toCompany && CompanyService.convertToDTO(order.toCompany);
     const fromCompany =
       !!order.fromCompany && CompanyService.convertToDTO(order.fromCompany);
+    const storageFacility =
+      !!order.storageFacility &&
+      CompanyService.convertToDTO(order.storageFacility);
+    const courier = !!order.courier && UserService.convertToDTO(order.courier);
+
     return {
       ...order,
       orderItems: order.orderItems.map((o) => OrderItemService.convertToDTO(o)),
       status: order.status as OrderStatusEnum,
       toCompany,
       fromCompany,
+      storageFacility,
+      courier,
     };
   }
 }

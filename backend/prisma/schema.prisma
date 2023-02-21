@@ -21,6 +21,8 @@ model User {
   companyId                 String?
   company                   Company? @relation(fields: [companyId], references: [id], onDelete: Cascade)
   role                      UserRole
+
+  orders Order[] @relation("courierOrder")
 }
 
 enum UserRole {
@@ -59,6 +61,8 @@ model Company {
 
   storageFacilityPartners Company[] @relation("storageFacilitySellerPartners")
   sellerPartners          Company[] @relation("storageFacilitySellerPartners")
+
+  orders Order[] @relation("storageFacilityOrder")
 }
 
 enum CompanyType {
@@ -182,6 +186,12 @@ model Order {
   fromCompany   Company @relation("fromCompany", fields: [fromCompanyId], references: [id], onDelete: Cascade)
   toCompanyId   String
   toCompany     Company @relation("toCompany", fields: [toCompanyId], references: [id], onDelete: Cascade)
+
+  storageFacilityId String?
+  storageFacility   Company? @relation("storageFacilityOrder", fields: [storageFacilityId], references: [id])
+
+  courierId String?
+  courier   User?   @relation("courierOrder", fields: [courierId], references: [id])
 }
 
 enum OrderStatus {
