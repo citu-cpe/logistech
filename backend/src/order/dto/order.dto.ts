@@ -6,6 +6,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { CompanyDTO } from '../../company/dto/company.dto';
+import { UserDTO } from '../../user/dto/user.dto';
 import { OrderItemDTO } from './order-item.dto';
 
 export enum OrderStatusEnum {
@@ -38,4 +39,10 @@ export class OrderDTO {
 
   @ValidateNested()
   public toCompany?: CompanyDTO;
+
+  @ValidateNested()
+  public storageFacility?: CompanyDTO;
+
+  @ValidateNested()
+  public courier?: UserDTO;
 }

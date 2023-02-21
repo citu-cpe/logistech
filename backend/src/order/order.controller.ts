@@ -12,6 +12,7 @@ import { CartDTO } from '../cart/dto/cart.dto';
 import { CreateOrderItemDTO } from './dto/create-order-item.dto';
 import { OrderDTO } from './dto/order.dto';
 import { UpdateOrderStatusDTO } from './dto/update-order-status.dto';
+import { UpdateOrderDTO } from './dto/update-order.dto';
 import { OrderItemService } from './order-item.service';
 import { OrderService } from './order.service';
 
@@ -77,11 +78,30 @@ export class OrderController {
     return this.orderService.getOutgoingOrders(companyId);
   }
 
-  @Patch(OrderController.ORDER_API_ROUTE + '/:orderId')
+  @Get(
+    OrderController.ORDER_API_ROUTE +
+      OrderController.COMPANY_API_ROUTE +
+      '/storage-facility'
+  )
+  public getOrdersForStorageFacility(
+    @Param('companyId') companyId: string
+  ): Promise<OrderDTO[]> {
+    return this.orderService.getOrdersForStorageFacility(companyId);
+  }
+
+  @Patch(OrderController.ORDER_API_ROUTE + '/:orderId/status')
   public updateOrderStatus(
     @Param('orderId') orderId: string,
     @Body() dto: UpdateOrderStatusDTO
   ): Promise<void> {
     return this.orderService.updateOrderStatus(orderId, dto.status);
+  }
+
+  @Put(OrderController.ORDER_API_ROUTE + '/:orderId')
+  public updateOrder(
+    @Param('orderId') orderId: string,
+    @Body() dto: UpdateOrderDTO
+  ): Promise<void> {
+    return this.orderService.updateOrder(orderId, dto);
   }
 }

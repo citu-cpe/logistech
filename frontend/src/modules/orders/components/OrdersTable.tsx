@@ -7,34 +7,56 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import { OrderDTO } from 'generated-api';
+import { CompanyDTOTypeEnum, OrderDTO } from 'generated-api';
+import { useGlobalStore } from '../../../shared/stores';
 import { OrderRow } from './OrderRow';
 
 interface OrdersTableProps {
-  incoming: boolean;
+  allowActions: boolean;
   orders: OrderDTO[];
+  incoming: boolean;
 }
 
 export const OrdersTable: React.FC<OrdersTableProps> = ({
-  incoming,
+  allowActions,
   orders,
+  incoming,
 }) => {
+  const getUser = useGlobalStore().getUser;
+  const company = getUser()?.company;
+
   return (
     <Box>
       <TableContainer>
         <Table variant='simple'>
           <Thead>
             <Tr>
-              <Th>Company</Th>
+              {company?.type !== CompanyDTOTypeEnum.StorageFacility && (
+                <Th>Company</Th>
+              )}
+              {company?.type === CompanyDTOTypeEnum.StorageFacility && (
+                <>
+                  <Th>From Company</Th>
+                  <Th>To Company</Th>
+                </>
+              )}
               <Th>Order date</Th>
               <Th>Status</Th>
+              <Th>Storage Facility</Th>
+              <Th>Courier</Th>
               <Th isNumeric>Total</Th>
-              {incoming && <Th>Actions</Th>}
+              {allowActions && <Th>Actions</Th>}
             </Tr>
           </Thead>
           <Tbody>
             {orders.map((o) => (
-              <OrderRow key={o.id} order={o} incoming={incoming} />
+              <OrderRow
+                key={o.id}
+                order={o}
+                incoming={incoming}
+                allowActions={allowActions}
+                company={company!}
+              />
             ))}
           </Tbody>
         </Table>

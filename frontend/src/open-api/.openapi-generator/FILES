@@ -29,6 +29,7 @@ models/product-item-dto.ts
 models/register-user-dto.ts
 models/tokens-dto.ts
 models/transaction-dto.ts
+models/update-order-dto.ts
 models/update-order-status-dto.ts
 models/user-dto.ts
 package.json

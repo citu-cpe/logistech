@@ -25,6 +25,10 @@ const Order = () => {
               Date ordered: {new Date(order.createdAt).toLocaleDateString()}
             </Text>
             <Text>
+              Storage Facility: {order.storageFacility?.name ?? 'Unassigned'}
+            </Text>
+            <Text>Courier: {order.courier?.username ?? 'Unassigned'}</Text>
+            <Text>
               Total: <Peso amount={order.total} />
             </Text>
           </Box>

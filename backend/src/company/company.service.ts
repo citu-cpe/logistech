@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { Company, CompanyType } from '@prisma/client';
+import { Company, CompanyType, UserRole } from '@prisma/client';
 import { PrismaService } from '../global/prisma/prisma.service';
+import { UserService } from '../user/user.service';
 import { AddStorageFacilityPartnerDTO } from './dto/add-storage-facility-partner.dto';
 import { CompanyDTO, CompanyTypeEnum } from './dto/company.dto';
 
@@ -77,6 +78,14 @@ export class CompanyService {
         },
       },
     });
+  }
+
+  public async getCouriers(id: string) {
+    const couriers = await this.prismaService.user.findMany({
+      where: { companyId: id, role: UserRole.COURIER },
+    });
+
+    return couriers.map((c) => UserService.convertToDTO(c));
   }
 
   public static convertToDTO(company: Company): CompanyDTO {

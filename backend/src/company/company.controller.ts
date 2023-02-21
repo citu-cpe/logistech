@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { UserDTO } from '../user/dto/user.dto';
 import { CompanyService } from './company.service';
 import { AddStorageFacilityPartnerDTO } from './dto/add-storage-facility-partner.dto';
 import { CompanyDTO } from './dto/company.dto';
@@ -13,6 +14,7 @@ export class CompanyController {
   public static readonly AVAILABLE_STORAGE_FACILITY_PARTNERS_API_ROUTE =
     '/:id/storage-facility/available';
   public static readonly SELLER_PARTNERS_API_ROUTE = '/:id/seller-partners';
+  public static readonly COURIERS_API_ROUTE = '/:id/couriers';
 
   constructor(private readonly companyService: CompanyService) {}
 
@@ -52,5 +54,10 @@ export class CompanyController {
       id,
       storageFacilityId
     );
+  }
+
+  @Get(CompanyController.COURIERS_API_ROUTE)
+  public getCouriers(@Param('id') id: string): Promise<UserDTO[]> {
+    return this.companyService.getCouriers(id);
   }
 }

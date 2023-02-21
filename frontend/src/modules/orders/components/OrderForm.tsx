@@ -1,32 +1,45 @@
 import { Button, Box } from '@chakra-ui/react';
 import { Formik, Form, Field, FieldProps } from 'formik';
 import {
+  CompanyDTO,
   OrderDTO,
-  UpdateOrderStatusDTO,
-  UpdateOrderStatusDTOStatusEnum,
+  UpdateOrderDTO,
+  UpdateOrderDTOStatusEnum,
+  UserDTO,
 } from 'generated-api';
-import { useUpdateOrderStatus } from '../hooks/useUpdateOrderStatus';
 import * as Yup from 'yup';
 import { Select } from '../../../shared/components/form/Select/Select';
+import { useUpdateOrder } from '../hooks/useUpdateOrder';
 
 interface OrderFormProps {
   order: OrderDTO;
   onClose?: () => void;
+  partnerStorageFacilities?: CompanyDTO[];
+  couriers?: UserDTO[];
 }
 
 const orderFormValidationSchema = Yup.object({
-  status: Yup.mixed<UpdateOrderStatusDTOStatusEnum>()
-    .oneOf(Object.values(UpdateOrderStatusDTOStatusEnum))
+  status: Yup.mixed<UpdateOrderDTOStatusEnum>()
+    .oneOf(Object.values(UpdateOrderDTOStatusEnum))
     .required(),
+  storageFacilityId: Yup.string().optional(),
+  courierId: Yup.string().optional(),
 });
 
-export const OrderForm: React.FC<OrderFormProps> = ({ order, onClose }) => {
-  const updateOrderStatus = useUpdateOrderStatus(order.id);
-  const initialValues: UpdateOrderStatusDTO = {
-    status: order.status as unknown as UpdateOrderStatusDTOStatusEnum,
+export const OrderForm: React.FC<OrderFormProps> = ({
+  order,
+  onClose,
+  partnerStorageFacilities,
+  couriers,
+}) => {
+  const updateOrderStatus = useUpdateOrder(order.id);
+  const initialValues: UpdateOrderDTO = {
+    status: order.status as unknown as UpdateOrderDTOStatusEnum,
+    storageFacilityId: order.storageFacility?.id,
+    courierId: order.courier?.id,
   };
 
-  const onSubmit = (dto: UpdateOrderStatusDTO) => {
+  const onSubmit = (dto: UpdateOrderDTO) => {
     updateOrderStatus.mutate(dto, {
       onSettled: () => {
         if (onClose) {
@@ -46,7 +59,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ order, onClose }) => {
         <Form noValidate>
           <Box mb='4'>
             <Field name='status' type='text'>
-              {(fieldProps: FieldProps<string, UpdateOrderStatusDTO>) => (
+              {(fieldProps: FieldProps<string, UpdateOrderDTO>) => (
                 <Select
                   fieldProps={fieldProps}
                   name='status'
@@ -59,18 +72,64 @@ export const OrderForm: React.FC<OrderFormProps> = ({ order, onClose }) => {
                   <option selected hidden disabled value=''>
                     Choose a status
                   </option>
-                  <option value={UpdateOrderStatusDTOStatusEnum.Pending}>
+                  <option value={UpdateOrderDTOStatusEnum.Pending}>
                     PENDING
                   </option>
-                  <option value={UpdateOrderStatusDTOStatusEnum.Invoiced}>
+                  <option value={UpdateOrderDTOStatusEnum.Invoiced}>
                     INVOICED
                   </option>
-                  <option value={UpdateOrderStatusDTOStatusEnum.Paid}>
-                    PAID
-                  </option>
+                  <option value={UpdateOrderDTOStatusEnum.Paid}>PAID</option>
                 </Select>
               )}
             </Field>
+            {!!partnerStorageFacilities && (
+              <Field name='storageFacilityId' type='text'>
+                {(fieldProps: FieldProps<string, UpdateOrderDTO>) => (
+                  <Select
+                    fieldProps={fieldProps}
+                    name='storageFacilityId'
+                    label='Storage Facility'
+                    id='storageFacilityId'
+                    borderColor='gray.300'
+                    bgColor='gray.50'
+                    color='gray.800'
+                  >
+                    <option selected hidden disabled value=''>
+                      Choose a storage facility
+                    </option>
+                    {partnerStorageFacilities.map((sf) => (
+                      <option key={sf.id} value={sf.id}>
+                        {sf.name}
+                      </option>
+                    ))}
+                  </Select>
+                )}
+              </Field>
+            )}
+            {!!couriers && (
+              <Field name='courierId' type='text'>
+                {(fieldProps: FieldProps<string, UpdateOrderDTO>) => (
+                  <Select
+                    fieldProps={fieldProps}
+                    name='courierId'
+                    label='Courier'
+                    id='courierId'
+                    borderColor='gray.300'
+                    bgColor='gray.50'
+                    color='gray.800'
+                  >
+                    <option selected hidden disabled value=''>
+                      Choose a courier
+                    </option>
+                    {couriers.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.username}
+                      </option>
+                    ))}
+                  </Select>
+                )}
+              </Field>
+            )}
           </Box>
           <Box mb='4'>
             <Button

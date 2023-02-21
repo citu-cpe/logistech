@@ -17,5 +17,6 @@ export * from './product-item-dto';
 export * from './register-user-dto';
 export * from './tokens-dto';
 export * from './transaction-dto';
+export * from './update-order-dto';
 export * from './update-order-status-dto';
 export * from './user-dto';

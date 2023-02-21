@@ -14,6 +14,7 @@
 
 import { CompanyDTO } from './company-dto';
 import { OrderItemDTO } from './order-item-dto';
+import { UserDTO } from './user-dto';
 
 /**
  *
@@ -69,6 +70,18 @@ export interface OrderDTO {
    * @memberof OrderDTO
    */
   toCompany?: CompanyDTO;
+  /**
+   *
+   * @type {CompanyDTO}
+   * @memberof OrderDTO
+   */
+  storageFacility?: CompanyDTO;
+  /**
+   *
+   * @type {UserDTO}
+   * @memberof OrderDTO
+   */
+  courier?: UserDTO;
 }
 
 /**

@@ -71,7 +71,11 @@ import { TokensDTO } from '../models';
 // @ts-ignore
 import { TransactionDTO } from '../models';
 // @ts-ignore
+import { UpdateOrderDTO } from '../models';
+// @ts-ignore
 import { UpdateOrderStatusDTO } from '../models';
+// @ts-ignore
+import { UserDTO } from '../models';
 /**
  * DefaultApi - axios parameter creator
  * @export
@@ -933,6 +937,51 @@ export const DefaultApiAxiosParamCreator = function (
     },
     /**
      *
+     * @param {string} id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getCouriers: async (
+      id: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'id' is not null or undefined
+      assertParamExists('getCouriers', 'id', id);
+      const localVarPath = `/api/v1/company/{id}/couriers`.replace(
+        `{${'id'}}`,
+        encodeURIComponent(String(id))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -1077,6 +1126,52 @@ export const DefaultApiAxiosParamCreator = function (
         `{${'orderId'}}`,
         encodeURIComponent(String(orderId))
       );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getOrdersForStorageFacility: async (
+      companyId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'companyId' is not null or undefined
+      assertParamExists('getOrdersForStorageFacility', 'companyId', companyId);
+      const localVarPath =
+        `/api/v1/order/company/{companyId}/storage-facility`.replace(
+          `{${'companyId'}}`,
+          encodeURIComponent(String(companyId))
+        );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -1636,6 +1731,62 @@ export const DefaultApiAxiosParamCreator = function (
     /**
      *
      * @param {string} orderId
+     * @param {UpdateOrderDTO} updateOrderDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateOrder: async (
+      orderId: string,
+      updateOrderDTO: UpdateOrderDTO,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'orderId' is not null or undefined
+      assertParamExists('updateOrder', 'orderId', orderId);
+      // verify required parameter 'updateOrderDTO' is not null or undefined
+      assertParamExists('updateOrder', 'updateOrderDTO', updateOrderDTO);
+      const localVarPath = `/api/v1/order/{orderId}`.replace(
+        `{${'orderId'}}`,
+        encodeURIComponent(String(orderId))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'PUT',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        updateOrderDTO,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} orderId
      * @param {UpdateOrderStatusDTO} updateOrderStatusDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1653,7 +1804,7 @@ export const DefaultApiAxiosParamCreator = function (
         'updateOrderStatusDTO',
         updateOrderStatusDTO
       );
-      const localVarPath = `/api/v1/order/{orderId}`.replace(
+      const localVarPath = `/api/v1/order/{orderId}/status`.replace(
         `{${'orderId'}}`,
         encodeURIComponent(String(orderId))
       );
@@ -2114,6 +2265,29 @@ export const DefaultApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @param {string} id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getCouriers(
+      id: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UserDTO>>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getCouriers(
+        id,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -2199,6 +2373,33 @@ export const DefaultApiFp = function (configuration?: Configuration) {
         orderId,
         options
       );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getOrdersForStorageFacility(
+      companyId: string,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<OrderDTO>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getOrdersForStorageFacility(
+          companyId,
+          options
+        );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -2486,6 +2687,32 @@ export const DefaultApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} orderId
+     * @param {UpdateOrderDTO} updateOrderDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async updateOrder(
+      orderId: string,
+      updateOrderDTO: UpdateOrderDTO,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.updateOrder(
+        orderId,
+        updateOrderDTO,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} orderId
      * @param {UpdateOrderStatusDTO} updateOrderStatusDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -2759,6 +2986,17 @@ export const DefaultApiFactory = function (
     },
     /**
      *
+     * @param {string} id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getCouriers(id: string, options?: any): AxiosPromise<Array<UserDTO>> {
+      return localVarFp
+        .getCouriers(id, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -2804,6 +3042,20 @@ export const DefaultApiFactory = function (
     getOrderById(orderId: string, options?: any): AxiosPromise<OrderDTO> {
       return localVarFp
         .getOrderById(orderId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getOrdersForStorageFacility(
+      companyId: string,
+      options?: any
+    ): AxiosPromise<Array<OrderDTO>> {
+      return localVarFp
+        .getOrdersForStorageFacility(companyId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -2954,6 +3206,22 @@ export const DefaultApiFactory = function (
     ): AxiosPromise<void> {
       return localVarFp
         .removeStorageFacilityPartner(id, storageFacilityId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} orderId
+     * @param {UpdateOrderDTO} updateOrderDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateOrder(
+      orderId: string,
+      updateOrderDTO: UpdateOrderDTO,
+      options?: any
+    ): AxiosPromise<void> {
+      return localVarFp
+        .updateOrder(orderId, updateOrderDTO, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -3238,6 +3506,19 @@ export class DefaultApi extends BaseAPI {
 
   /**
    *
+   * @param {string} id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof DefaultApi
+   */
+  public getCouriers(id: string, options?: any) {
+    return DefaultApiFp(this.configuration)
+      .getCouriers(id, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof DefaultApi
@@ -3284,6 +3565,19 @@ export class DefaultApi extends BaseAPI {
   public getOrderById(orderId: string, options?: any) {
     return DefaultApiFp(this.configuration)
       .getOrderById(orderId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {string} companyId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof DefaultApi
+   */
+  public getOrdersForStorageFacility(companyId: string, options?: any) {
+    return DefaultApiFp(this.configuration)
+      .getOrdersForStorageFacility(companyId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
@@ -3432,6 +3726,24 @@ export class DefaultApi extends BaseAPI {
   ) {
     return DefaultApiFp(this.configuration)
       .removeStorageFacilityPartner(id, storageFacilityId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {string} orderId
+   * @param {UpdateOrderDTO} updateOrderDTO
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof DefaultApi
+   */
+  public updateOrder(
+    orderId: string,
+    updateOrderDTO: UpdateOrderDTO,
+    options?: any
+  ) {
+    return DefaultApiFp(this.configuration)
+      .updateOrder(orderId, updateOrderDTO, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
