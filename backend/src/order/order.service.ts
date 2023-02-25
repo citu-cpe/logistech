@@ -40,6 +40,7 @@ export class OrderService {
         orderItemIds: group.orderItems.map((o) => ({ id: o.id })),
         storageFacilityId: null,
         courierId: null,
+        dueDate: null,
       });
     }
 
@@ -189,6 +190,7 @@ export class OrderService {
         status: dto.status,
         storageFacilityId: dto.storageFacilityId,
         courierId: dto.courierId,
+        dueDate: new Date(dto.dueDate),
       },
     });
   }

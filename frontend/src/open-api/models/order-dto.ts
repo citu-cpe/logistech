@@ -82,6 +82,12 @@ export interface OrderDTO {
    * @memberof OrderDTO
    */
   courier?: UserDTO;
+  /**
+   *
+   * @type {string}
+   * @memberof OrderDTO
+   */
+  dueDate?: string;
 }
 
 /**
