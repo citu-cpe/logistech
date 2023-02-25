@@ -4,6 +4,7 @@ import {
   IsEnum,
   IsNumber,
   ValidateNested,
+  IsOptional,
 } from 'class-validator';
 import { CompanyDTO } from '../../company/dto/company.dto';
 import { UserDTO } from '../../user/dto/user.dto';
@@ -45,4 +46,8 @@ export class OrderDTO {
 
   @ValidateNested()
   public courier?: UserDTO;
+
+  @IsOptional()
+  @IsDateString()
+  public dueDate?: Date;
 }

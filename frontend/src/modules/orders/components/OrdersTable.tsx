@@ -44,6 +44,7 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
               <Th>Status</Th>
               <Th>Storage Facility</Th>
               <Th>Courier</Th>
+              <Th>Due date</Th>
               <Th isNumeric>Total</Th>
               {allowActions && <Th>Actions</Th>}
             </Tr>

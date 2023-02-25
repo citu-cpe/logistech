@@ -192,8 +192,11 @@ model Order {
 
   courierId String?
   courier   User?   @relation("courierOrder", fields: [courierId], references: [id])
+
+  dueDate DateTime?
 }
 
+// TODO: add OVERDUE status
 enum OrderStatus {
   PENDING
   INVOICED

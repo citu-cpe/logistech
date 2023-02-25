@@ -36,6 +36,12 @@ export interface UpdateOrderDTO {
    * @memberof UpdateOrderDTO
    */
   courierId?: string;
+  /**
+   *
+   * @type {string}
+   * @memberof UpdateOrderDTO
+   */
+  dueDate?: string;
 }
 
 /**

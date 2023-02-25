@@ -61,6 +61,7 @@ export const OrderRow: React.FC<OrderRowProps> = ({
       </Td>
       <Td>{order.storageFacility?.name}</Td>
       <Td>{order.courier?.username}</Td>
+      <Td>{order.dueDate && new Date(order.dueDate).toLocaleDateString()}</Td>
       <Td isNumeric>
         <Peso amount={order.total} />
       </Td>
@@ -75,7 +76,7 @@ export const OrderRow: React.FC<OrderRowProps> = ({
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Update Order Status</ModalHeader>
+          <ModalHeader>Update Order</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <OrderForm
@@ -91,6 +92,7 @@ export const OrderRow: React.FC<OrderRowProps> = ({
                   ? couriersQuery.data?.data
                   : undefined
               }
+              incoming={incoming}
             />
           </ModalBody>
         </ModalContent>

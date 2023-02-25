@@ -8,6 +8,7 @@ import {
   UserDTO,
 } from 'generated-api';
 import * as Yup from 'yup';
+import { Input } from '../../../shared/components/form/Input/Input';
 import { Select } from '../../../shared/components/form/Select/Select';
 import { useUpdateOrder } from '../hooks/useUpdateOrder';
 
@@ -16,6 +17,7 @@ interface OrderFormProps {
   onClose?: () => void;
   partnerStorageFacilities?: CompanyDTO[];
   couriers?: UserDTO[];
+  incoming: boolean;
 }
 
 const orderFormValidationSchema = Yup.object({
@@ -31,12 +33,15 @@ export const OrderForm: React.FC<OrderFormProps> = ({
   onClose,
   partnerStorageFacilities,
   couriers,
+  incoming,
 }) => {
   const updateOrderStatus = useUpdateOrder(order.id);
   const initialValues: UpdateOrderDTO = {
     status: order.status as unknown as UpdateOrderDTOStatusEnum,
     storageFacilityId: order.storageFacility?.id,
     courierId: order.courier?.id,
+    dueDate:
+      order.dueDate && new Date(order.dueDate).toISOString().split('T')[0],
   };
 
   const onSubmit = (dto: UpdateOrderDTO) => {
@@ -127,6 +132,22 @@ export const OrderForm: React.FC<OrderFormProps> = ({
                       </option>
                     ))}
                   </Select>
+                )}
+              </Field>
+            )}
+            {incoming && (
+              <Field name='dueDate' type='test'>
+                {(fieldProps: FieldProps<Date, UpdateOrderDTO>) => (
+                  <Input
+                    fieldProps={fieldProps}
+                    name='dueDate'
+                    label='Due Date'
+                    type='date'
+                    id='date'
+                    borderColor='gray.300'
+                    bgColor='gray.50'
+                    color='gray.800'
+                  />
                 )}
               </Field>
             )}
