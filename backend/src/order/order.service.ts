@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { SchedulerRegistry } from '@nestjs/schedule';
 import {
   Company,
   Order,
@@ -10,6 +11,7 @@ import {
   User,
   UserRole,
 } from '@prisma/client';
+import { CronJob, CronTime } from 'cron';
 import { CartDTO } from '../cart/dto/cart.dto';
 import { CompanyService } from '../company/company.service';
 import { PrismaService } from '../global/prisma/prisma.service';
@@ -18,9 +20,14 @@ import { OrderDTO, OrderStatusEnum } from './dto/order.dto';
 import { UpdateOrderDTO } from './dto/update-order.dto';
 import { OrderItemService } from './order-item.service';
 
+const ORDER_DUE_DATE_PREFIX = 'DUE DATE: ';
+
 @Injectable()
 export class OrderService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private schedulerRegistry: SchedulerRegistry
+  ) {}
 
   public async createOrders(dto: CartDTO, companyId: string) {
     if (dto.groupedOrderItems.length === 0) {
@@ -184,13 +191,65 @@ export class OrderService {
       }
     }
 
+    const order = await this.prismaService.order.findUniqueOrThrow({
+      where: { id: orderId },
+    });
+
+    let newStatus: OrderStatus | undefined;
+
+    const jobExists = this.schedulerRegistry.doesExist(
+      'cron',
+      ORDER_DUE_DATE_PREFIX + order.id
+    );
+
+    const startOfToday = new Date();
+    const dueDate = new Date(dto.dueDate);
+
+    if (jobExists && dto.dueDate) {
+      const job = this.schedulerRegistry.getCronJob(
+        ORDER_DUE_DATE_PREFIX + order.id
+      );
+
+      if (dueDate < startOfToday) {
+        job.stop();
+        newStatus = OrderStatus.OVERDUE;
+      } else {
+        job.setTime(new CronTime(dueDate));
+        if (order.status === OrderStatus.OVERDUE) {
+          newStatus = OrderStatus.PENDING;
+        }
+      }
+    } else if (dto.dueDate) {
+      if (dueDate < startOfToday) {
+        newStatus = OrderStatus.OVERDUE;
+      } else {
+        if (order.status === OrderStatus.OVERDUE) {
+          newStatus = OrderStatus.PENDING;
+        }
+
+        const job = new CronJob(dueDate, async () => {
+          await this.prismaService.order.update({
+            where: { id: orderId },
+            data: { status: OrderStatus.OVERDUE },
+          });
+        });
+
+        this.schedulerRegistry.addCronJob(
+          ORDER_DUE_DATE_PREFIX + order.id,
+          job
+        );
+
+        job.start();
+      }
+    }
+
     await this.prismaService.order.update({
       where: { id: orderId },
       data: {
-        status: dto.status,
+        status: newStatus ?? dto.status,
         storageFacilityId: dto.storageFacilityId,
         courierId: dto.courierId,
-        dueDate: new Date(dto.dueDate),
+        dueDate: dto.dueDate && dueDate,
       },
     });
   }

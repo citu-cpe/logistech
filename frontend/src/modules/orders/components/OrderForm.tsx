@@ -84,6 +84,9 @@ export const OrderForm: React.FC<OrderFormProps> = ({
                     INVOICED
                   </option>
                   <option value={UpdateOrderDTOStatusEnum.Paid}>PAID</option>
+                  <option value={UpdateOrderDTOStatusEnum.Overdue}>
+                    OVERDUE
+                  </option>
                 </Select>
               )}
             </Field>
@@ -136,7 +139,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({
               </Field>
             )}
             {incoming && (
-              <Field name='dueDate' type='test'>
+              <Field name='dueDate' type='date'>
                 {(fieldProps: FieldProps<Date, UpdateOrderDTO>) => (
                   <Input
                     fieldProps={fieldProps}
