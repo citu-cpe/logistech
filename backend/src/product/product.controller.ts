@@ -21,7 +21,7 @@ import { ProductService } from './product.service';
 @Controller(ProductController.PRODUCT_API_ROUTE)
 export class ProductController {
   public static readonly PRODUCT_API_ROUTE = '/product';
-  public static readonly COMMERCE_API_ROUTE = '/commerce';
+  public static readonly COMMERCE_API_ROUTE = '/:companyId/commerce';
   public static readonly ID_API_ROUTE = '/:id';
   public static readonly COMPANY_API_ROUTE = '/company/:companyId';
   public static readonly PRODUCT_ITEM_API_ROUTE = '/:productId/product-item';
@@ -43,9 +43,10 @@ export class ProductController {
   @Post(ProductController.COMMERCE_API_ROUTE)
   @HttpCode(HttpStatus.OK)
   public getCommerceProducts(
+    @Param('companyId') companyId: string,
     @Body() dto: CommerceProductDTO
   ): Promise<ProductDTO[]> {
-    return this.productService.getCommerceProducts(dto.companyTypes);
+    return this.productService.getCommerceProducts(dto.companyTypes, companyId);
   }
 
   @Post(ProductController.COMPANY_API_ROUTE)

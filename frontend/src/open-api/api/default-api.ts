@@ -884,21 +884,28 @@ export const DefaultApiAxiosParamCreator = function (
     },
     /**
      *
+     * @param {string} companyId
      * @param {CommerceProductDTO} commerceProductDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getCommerceProducts: async (
+      companyId: string,
       commerceProductDTO: CommerceProductDTO,
       options: any = {}
     ): Promise<RequestArgs> => {
+      // verify required parameter 'companyId' is not null or undefined
+      assertParamExists('getCommerceProducts', 'companyId', companyId);
       // verify required parameter 'commerceProductDTO' is not null or undefined
       assertParamExists(
         'getCommerceProducts',
         'commerceProductDTO',
         commerceProductDTO
       );
-      const localVarPath = `/api/v1/product/commerce`;
+      const localVarPath = `/api/v1/product/{companyId}/commerce`.replace(
+        `{${'companyId'}}`,
+        encodeURIComponent(String(companyId))
+      );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -2238,11 +2245,13 @@ export const DefaultApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @param {string} companyId
      * @param {CommerceProductDTO} commerceProductDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async getCommerceProducts(
+      companyId: string,
       commerceProductDTO: CommerceProductDTO,
       options?: any
     ): Promise<
@@ -2253,6 +2262,7 @@ export const DefaultApiFp = function (configuration?: Configuration) {
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getCommerceProducts(
+          companyId,
           commerceProductDTO,
           options
         );
@@ -2972,16 +2982,18 @@ export const DefaultApiFactory = function (
     },
     /**
      *
+     * @param {string} companyId
      * @param {CommerceProductDTO} commerceProductDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getCommerceProducts(
+      companyId: string,
       commerceProductDTO: CommerceProductDTO,
       options?: any
     ): AxiosPromise<Array<ProductDTO>> {
       return localVarFp
-        .getCommerceProducts(commerceProductDTO, options)
+        .getCommerceProducts(companyId, commerceProductDTO, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -3490,17 +3502,19 @@ export class DefaultApi extends BaseAPI {
 
   /**
    *
+   * @param {string} companyId
    * @param {CommerceProductDTO} commerceProductDTO
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof DefaultApi
    */
   public getCommerceProducts(
+    companyId: string,
     commerceProductDTO: CommerceProductDTO,
     options?: any
   ) {
     return DefaultApiFp(this.configuration)
-      .getCommerceProducts(commerceProductDTO, options)
+      .getCommerceProducts(companyId, commerceProductDTO, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

@@ -28,10 +28,13 @@ export class ProductService {
   }
 
   public async getCommerceProducts(
-    companyTypes: CompanyTypeEnum[]
+    companyTypes: CompanyTypeEnum[],
+    companyId: string
   ): Promise<ProductDTO[]> {
     const products = await this.prismaService.product.findMany({
-      where: { company: { type: { in: companyTypes } } },
+      where: {
+        company: { id: { not: companyId }, type: { in: companyTypes } },
+      },
       orderBy: { createdAt: 'desc' },
       include: {
         company: true,

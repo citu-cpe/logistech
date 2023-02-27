@@ -15,6 +15,7 @@ const getCompanyTypes = (companyType: CompanyDTOTypeEnum) => {
       return [
         CommerceProductDTOCompanyTypesEnum.Supplier,
         CommerceProductDTOCompanyTypesEnum.Manufacturer,
+        CommerceProductDTOCompanyTypesEnum.Retailer,
       ];
     default:
       return [];
@@ -25,7 +26,10 @@ const Commerce = () => {
   const getUser = useGlobalStore((state) => state.getUser);
   const companyId = getUser()?.company?.id;
   const companyType = getUser()?.company?.type;
-  const { data } = useGetCommerceProducts(getCompanyTypes(companyType!));
+  const { data } = useGetCommerceProducts(
+    getCompanyTypes(companyType!),
+    companyId!
+  );
 
   return (
     <Box>

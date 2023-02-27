@@ -5,6 +5,7 @@ import { CustomLogger } from '../../shared/custom-logger';
 import { User, UserRole } from '@prisma/client';
 import {
   testManufacturerCompany,
+  testNewRetailerCompany,
   testNewStorageFacilityCompany,
   testRetailerCompany,
   testStorageFacilityCompany,
@@ -95,6 +96,18 @@ export const testRetailer: User = {
   companyId: testRetailerCompany.id,
 };
 
+export const testNewRetailer: User = {
+  id: '38e1b4b5-946b-4cd0-904c-65d43a6609cd',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  email: 'test_new_retailer@test.com',
+  username: 'test_new_retailer',
+  password: 'test',
+  currentHashedRefreshToken: undefined,
+  role: UserRole.RETAILER_SUPERVISOR,
+  companyId: testNewRetailerCompany.id,
+};
+
 @Injectable()
 export class UserTestDataService {
   private readonly logger = new CustomLogger(UserTestDataService.name);
@@ -125,6 +138,9 @@ export class UserTestDataService {
     const foundRetailer = await this.prismaService.user.findUnique({
       where: { id: testRetailer.id },
     });
+    const foundNewRetailer = await this.prismaService.user.findUnique({
+      where: { id: testNewRetailer.id },
+    });
 
     if (!foundCustomer) {
       this.logger.log('GENERATING TEST CUSTOMER');
@@ -153,6 +169,10 @@ export class UserTestDataService {
     if (!foundRetailer) {
       this.logger.log('GENERATING TEST RETAILER');
       await this.createUser(testRetailer);
+    }
+    if (!foundNewRetailer) {
+      this.logger.log('GENERATING TEST NEW RETAILER');
+      await this.createUser(testNewRetailer);
     }
 
     this.logger.log('DONE GENERATING USER TEST DATA');
