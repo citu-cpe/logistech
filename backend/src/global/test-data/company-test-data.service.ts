@@ -43,6 +43,14 @@ export const testRetailerCompany: Company = {
   name: 'RETAILER CO.',
 };
 
+export const testNewRetailerCompany: Company = {
+  id: 'db0bf4a0-7190-4382-9fd5-501b0797f5eb',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  type: CompanyType.RETAILER,
+  name: 'NEW RETAILER CO.',
+};
+
 @Injectable()
 export class CompanyTestDataService {
   private readonly logger = new CustomLogger(CompanyTestDataService.name);
@@ -66,6 +74,9 @@ export class CompanyTestDataService {
     });
     const foundRetailer = await this.prismaService.company.findUnique({
       where: { id: testRetailerCompany.id },
+    });
+    const foundNewRetailer = await this.prismaService.company.findUnique({
+      where: { id: testNewRetailerCompany.id },
     });
 
     if (!foundStorageFacility) {
@@ -96,6 +107,14 @@ export class CompanyTestDataService {
       this.logger.log('GENERATING TEST RETAILER COMPANY');
       await this.createCompany(
         testRetailerCompany,
+        [],
+        [testStorageFacilityCompany.id]
+      );
+    }
+    if (!foundNewRetailer) {
+      this.logger.log('GENERATING TEST NEW RETAILER COMPANY');
+      await this.createCompany(
+        testNewRetailerCompany,
         [],
         [testStorageFacilityCompany.id]
       );
