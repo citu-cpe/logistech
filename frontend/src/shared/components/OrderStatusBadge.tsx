@@ -20,6 +20,9 @@ export const OrderStatusBadge: React.FC<OrderStatusBadgeProps> = ({
     case OrderDTOStatusEnum.Paid:
       colorScheme = 'green';
       break;
+    case OrderDTOStatusEnum.Overdue:
+      colorScheme = 'red';
+      break;
   }
 
   return <Badge colorScheme={colorScheme}>{status.replaceAll('_', ' ')}</Badge>;

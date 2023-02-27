@@ -22,6 +22,7 @@ import { TestDataModule } from '../global/test-data/test-data.module';
 import { UserModule } from '../user/user.module';
 import { CartModule } from '../cart/cart.module';
 import { OrderModule } from '../order/order.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 export const appModule: ModuleMetadata = {
   imports: [
@@ -38,6 +39,7 @@ export const appModule: ModuleMetadata = {
         ACTIVE_PROFILES: Joi.string(),
       }),
     }),
+    ScheduleModule.forRoot(),
     AuthenticationModule,
     UserModule,
     AuthorizationModule,

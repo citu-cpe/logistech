@@ -34,4 +34,5 @@ export enum UpdateOrderStatusDTOStatusEnum {
   Pending = 'PENDING',
   Invoiced = 'INVOICED',
   Paid = 'PAID',
+  Overdue = 'OVERDUE',
 }

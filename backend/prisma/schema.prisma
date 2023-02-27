@@ -196,9 +196,9 @@ model Order {
   dueDate DateTime?
 }
 
-// TODO: add OVERDUE status
 enum OrderStatus {
   PENDING
   INVOICED
   PAID
+  OVERDUE
 }

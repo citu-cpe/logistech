@@ -14,6 +14,7 @@ export enum OrderStatusEnum {
   PENDING = 'PENDING',
   INVOICED = 'INVOICED',
   PAID = 'PAID',
+  OVERDUE = 'OVERDUE',
 }
 
 export class OrderDTO {
