@@ -22,6 +22,7 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev:test": "prisma migrate dev -- --name",
     "prisma:migrate:dev": "dotenv -e local.env prisma migrate dev -- --name",
+    "prisma:migrate:dev:create-only": "dotenv -e local.env prisma migrate dev -- --create-only",
     "prisma:migrate:deploy": "prisma migrate deploy",
     "prisma:migrate:deploy:local": "dotenv -e local.env prisma migrate deploy",
     "prisma:studio": "dotenv -e local.env prisma studio",
