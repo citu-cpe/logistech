@@ -15,6 +15,7 @@ models/commerce-product-dto.ts
 models/company-dto.ts
 models/create-many-product-items-dto.ts
 models/create-order-item-dto.ts
+models/create-payment-dto.ts
 models/create-product-dto.ts
 models/create-product-item-dto.ts
 models/index.ts
@@ -25,6 +26,7 @@ models/order-dto.ts
 models/order-item-dto.ts
 models/order-item-group.ts
 models/payment-dto.ts
+models/payment-url-dto.ts
 models/product-dto.ts
 models/product-item-dto.ts
 models/register-user-dto.ts

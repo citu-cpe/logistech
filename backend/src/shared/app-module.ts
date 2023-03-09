@@ -38,6 +38,7 @@ export const appModule: ModuleMetadata = {
         JWT_REFRESH_TOKEN_SECRET: Joi.string().required(),
         JWT_REFRESH_TOKEN_EXPIRATION_TIME: Joi.number().required(),
         ACTIVE_PROFILES: Joi.string(),
+        STRIPE_API_KEY: Joi.string(),
       }),
     }),
     ScheduleModule.forRoot(),

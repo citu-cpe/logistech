@@ -49,6 +49,8 @@ import { CreateManyProductItemsDTO } from '../models';
 // @ts-ignore
 import { CreateOrderItemDTO } from '../models';
 // @ts-ignore
+import { CreatePaymentDTO } from '../models';
+// @ts-ignore
 import { CreateProductDTO } from '../models';
 // @ts-ignore
 import { CreateProductItemDTO } from '../models';
@@ -60,6 +62,8 @@ import { LoginUserDTO } from '../models';
 import { LogoutUserDTO } from '../models';
 // @ts-ignore
 import { OrderDTO } from '../models';
+// @ts-ignore
+import { PaymentUrlDTO } from '../models';
 // @ts-ignore
 import { ProductDTO } from '../models';
 // @ts-ignore
@@ -349,6 +353,55 @@ export const DefaultApiAxiosParamCreator = function (
       };
       localVarRequestOptions.data = serializeDataIfNeeded(
         cartDTO,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {CreatePaymentDTO} createPaymentDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createPayment: async (
+      createPaymentDTO: CreatePaymentDTO,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'createPaymentDTO' is not null or undefined
+      assertParamExists('createPayment', 'createPaymentDTO', createPaymentDTO);
+      const localVarPath = `/api/v1/payment`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'POST',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        createPaymentDTO,
         localVarRequestOptions,
         configuration
       );
@@ -1988,6 +2041,29 @@ export const DefaultApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @param {CreatePaymentDTO} createPaymentDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async createPayment(
+      createPaymentDTO: CreatePaymentDTO,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaymentUrlDTO>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.createPayment(
+        createPaymentDTO,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
      * @param {string} companyId
      * @param {CreateProductDTO} createProductDTO
      * @param {*} [options] Override http request option.
@@ -2837,6 +2913,20 @@ export const DefaultApiFactory = function (
     },
     /**
      *
+     * @param {CreatePaymentDTO} createPaymentDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createPayment(
+      createPaymentDTO: CreatePaymentDTO,
+      options?: any
+    ): AxiosPromise<PaymentUrlDTO> {
+      return localVarFp
+        .createPayment(createPaymentDTO, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @param {string} companyId
      * @param {CreateProductDTO} createProductDTO
      * @param {*} [options] Override http request option.
@@ -3339,6 +3429,19 @@ export class DefaultApi extends BaseAPI {
   public createOrders(companyId: string, cartDTO: CartDTO, options?: any) {
     return DefaultApiFp(this.configuration)
       .createOrders(companyId, cartDTO, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {CreatePaymentDTO} createPaymentDTO
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof DefaultApi
+   */
+  public createPayment(createPaymentDTO: CreatePaymentDTO, options?: any) {
+    return DefaultApiFp(this.configuration)
+      .createPayment(createPaymentDTO, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
