@@ -32,7 +32,7 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
           <Thead>
             <Tr>
               {company?.type !== CompanyDTOTypeEnum.StorageFacility && (
-                <Th>Company</Th>
+                <Th>{incoming ? 'Customer' : 'Company'}</Th>
               )}
               {company?.type === CompanyDTOTypeEnum.StorageFacility && (
                 <>

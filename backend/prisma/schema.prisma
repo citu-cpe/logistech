@@ -174,13 +174,16 @@ model OrderItem {
 }
 
 model Order {
-  id        String      @id @default(uuid())
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt()
-  status    OrderStatus
-  total     Float
+  id            String      @id @default(uuid())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt()
+  status        OrderStatus
+  total         Float
+  invoiceNumber Int
+  finalized     Boolean     @default(false)
 
   orderItems OrderItem[]
+  payments   Payment[]
 
   fromCompanyId String
   fromCompany   Company @relation("fromCompany", fields: [fromCompanyId], references: [id], onDelete: Cascade)
@@ -201,4 +204,15 @@ enum OrderStatus {
   INVOICED
   PAID
   OVERDUE
+}
+
+model Payment {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  amount Float
+
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }
