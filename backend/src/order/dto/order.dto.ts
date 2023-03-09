@@ -5,8 +5,10 @@ import {
   IsNumber,
   ValidateNested,
   IsOptional,
+  IsBoolean,
 } from 'class-validator';
 import { CompanyDTO } from '../../company/dto/company.dto';
+import { PaymentDTO } from '../../payment/dto/payment.dto';
 import { UserDTO } from '../../user/dto/user.dto';
 import { OrderItemDTO } from './order-item.dto';
 
@@ -33,6 +35,12 @@ export class OrderDTO {
   @IsNumber()
   public total: number;
 
+  @IsNumber()
+  public invoiceNumber: number;
+
+  @IsBoolean()
+  public finalized: boolean;
+
   @ValidateNested()
   public orderItems: OrderItemDTO[];
 
@@ -47,6 +55,9 @@ export class OrderDTO {
 
   @ValidateNested()
   public courier?: UserDTO;
+
+  @ValidateNested({ each: true })
+  public payments?: PaymentDTO[];
 
   @IsOptional()
   @IsDateString()

@@ -5,6 +5,7 @@ import {
   Order,
   OrderItem,
   OrderStatus,
+  Payment,
   Product,
   ProductItem,
   ProductItemStatus,
@@ -15,6 +16,7 @@ import { CronJob, CronTime } from 'cron';
 import { CartDTO } from '../cart/dto/cart.dto';
 import { CompanyService } from '../company/company.service';
 import { PrismaService } from '../global/prisma/prisma.service';
+import { PaymentService } from '../payment/payment.service';
 import { UserService } from '../user/user.service';
 import { OrderDTO, OrderStatusEnum } from './dto/order.dto';
 import { UpdateOrderDTO } from './dto/update-order.dto';
@@ -34,10 +36,22 @@ export class OrderService {
       throw new BadRequestException('No orders to create');
     }
 
-    const orders: (Omit<Order, 'id' | 'createdAt' | 'updatedAt'> & {
+    const lastCreatedOrder: Order | null =
+      await this.prismaService.order.findFirst({
+        orderBy: { createdAt: 'desc' },
+        take: 1,
+      });
+
+    const lastCreatedOrderInvoiceNumber = lastCreatedOrder?.invoiceNumber ?? 0;
+
+    const orders: (Omit<
+      Order,
+      'id' | 'createdAt' | 'updatedAt' | 'finalized'
+    > & {
       orderItemIds: { id: string }[];
     })[] = [];
 
+    let i = 1;
     for (const group of dto.groupedOrderItems) {
       orders.push({
         total: group.total,
@@ -48,6 +62,7 @@ export class OrderService {
         storageFacilityId: null,
         courierId: null,
         dueDate: null,
+        invoiceNumber: lastCreatedOrderInvoiceNumber + i++,
       });
     }
 
@@ -123,6 +138,7 @@ export class OrderService {
         fromCompany: true,
         storageFacility: true,
         courier: true,
+        payments: true,
       },
     });
 
@@ -137,6 +153,7 @@ export class OrderService {
         toCompany: true,
         storageFacility: true,
         courier: true,
+        payments: true,
       },
     });
 
@@ -256,7 +273,7 @@ export class OrderService {
 
   public static convertToDTO(
     order: Order & {
-      orderItems: (OrderItem & {
+      orderItems?: (OrderItem & {
         product: Product;
         productItems?: ProductItem[];
       })[];
@@ -264,6 +281,7 @@ export class OrderService {
       fromCompany?: Company;
       storageFacility?: Company;
       courier?: User;
+      payments?: Payment[];
     }
   ): OrderDTO {
     const toCompany =
@@ -274,6 +292,9 @@ export class OrderService {
       !!order.storageFacility &&
       CompanyService.convertToDTO(order.storageFacility);
     const courier = !!order.courier && UserService.convertToDTO(order.courier);
+    const payments =
+      !!order.payments &&
+      order.payments.map((p) => PaymentService.convertToDTO(p));
 
     return {
       ...order,
@@ -283,6 +304,7 @@ export class OrderService {
       fromCompany,
       storageFacility,
       courier,
+      payments,
     };
   }
 }

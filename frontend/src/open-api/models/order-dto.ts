@@ -14,6 +14,7 @@
 
 import { CompanyDTO } from './company-dto';
 import { OrderItemDTO } from './order-item-dto';
+import { PaymentDTO } from './payment-dto';
 import { UserDTO } from './user-dto';
 
 /**
@@ -54,6 +55,18 @@ export interface OrderDTO {
   total: number;
   /**
    *
+   * @type {number}
+   * @memberof OrderDTO
+   */
+  invoiceNumber: number;
+  /**
+   *
+   * @type {boolean}
+   * @memberof OrderDTO
+   */
+  finalized: boolean;
+  /**
+   *
    * @type {Array<OrderItemDTO>}
    * @memberof OrderDTO
    */
@@ -82,6 +95,12 @@ export interface OrderDTO {
    * @memberof OrderDTO
    */
   courier?: UserDTO;
+  /**
+   *
+   * @type {Array<PaymentDTO>}
+   * @memberof OrderDTO
+   */
+  payments?: Array<PaymentDTO>;
   /**
    *
    * @type {string}

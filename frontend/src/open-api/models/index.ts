@@ -12,6 +12,7 @@ export * from './logout-user-dto';
 export * from './order-dto';
 export * from './order-item-dto';
 export * from './order-item-group';
+export * from './payment-dto';
 export * from './product-dto';
 export * from './product-item-dto';
 export * from './register-user-dto';

@@ -23,6 +23,7 @@ import { UserModule } from '../user/user.module';
 import { CartModule } from '../cart/cart.module';
 import { OrderModule } from '../order/order.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { PaymentModule } from '../payment/payment.module';
 
 export const appModule: ModuleMetadata = {
   imports: [
@@ -53,6 +54,7 @@ export const appModule: ModuleMetadata = {
     TransactionModule,
     CartModule,
     OrderModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [
