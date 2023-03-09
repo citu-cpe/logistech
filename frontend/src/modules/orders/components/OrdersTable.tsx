@@ -46,7 +46,7 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
               <Th>Courier</Th>
               <Th>Due date</Th>
               <Th isNumeric>Total</Th>
-              {allowActions && <Th>Actions</Th>}
+              <Th>Actions</Th>
             </Tr>
           </Thead>
           <Tbody>

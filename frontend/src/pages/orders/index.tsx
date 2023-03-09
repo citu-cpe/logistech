@@ -6,8 +6,11 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  useToast,
 } from '@chakra-ui/react';
 import { CompanyDTOTypeEnum } from 'generated-api';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { OrdersTable } from '../../modules/orders/components/OrdersTable';
 import { useGetIncomingOrders } from '../../modules/orders/hooks/useGetIncomingOrders';
 import { useGetOrdersForStorageFacility } from '../../modules/orders/hooks/useGetOrdersForStorageFacility';
@@ -21,6 +24,26 @@ const Orders = () => {
   const incomingOrdersQuery = useGetIncomingOrders(companyId!);
   const outgoingOrdersQuery = useGetOutgoingOrders(companyId!);
   const storageFacilityOrdersQuery = useGetOrdersForStorageFacility(companyId!);
+  const toast = useToast();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (router.query.success) {
+      toast({
+        status: 'success',
+        title: 'Successfully paid order',
+        isClosable: true,
+        variant: 'subtle',
+      });
+    } else if (router.query.canceled) {
+      toast({
+        status: 'success',
+        title: 'Successfully canceled payment',
+        isClosable: true,
+        variant: 'subtle',
+      });
+    }
+  }, [router.query, toast]);
 
   return (
     <Box>

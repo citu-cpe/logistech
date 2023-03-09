@@ -12,11 +12,13 @@ import {
 export interface InputProps {
   fieldProps: FieldProps;
   label?: string;
+  disabled?: boolean;
 }
 
 export const Input = ({
   fieldProps: { field, form },
   label,
+  disabled,
   ...props
 }: InputProps & ChakraInputProps) => (
   <FormControl
@@ -40,7 +42,7 @@ export const Input = ({
             {label}
           </FormLabel>
         )}
-        <ChakraInput {...field} {...props} />
+        <ChakraInput {...field} {...props} disabled={disabled} />
       </Box>
     )}
     <FormErrorMessage>{form.errors[props.name!] as string}</FormErrorMessage>

@@ -37,7 +37,7 @@ export const LedgerRow: React.FC<LedgerRowProps> = ({ order }) => {
           if (idx === 0) {
             paid = p.amount;
           } else {
-            let runningBalance = 0;
+            let runningBalance = p.amount;
 
             for (let i = 0; i < idx; i++) {
               runningBalance += order.payments![i].amount;

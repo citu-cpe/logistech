@@ -23,4 +23,7 @@ export class PaymentDTO {
   @IsOptional()
   @ValidateNested()
   public order?: OrderDTO;
+
+  @IsUUID()
+  public orderId: string;
 }

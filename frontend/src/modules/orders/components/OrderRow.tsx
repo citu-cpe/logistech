@@ -18,6 +18,7 @@ import { Peso } from '../../../shared/components/Peso';
 import { OrderStatusBadge } from '../../../shared/components/OrderStatusBadge';
 import { useGetStorageFacilityPartners } from '../../storage-facilities/hooks/useGetStorageFacilityPartnersQuery';
 import { useGetCouriers } from '../../storage-facilities/hooks/useGetCouriers';
+import { PaymentForm } from '../../payments/components/PaymentForm';
 
 interface OrderRowProps {
   order: OrderDTO;
@@ -32,7 +33,16 @@ export const OrderRow: React.FC<OrderRowProps> = ({
   incoming,
   company,
 }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isEditOpen,
+    onOpen: onEditOpen,
+    onClose: onEditClose,
+  } = useDisclosure();
+  const {
+    isOpen: isPaymentOpen,
+    onOpen: onPaymentOpen,
+    onClose: onPaymentClose,
+  } = useDisclosure();
   const storageFacilityPartnersQuery = useGetStorageFacilityPartners(
     company.id
   );
@@ -65,15 +75,17 @@ export const OrderRow: React.FC<OrderRowProps> = ({
       <Td isNumeric>
         <Peso amount={order.total} />
       </Td>
-      {allowActions && (
-        <Td>
-          <Button onClick={onOpen}>
+      <Td>
+        {allowActions && (
+          <Button onClick={onEditOpen}>
             <EditIcon />
           </Button>
-        </Td>
-      )}
+        )}
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+        {!incoming && <Button onClick={onPaymentOpen}>Pay</Button>}
+      </Td>
+
+      <Modal isOpen={isEditOpen} onClose={onEditClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Update Order</ModalHeader>
@@ -81,7 +93,7 @@ export const OrderRow: React.FC<OrderRowProps> = ({
           <ModalBody>
             <OrderForm
               order={order}
-              onClose={onClose}
+              onClose={onEditClose}
               partnerStorageFacilities={
                 company.type !== CompanyDTOTypeEnum.StorageFacility
                   ? storageFacilityPartnersQuery.data?.data
@@ -94,6 +106,17 @@ export const OrderRow: React.FC<OrderRowProps> = ({
               }
               incoming={incoming}
             />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+
+      <Modal isOpen={isPaymentOpen} onClose={onPaymentClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Payment</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <PaymentForm order={order} />
           </ModalBody>
         </ModalContent>
       </Modal>

@@ -50,4 +50,10 @@ export interface PaymentDTO {
    * @memberof PaymentDTO
    */
   order?: OrderDTO;
+  /**
+   *
+   * @type {string}
+   * @memberof PaymentDTO
+   */
+  orderId: string;
 }
