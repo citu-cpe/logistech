@@ -22,16 +22,20 @@ import { PaymentForm } from '../../payments/components/PaymentForm';
 
 interface OrderRowProps {
   order: OrderDTO;
-  allowActions: boolean;
+  allowEdit: boolean;
   incoming: boolean;
   company: CompanyDTO;
+  allowPayment: boolean;
+  showTotal: boolean;
 }
 
 export const OrderRow: React.FC<OrderRowProps> = ({
   order,
-  allowActions,
+  allowEdit,
   incoming,
   company,
+  allowPayment,
+  showTotal,
 }) => {
   const {
     isOpen: isEditOpen,
@@ -72,17 +76,19 @@ export const OrderRow: React.FC<OrderRowProps> = ({
       <Td>{order.storageFacility?.name}</Td>
       <Td>{order.courier?.username}</Td>
       <Td>{order.dueDate && new Date(order.dueDate).toLocaleDateString()}</Td>
-      <Td isNumeric>
-        <Peso amount={order.total} />
-      </Td>
+      {showTotal && (
+        <Td isNumeric>
+          <Peso amount={order.total} />
+        </Td>
+      )}
       <Td>
-        {allowActions && (
+        {allowEdit && (
           <Button onClick={onEditOpen}>
             <EditIcon />
           </Button>
         )}
 
-        {!incoming && <Button onClick={onPaymentOpen}>Pay</Button>}
+        {allowPayment && <Button onClick={onPaymentOpen}>Pay</Button>}
       </Td>
 
       <Modal isOpen={isEditOpen} onClose={onEditClose}>

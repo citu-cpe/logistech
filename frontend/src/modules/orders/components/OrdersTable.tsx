@@ -12,15 +12,19 @@ import { useGlobalStore } from '../../../shared/stores';
 import { OrderRow } from './OrderRow';
 
 interface OrdersTableProps {
-  allowActions: boolean;
+  allowEdit: boolean;
   orders: OrderDTO[];
   incoming: boolean;
+  allowPayment: boolean;
+  showTotal: boolean;
 }
 
 export const OrdersTable: React.FC<OrdersTableProps> = ({
-  allowActions,
+  allowEdit,
   orders,
   incoming,
+  allowPayment,
+  showTotal,
 }) => {
   const getUser = useGlobalStore().getUser;
   const company = getUser()?.company;
@@ -45,7 +49,7 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
               <Th>Storage Facility</Th>
               <Th>Courier</Th>
               <Th>Due date</Th>
-              <Th isNumeric>Total</Th>
+              {showTotal && <Th isNumeric>Total</Th>}
               <Th>Actions</Th>
             </Tr>
           </Thead>
@@ -55,8 +59,10 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
                 key={o.id}
                 order={o}
                 incoming={incoming}
-                allowActions={allowActions}
+                allowEdit={allowEdit}
                 company={company!}
+                allowPayment={allowPayment}
+                showTotal={showTotal}
               />
             ))}
           </Tbody>
