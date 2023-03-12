@@ -59,15 +59,19 @@ const Orders = () => {
             <TabPanel>
               <OrdersTable
                 orders={outgoingOrdersQuery?.data?.data ?? []}
-                allowActions={false}
+                allowEdit={false}
                 incoming={false}
+                allowPayment={true}
+                showTotal={true}
               />
             </TabPanel>
             <TabPanel>
               <OrdersTable
                 orders={incomingOrdersQuery?.data?.data ?? []}
-                allowActions={true}
+                allowEdit={true}
                 incoming={true}
+                allowPayment={false}
+                showTotal={true}
               />
             </TabPanel>
           </TabPanels>
@@ -78,8 +82,10 @@ const Orders = () => {
         <Box>
           <OrdersTable
             orders={storageFacilityOrdersQuery?.data?.data ?? []}
-            allowActions={true}
+            allowEdit={true}
             incoming={false}
+            allowPayment={false}
+            showTotal={false}
           />
         </Box>
       )}

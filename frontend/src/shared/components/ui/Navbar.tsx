@@ -82,7 +82,10 @@ export const Navbar = (props: ChakraProps) => {
           <NavLink href='/orders'>Orders</NavLink>
 
           {companyType === CompanyDTOTypeEnum.Supplier && (
-            <NavLink href='/received'>Received</NavLink>
+            <>
+              <NavLink href='/received'>Received</NavLink>
+              <NavLink href='/ledger'>Ledger</NavLink>
+            </>
           )}
 
           {companyType === CompanyDTOTypeEnum.StorageFacility && (
@@ -97,7 +100,6 @@ export const Navbar = (props: ChakraProps) => {
             companyType === CompanyDTOTypeEnum.Manufacturer ||
             companyType === CompanyDTOTypeEnum.Retailer) && (
             <>
-              <NavLink href='/ledger'>Ledger</NavLink>
               <NavLink href='/cart'>Cart</NavLink>
             </>
           )}
@@ -123,7 +125,7 @@ export const Navbar = (props: ChakraProps) => {
         >
           <Flex align='center' gap='4'>
             <Avatar mr='2' />
-            <Text fontWeight='bold'>User Profile</Text>
+            <Text fontWeight='bold'>{user?.username}</Text>
           </Flex>
         </MenuButton>
 

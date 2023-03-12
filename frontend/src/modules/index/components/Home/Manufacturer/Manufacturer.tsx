@@ -39,12 +39,6 @@ export const Manufacturer = () => {
           href='/in-transit'
           flexBasis={flexBasis}
         />
-        <LinkCard
-          title='Couriers'
-          n='n'
-          href='/couriers'
-          flexBasis={flexBasis}
-        />
       </Flex>
 
       <Flex gap='4' h='sm' align='center' flexWrap='wrap'>
