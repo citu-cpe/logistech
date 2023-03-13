@@ -20,12 +20,7 @@ export const StorageFacility = () => {
           n='n'
           href='/new-arrival'
         />
-        <LinkCard
-          flexBasis={flexBasis}
-          title='To Be Picked'
-          n='nn'
-          href='/to-be-picked'
-        />
+        <LinkCard flexBasis={flexBasis} title='Orders' n='nn' href='/orders' />
         <LinkCard
           flexBasis={flexBasis}
           title='Clustered'

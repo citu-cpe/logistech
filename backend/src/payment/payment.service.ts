@@ -6,6 +6,7 @@ import Stripe from 'stripe';
 import { PrismaService } from '../global/prisma/prisma.service';
 import { CreatePaymentDTO } from './dto/create-payment.dto';
 import { PaymentUrlDTO } from './dto/payment-url.dto';
+import { OrderStatusEnum } from '../order/dto/order.dto';
 
 @Injectable()
 export class PaymentService {
@@ -20,6 +21,10 @@ export class PaymentService {
       include: { toCompany: true, payments: true },
     });
 
+    if (order.status !== OrderStatusEnum.BILLED) {
+      throw new BadRequestException('Cannot pay order if it is not BILLED');
+    }
+
     const totalPaid = order.payments.reduce(
       (sum, payment) => sum + payment.amount,
       0
@@ -27,7 +32,7 @@ export class PaymentService {
 
     const newTotalPaid = totalPaid + dto.amount;
 
-    if (newTotalPaid > order.total) {
+    if (newTotalPaid > order.total + (order.shippingFee ?? 0)) {
       throw new BadRequestException('Amount is more than remaining balance');
     }
 
@@ -56,12 +61,31 @@ export class PaymentService {
   public async handleStripeWebhook(body: any) {
     if (body.type === 'checkout.session.completed') {
       const data = body.data.object;
+      const orderId = data.metadata.orderId;
+
       await this.prismaService.payment.create({
         data: {
           amount: Number.parseFloat(data.metadata.amount),
-          order: { connect: { id: data.metadata.orderId } },
+          order: { connect: { id: orderId } },
         },
       });
+
+      const order = await this.prismaService.order.findUnique({
+        where: { id: orderId },
+        include: { payments: true },
+      });
+
+      const totalPaid = order.payments.reduce(
+        (sum, payment) => sum + payment.amount,
+        0
+      );
+
+      if (totalPaid === order.total + (order.shippingFee ?? 0)) {
+        await this.prismaService.order.update({
+          where: { id: orderId },
+          data: { status: OrderStatusEnum.PAID },
+        });
+      }
     }
   }
 

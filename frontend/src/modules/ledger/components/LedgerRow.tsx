@@ -1,5 +1,5 @@
 import { Box, Checkbox, Td, Tr } from '@chakra-ui/react';
-import { OrderDTO } from 'generated-api';
+import { OrderDTO, OrderDTOStatusEnum } from 'generated-api';
 import { Peso } from '../../../shared/components/Peso';
 
 interface LedgerRowProps {
@@ -13,7 +13,10 @@ export const LedgerRow: React.FC<LedgerRowProps> = ({ order }) => {
       <Td>{order.fromCompany?.name}</Td>
       <Td>{order.invoiceNumber}</Td>
       <Td>
-        <Checkbox defaultChecked={order.finalized} disabled />
+        <Checkbox
+          defaultChecked={order.status === OrderDTOStatusEnum.Billed}
+          disabled
+        />
       </Td>
       <Td>
         <Peso amount={order.total} />
@@ -48,7 +51,7 @@ export const LedgerRow: React.FC<LedgerRowProps> = ({ order }) => {
 
           return (
             <Box key={p.id}>
-              <Peso amount={order.total - paid} />
+              <Peso amount={order.total + (order.shippingFee ?? 0) - paid} />
             </Box>
           );
         })}

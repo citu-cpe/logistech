@@ -35,4 +35,6 @@ export enum UpdateOrderStatusDTOStatusEnum {
   Invoiced = 'INVOICED',
   Paid = 'PAID',
   Overdue = 'OVERDUE',
+  Billed = 'BILLED',
+  Rejected = 'REJECTED',
 }

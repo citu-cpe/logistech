@@ -10,16 +10,9 @@ import {
   ModalHeader,
   ModalCloseButton,
   ModalBody,
-  TableContainer,
-  Table,
-  Thead,
-  Tr,
-  Th,
-  Tbody,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { ProductItemForm } from '../../modules/products/components/ProductItemForm';
-import { ProductItemRow } from '../../modules/products/components/ProductItemRow';
 import { ProductItemTable } from '../../modules/products/components/ProductItemTable';
 import { useGetProductItems } from '../../modules/products/hooks/useGetProductItems';
 

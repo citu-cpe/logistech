@@ -42,6 +42,12 @@ export interface UpdateOrderDTO {
    * @memberof UpdateOrderDTO
    */
   dueDate?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof UpdateOrderDTO
+   */
+  shippingFee?: number;
 }
 
 /**
@@ -53,4 +59,6 @@ export enum UpdateOrderDTOStatusEnum {
   Invoiced = 'INVOICED',
   Paid = 'PAID',
   Overdue = 'OVERDUE',
+  Billed = 'BILLED',
+  Rejected = 'REJECTED',
 }

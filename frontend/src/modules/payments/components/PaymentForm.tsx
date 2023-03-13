@@ -10,17 +10,21 @@ interface PaymentFormProps {
   order: OrderDTO;
 }
 
-export const paymentFormValidationSchema = Yup.object({
-  amount: Yup.number().required(),
-  orderId: Yup.string().required(),
-});
+export const paymentFormValidationSchema = (remainingBalance: number) =>
+  Yup.object({
+    amount: Yup.number()
+      .min(50)
+      .max(remainingBalance, 'Amount is over the remaining balance')
+      .required(),
+    orderId: Yup.string().required(),
+  });
 
 export const PaymentForm: React.FC<PaymentFormProps> = ({ order }) => {
   const createPayment = useCreatePayment();
   const [disabled, setDisabled] = useState(true);
 
   const initialValues: CreatePaymentDTO = {
-    amount: order.total,
+    amount: order.remainingBalance,
     orderId: order.id,
   };
 
@@ -31,7 +35,7 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ order }) => {
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={paymentFormValidationSchema}
+      validationSchema={paymentFormValidationSchema(order.remainingBalance)}
       onSubmit={onSubmit}
     >
       {(props) => (
@@ -60,7 +64,7 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ order }) => {
             onChange={(e) => {
               if (e.target.checked) {
                 setDisabled(true);
-                props.setFieldValue('amount', order.total);
+                props.setFieldValue('amount', order.remainingBalance);
               } else {
                 setDisabled(false);
               }
