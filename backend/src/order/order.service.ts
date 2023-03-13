@@ -63,6 +63,7 @@ export class OrderService {
         courierId: null,
         dueDate: null,
         invoiceNumber: lastCreatedOrderInvoiceNumber + i++,
+        shippingFee: null,
       });
     }
 
@@ -193,7 +194,10 @@ export class OrderService {
   public async updateOrderStatus(orderId: string, status: OrderStatus) {
     await this.prismaService.order.update({
       where: { id: orderId },
-      data: { status },
+      data: {
+        status,
+        storageFacility: { disconnect: status === OrderStatus.REJECTED },
+      },
     });
   }
 
@@ -260,6 +264,14 @@ export class OrderService {
       }
     }
 
+    if (order.shippingFee === null && dto.shippingFee !== undefined) {
+      newStatus = OrderStatus.BILLED;
+    }
+
+    if (order.status === OrderStatus.REJECTED && !!dto.storageFacilityId) {
+      newStatus = OrderStatus.PENDING;
+    }
+
     await this.prismaService.order.update({
       where: { id: orderId },
       data: {
@@ -267,6 +279,7 @@ export class OrderService {
         storageFacilityId: dto.storageFacilityId,
         courierId: dto.courierId,
         dueDate: dto.dueDate && dueDate,
+        shippingFee: dto.shippingFee && dto.shippingFee,
       },
     });
   }
@@ -296,6 +309,9 @@ export class OrderService {
       !!order.payments &&
       order.payments.map((p) => PaymentService.convertToDTO(p));
 
+    const sumPayments =
+      order.payments?.reduce((p, sum) => p + sum.amount, 0) ?? 0;
+
     return {
       ...order,
       orderItems: order.orderItems.map((o) => OrderItemService.convertToDTO(o)),
@@ -305,6 +321,7 @@ export class OrderService {
       storageFacility,
       courier,
       payments,
+      remainingBalance: order.total + (order.shippingFee ?? 0) - sumPayments,
     };
   }
 }

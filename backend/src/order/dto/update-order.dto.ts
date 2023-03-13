@@ -1,4 +1,10 @@
-import { IsDateString, IsEnum, IsOptional, IsUUID } from 'class-validator';
+import {
+  IsDateString,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsUUID,
+} from 'class-validator';
 import { OrderStatusEnum } from './order.dto';
 
 export class UpdateOrderDTO {
@@ -17,4 +23,8 @@ export class UpdateOrderDTO {
   @IsOptional()
   @IsDateString()
   public dueDate?: Date;
+
+  @IsOptional()
+  @IsNumber()
+  public shippingFee?: number;
 }

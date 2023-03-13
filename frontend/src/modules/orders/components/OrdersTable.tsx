@@ -17,6 +17,7 @@ interface OrdersTableProps {
   incoming: boolean;
   allowPayment: boolean;
   showTotal: boolean;
+  billed?: boolean;
 }
 
 export const OrdersTable: React.FC<OrdersTableProps> = ({
@@ -25,31 +26,43 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
   incoming,
   allowPayment,
   showTotal,
+  billed,
 }) => {
   const getUser = useGlobalStore().getUser;
   const company = getUser()?.company;
 
   return (
-    <Box>
-      <TableContainer>
-        <Table variant='simple'>
+    <Box height='100%'>
+      <TableContainer height='100%'>
+        <Table variant='simple' height='100%'>
           <Thead>
             <Tr>
               {company?.type !== CompanyDTOTypeEnum.StorageFacility && (
                 <Th>{incoming ? 'Customer' : 'Company'}</Th>
               )}
+
               {company?.type === CompanyDTOTypeEnum.StorageFacility && (
-                <>
-                  <Th>From Company</Th>
-                  <Th>To Company</Th>
-                </>
+                <Th>Invoice Number</Th>
               )}
-              <Th>Order date</Th>
-              <Th>Status</Th>
-              <Th>Storage Facility</Th>
-              <Th>Courier</Th>
-              <Th>Due date</Th>
+
+              {(billed === undefined || !billed) && <Th>Order date</Th>}
+
+              {(billed === undefined || !billed) && <Th>Status</Th>}
+
+              {billed === undefined && <Th>Storage Facility</Th>}
+
+              {billed === undefined ||
+                (billed !== undefined && !!billed && (
+                  <>
+                    <Th>Courier</Th>
+                    <Th>Due date</Th>
+                  </>
+                ))}
+
+              {billed === undefined && <Th isNumeric>Remaining Balance</Th>}
+
               {showTotal && <Th isNumeric>Total</Th>}
+
               <Th>Actions</Th>
             </Tr>
           </Thead>
@@ -63,6 +76,7 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
                 company={company!}
                 allowPayment={allowPayment}
                 showTotal={showTotal}
+                billed={billed}
               />
             ))}
           </Tbody>

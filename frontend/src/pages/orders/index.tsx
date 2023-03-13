@@ -1,5 +1,6 @@
 import {
   Box,
+  Flex,
   Heading,
   Tab,
   TabList,
@@ -8,7 +9,7 @@ import {
   Tabs,
   useToast,
 } from '@chakra-ui/react';
-import { CompanyDTOTypeEnum } from 'generated-api';
+import { CompanyDTOTypeEnum, OrderDTOStatusEnum } from 'generated-api';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { OrdersTable } from '../../modules/orders/components/OrdersTable';
@@ -79,15 +80,49 @@ const Orders = () => {
       )}
 
       {companyType === CompanyDTOTypeEnum.StorageFacility && (
-        <Box>
-          <OrdersTable
-            orders={storageFacilityOrdersQuery?.data?.data ?? []}
-            allowEdit={true}
-            incoming={false}
-            allowPayment={false}
-            showTotal={false}
-          />
-        </Box>
+        <Flex gap='4'>
+          <Box width='50%'>
+            <Heading textAlign='center' mb='4'>
+              Incoming
+            </Heading>
+
+            <Box bg='gray.900' rounded='md' padding='8'>
+              <OrdersTable
+                orders={
+                  storageFacilityOrdersQuery?.data?.data.filter(
+                    (o) => o.status === OrderDTOStatusEnum.Pending
+                  ) ?? []
+                }
+                allowEdit={true}
+                incoming={false}
+                allowPayment={false}
+                showTotal={false}
+                billed={false}
+              />
+            </Box>
+          </Box>
+
+          <Box width='50%'>
+            <Heading textAlign='center' mb='4'>
+              To Be Picked Up
+            </Heading>
+
+            <Box bg='gray.900' rounded='md' padding='8'>
+              <OrdersTable
+                orders={
+                  storageFacilityOrdersQuery?.data?.data.filter(
+                    (o) => o.status === OrderDTOStatusEnum.Billed
+                  ) ?? []
+                }
+                allowEdit={true}
+                incoming={false}
+                allowPayment={false}
+                showTotal={false}
+                billed={true}
+              />
+            </Box>
+          </Box>
+        </Flex>
       )}
     </Box>
   );

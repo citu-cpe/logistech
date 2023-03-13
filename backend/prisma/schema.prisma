@@ -197,6 +197,8 @@ model Order {
   courier   User?   @relation("courierOrder", fields: [courierId], references: [id])
 
   dueDate DateTime?
+
+  shippingFee Float?
 }
 
 enum OrderStatus {
@@ -204,6 +206,8 @@ enum OrderStatus {
   INVOICED
   PAID
   OVERDUE
+  BILLED
+  REJECTED
 }
 
 model Payment {

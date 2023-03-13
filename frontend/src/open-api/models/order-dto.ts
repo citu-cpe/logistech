@@ -107,6 +107,18 @@ export interface OrderDTO {
    * @memberof OrderDTO
    */
   dueDate?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof OrderDTO
+   */
+  shippingFee?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof OrderDTO
+   */
+  remainingBalance: number;
 }
 
 /**
@@ -118,4 +130,6 @@ export enum OrderDTOStatusEnum {
   Invoiced = 'INVOICED',
   Paid = 'PAID',
   Overdue = 'OVERDUE',
+  Billed = 'BILLED',
+  Rejected = 'REJECTED',
 }

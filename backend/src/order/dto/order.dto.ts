@@ -17,6 +17,8 @@ export enum OrderStatusEnum {
   INVOICED = 'INVOICED',
   PAID = 'PAID',
   OVERDUE = 'OVERDUE',
+  BILLED = 'BILLED',
+  REJECTED = 'REJECTED',
 }
 
 export class OrderDTO {
@@ -62,4 +64,11 @@ export class OrderDTO {
   @IsOptional()
   @IsDateString()
   public dueDate?: Date;
+
+  @IsOptional()
+  @IsNumber()
+  public shippingFee?: number;
+
+  @IsNumber()
+  public remainingBalance: number;
 }

@@ -11,7 +11,12 @@ import {
   Tr,
   useDisclosure,
 } from '@chakra-ui/react';
-import { CompanyDTO, CompanyDTOTypeEnum, OrderDTO } from 'generated-api';
+import {
+  CompanyDTO,
+  CompanyDTOTypeEnum,
+  OrderDTO,
+  OrderDTOStatusEnum,
+} from 'generated-api';
 import { OrderForm } from './OrderForm';
 import Link from 'next/link';
 import { Peso } from '../../../shared/components/Peso';
@@ -27,6 +32,7 @@ interface OrderRowProps {
   company: CompanyDTO;
   allowPayment: boolean;
   showTotal: boolean;
+  billed?: boolean;
 }
 
 export const OrderRow: React.FC<OrderRowProps> = ({
@@ -36,6 +42,7 @@ export const OrderRow: React.FC<OrderRowProps> = ({
   company,
   allowPayment,
   showTotal,
+  billed,
 }) => {
   const {
     isOpen: isEditOpen,
@@ -61,34 +68,59 @@ export const OrderRow: React.FC<OrderRowProps> = ({
           </Link>
         </Td>
       )}
+
       {company.type === CompanyDTOTypeEnum.StorageFacility && (
-        <>
-          <Td>
-            <Link href={`/orders/${order.id}`}>{order.fromCompany?.name}</Link>
-          </Td>
-          <Td>{order.toCompany?.name}</Td>
-        </>
+        <Td>{order.invoiceNumber}</Td>
       )}
-      <Td>{new Date(order.createdAt).toLocaleDateString()}</Td>
-      <Td>
-        <OrderStatusBadge status={order.status} />
-      </Td>
-      <Td>{order.storageFacility?.name}</Td>
-      <Td>{order.courier?.username}</Td>
-      <Td>{order.dueDate && new Date(order.dueDate).toLocaleDateString()}</Td>
-      {showTotal && (
-        <Td isNumeric>
-          <Peso amount={order.total} />
+
+      {(billed === undefined || !billed) && (
+        <Td>{new Date(order.createdAt).toLocaleDateString()}</Td>
+      )}
+
+      {(billed === undefined || !billed) && (
+        <Td>
+          <OrderStatusBadge status={order.status} />
         </Td>
       )}
+
+      {billed === undefined && <Td>{order.storageFacility?.name}</Td>}
+
+      {billed === undefined ||
+        (billed !== undefined && !!billed && (
+          <>
+            <Td>{order.courier?.username}</Td>
+            <Td>
+              {order.dueDate && new Date(order.dueDate).toLocaleDateString()}
+            </Td>
+          </>
+        ))}
+
+      {billed === undefined && (
+        <Td isNumeric>
+          <Peso amount={order.remainingBalance} />
+        </Td>
+      )}
+
+      {showTotal && (
+        <Td isNumeric>
+          <Peso amount={order.total + (order.shippingFee ?? 0)} />
+        </Td>
+      )}
+
       <Td>
         {allowEdit && (
           <Button onClick={onEditOpen}>
             <EditIcon />
           </Button>
         )}
-
-        {allowPayment && <Button onClick={onPaymentOpen}>Pay</Button>}
+        {allowPayment && (
+          <Button
+            onClick={onPaymentOpen}
+            disabled={order.status !== OrderDTOStatusEnum.Billed}
+          >
+            Pay
+          </Button>
+        )}
       </Td>
 
       <Modal isOpen={isEditOpen} onClose={onEditClose}>
@@ -111,6 +143,7 @@ export const OrderRow: React.FC<OrderRowProps> = ({
                   : undefined
               }
               incoming={incoming}
+              billed={billed}
             />
           </ModalBody>
         </ModalContent>

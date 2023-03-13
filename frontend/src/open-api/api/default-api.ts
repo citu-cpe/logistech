@@ -1790,6 +1790,42 @@ export const DefaultApiAxiosParamCreator = function (
     },
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    stripeWebhook: async (options: any = {}): Promise<RequestArgs> => {
+      const localVarPath = `/api/v1/payment/stripe-webhook`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'POST',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @param {string} orderId
      * @param {UpdateOrderDTO} updateOrderDTO
      * @param {*} [options] Override http request option.
@@ -2772,6 +2808,26 @@ export const DefaultApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async stripeWebhook(
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.stripeWebhook(
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
      * @param {string} orderId
      * @param {UpdateOrderDTO} updateOrderDTO
      * @param {*} [options] Override http request option.
@@ -3312,6 +3368,16 @@ export const DefaultApiFactory = function (
     },
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    stripeWebhook(options?: any): AxiosPromise<void> {
+      return localVarFp
+        .stripeWebhook(options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @param {string} orderId
      * @param {UpdateOrderDTO} updateOrderDTO
      * @param {*} [options] Override http request option.
@@ -3843,6 +3909,18 @@ export class DefaultApi extends BaseAPI {
   ) {
     return DefaultApiFp(this.configuration)
       .removeStorageFacilityPartner(id, storageFacilityId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof DefaultApi
+   */
+  public stripeWebhook(options?: any) {
+    return DefaultApiFp(this.configuration)
+      .stripeWebhook(options)
       .then((request) => request(this.axios, this.basePath));
   }
 
