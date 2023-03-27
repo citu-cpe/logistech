@@ -1,6 +1,8 @@
 import { Box, Checkbox, Td, Tr } from '@chakra-ui/react';
 import { OrderDTO, OrderDTOStatusEnum } from 'generated-api';
 import { Peso } from '../../../shared/components/Peso';
+import NextLink from 'next/link';
+import { addLeadingZeros } from '../../../shared/utils/addLeadingZeros';
 
 interface LedgerRowProps {
   order: OrderDTO;
@@ -11,10 +13,19 @@ export const LedgerRow: React.FC<LedgerRowProps> = ({ order }) => {
     <Tr>
       <Td>{new Date(order.createdAt).toLocaleDateString()}</Td>
       <Td>{order.fromCompany?.name}</Td>
-      <Td>{order.invoiceNumber}</Td>
+      <Td>
+        {!!order.storageFacility && (
+          <NextLink href={`/invoice/${order.id}`}>
+            {addLeadingZeros(order.invoiceNumber, 4)}
+          </NextLink>
+        )}
+      </Td>
       <Td>
         <Checkbox
-          defaultChecked={order.status === OrderDTOStatusEnum.Billed}
+          defaultChecked={
+            order.status === OrderDTOStatusEnum.Billed ||
+            order.status === OrderDTOStatusEnum.Paid
+          }
           disabled
         />
       </Td>

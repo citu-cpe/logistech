@@ -48,6 +48,24 @@ export interface CompanyDTO {
    * @memberof CompanyDTO
    */
   name: string;
+  /**
+   *
+   * @type {string}
+   * @memberof CompanyDTO
+   */
+  address: string;
+  /**
+   *
+   * @type {string}
+   * @memberof CompanyDTO
+   */
+  contactNumber: string;
+  /**
+   *
+   * @type {string}
+   * @memberof CompanyDTO
+   */
+  email: string;
 }
 
 /**

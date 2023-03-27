@@ -1,7 +1,9 @@
 import {
   IsDateString,
+  IsEmail,
   IsEnum,
   IsNotEmpty,
+  IsPhoneNumber,
   IsString,
   IsUUID,
 } from 'class-validator';
@@ -29,4 +31,15 @@ export class CompanyDTO {
   @IsString()
   @IsNotEmpty()
   public name: string;
+
+  @IsString()
+  public address: string;
+
+  @IsString()
+  @IsPhoneNumber()
+  public contactNumber: string;
+
+  @IsString()
+  @IsEmail()
+  public email: string;
 }

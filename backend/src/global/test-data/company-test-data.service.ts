@@ -9,6 +9,9 @@ export const testSupplierCompany: Company = {
   updatedAt: new Date(),
   type: CompanyType.SUPPLIER,
   name: 'SUPPLIER CO.',
+  address: 'Supplier St.',
+  contactNumber: '+63 999 999 9999',
+  email: 'accounting@supplier.com',
 };
 
 export const testStorageFacilityCompany: Company = {
@@ -17,6 +20,9 @@ export const testStorageFacilityCompany: Company = {
   updatedAt: new Date(),
   type: CompanyType.STORAGE_FACILITY,
   name: 'STORAGE FACILITY CO.',
+  address: 'Storage Facility St.',
+  contactNumber: '+63 888 888 8888',
+  email: 'accounting@storage_facility.com',
 };
 
 export const testNewStorageFacilityCompany: Company = {
@@ -25,6 +31,9 @@ export const testNewStorageFacilityCompany: Company = {
   updatedAt: new Date(),
   type: CompanyType.STORAGE_FACILITY,
   name: 'NEW STORAGE FACILITY CO.',
+  address: 'New Storage Facility St.',
+  contactNumber: '+63 777 777 7777',
+  email: 'accounting@new_storage_facility.com',
 };
 
 export const testManufacturerCompany: Company = {
@@ -33,6 +42,9 @@ export const testManufacturerCompany: Company = {
   updatedAt: new Date(),
   type: CompanyType.MANUFACTURER,
   name: 'MANUFACTURER CO.',
+  address: 'Manufacturer St.',
+  contactNumber: '+63 666 666 6666',
+  email: 'accounting@manufacturer.com',
 };
 
 export const testRetailerCompany: Company = {
@@ -41,6 +53,9 @@ export const testRetailerCompany: Company = {
   updatedAt: new Date(),
   type: CompanyType.RETAILER,
   name: 'RETAILER CO.',
+  address: 'Retailer St.',
+  contactNumber: '+63 555 555 5555',
+  email: 'accounting@retailer.com',
 };
 
 export const testNewRetailerCompany: Company = {
@@ -49,6 +64,9 @@ export const testNewRetailerCompany: Company = {
   updatedAt: new Date(),
   type: CompanyType.RETAILER,
   name: 'NEW RETAILER CO.',
+  address: 'New Retailer St.',
+  contactNumber: '+63 444 444 4444',
+  email: 'accounting@new_retailer.com',
 };
 
 @Injectable()

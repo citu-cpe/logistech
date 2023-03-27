@@ -44,11 +44,14 @@ enum UserRole {
 }
 
 model Company {
-  id        String      @id @default(uuid())
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  type      CompanyType
-  name      String
+  id            String      @id @default(uuid())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  type          CompanyType
+  name          String
+  address       String      @default("")
+  contactNumber String      @default("")
+  email         String      @default("")
 
   products              Product[]
   employees             User[]

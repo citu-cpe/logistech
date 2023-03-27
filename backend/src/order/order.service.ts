@@ -135,7 +135,7 @@ export class OrderService {
     const incomingOrders = await this.prismaService.order.findMany({
       where: { toCompanyId: companyId },
       include: {
-        orderItems: { include: { product: true } },
+        orderItems: { include: { product: true, productItems: true } },
         fromCompany: true,
         storageFacility: true,
         courier: true,
