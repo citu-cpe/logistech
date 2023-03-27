@@ -9,6 +9,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { ProductDTO } from 'generated-api';
+import { CompanyTypeBadge } from '../../../shared/components/CompanyTypeBadge';
 import { Peso } from '../../../shared/components/Peso';
 import { useAddToCart } from '../../cart/hooks/useAddToCart';
 
@@ -30,6 +31,10 @@ export const ItemCard: React.FC<ItemCardProps> = ({ product, companyId }) => {
         <Stack spacing='3'>
           <Heading size='md'>{product.name}</Heading>
           <Heading size='sm'>{product.company?.name}</Heading>
+          <CompanyTypeBadge
+            companyType={product.company?.type!}
+            alignSelf='start'
+          />
           {product.bulk && <Text>Items per box: {product.bulkQuantity}</Text>}
           <Text fontWeight='bold' fontSize='xl' textAlign='right'>
             <Peso amount={product.price} />{' '}
