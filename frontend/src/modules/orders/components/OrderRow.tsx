@@ -24,6 +24,7 @@ import { OrderStatusBadge } from '../../../shared/components/OrderStatusBadge';
 import { useGetStorageFacilityPartners } from '../../storage-facilities/hooks/useGetStorageFacilityPartnersQuery';
 import { useGetCouriers } from '../../storage-facilities/hooks/useGetCouriers';
 import { PaymentForm } from '../../payments/components/PaymentForm';
+import { addLeadingZeros } from '../../../shared/utils/addLeadingZeros';
 
 interface OrderRowProps {
   order: OrderDTO;
@@ -70,7 +71,7 @@ export const OrderRow: React.FC<OrderRowProps> = ({
       )}
 
       {company.type === CompanyDTOTypeEnum.StorageFacility && (
-        <Td>{order.invoiceNumber}</Td>
+        <Td>{addLeadingZeros(order.invoiceNumber, 4)}</Td>
       )}
 
       {(billed === undefined || !billed) && (
