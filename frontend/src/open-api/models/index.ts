@@ -18,6 +18,8 @@ export * from './payment-url-dto';
 export * from './product-dto';
 export * from './product-item-dto';
 export * from './register-user-dto';
+export * from './sales-dto';
+export * from './sales-item-dto';
 export * from './tokens-dto';
 export * from './transaction-dto';
 export * from './update-order-dto';

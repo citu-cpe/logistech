@@ -1,32 +1,75 @@
-import { Text, Tr, Td } from '@chakra-ui/react';
+import { Box, Text, Tr, Td } from '@chakra-ui/react';
+import { SalesDTO } from 'generated-api';
+import { OrderStatusBadge } from '../../../shared/components/OrderStatusBadge';
 import { Peso } from '../../../shared/components/Peso';
+import { ProductItemStatusBadge } from '../../../shared/components/ProductItemStatusBadge';
 
-interface SalesRowProps {}
+interface SalesRowProps {
+  sale: SalesDTO;
+}
 
-export const SalesRow: React.FC<SalesRowProps> = ({}) => {
+export const SalesRow: React.FC<SalesRowProps> = ({ sale }) => {
+  const salesItems = sale.salesItems;
+
   return (
     <Tr>
-      <Td>Item A</Td>
+      <Td>{sale.product.name}</Td>
 
       <Td>
-        <Text></Text>
-        <Text>Customer 1</Text>
-        <Text>Customer 2</Text>
+        {salesItems.map((s) => (
+          <Text key={s.customer.id}>{s.customer.name}</Text>
+        ))}
       </Td>
-
-      <Td isNumeric>1</Td>
 
       <Td isNumeric>
-        <Peso amount={1000} />
+        {salesItems.map((s) => (
+          <Text key={s.customer.id}>
+            {s.orderItems.reduce((quantity, o) => quantity + o.quantity, 0)}
+          </Text>
+        ))}
       </Td>
 
-      <Td>Customer ID</Td>
+      <Td isNumeric>
+        {salesItems.map((s) => (
+          <Box key={s.customer.id}>
+            <Peso
+              amount={s.orderItems.reduce((total, o) => total + o.total, 0)}
+            />
+          </Box>
+        ))}
+      </Td>
 
-      <Td>RFID</Td>
+      <Td>
+        {salesItems.map((s) => (
+          <Text key={s.customer.id}>{s.customer.id}</Text>
+        ))}
+      </Td>
 
-      <Td>Payment Status</Td>
+      <Td>
+        {salesItems.map((s) =>
+          s.orderItems.map((o) =>
+            o.productItems?.map((p) => <Text key={p.id}>{p.rfid}</Text>)
+          )
+        )}
+      </Td>
 
-      <Td>Delivery Status</Td>
+      <Td>
+        {salesItems.map((s) => (
+          <Box key={s.customer.id}>
+            <OrderStatusBadge status={s.orderItems[0].order?.status!} />
+          </Box>
+        ))}
+      </Td>
+
+      <Td>
+        {salesItems.map((s) => (
+          <Box key={s.customer.id}>
+            <ProductItemStatusBadge
+              status={s.orderItems[0].productItems![0].status!}
+            />
+          </Box>
+        ))}
+      </Td>
     </Tr>
   );
 };
