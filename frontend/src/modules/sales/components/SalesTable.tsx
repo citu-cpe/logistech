@@ -1,9 +1,15 @@
 import { TableContainer, Table, Thead, Tr, Th, Tbody } from '@chakra-ui/react';
+import { useGlobalStore } from '../../../shared/stores';
+import { useGetSales } from '../../orders/hooks/useGetSales';
 import { SalesRow } from './SalesRow';
 
 interface SalesTableProps {}
 
 export const SalesTable: React.FC<SalesTableProps> = ({}) => {
+  const getUser = useGlobalStore().getUser;
+  const companyId = getUser()?.company?.id;
+  const { data } = useGetSales(companyId!);
+
   return (
     <TableContainer>
       <Table variant='simple'>
@@ -20,7 +26,9 @@ export const SalesTable: React.FC<SalesTableProps> = ({}) => {
           </Tr>
         </Thead>
         <Tbody>
-          <SalesRow />
+          {data?.data.map((s) => (
+            <SalesRow key={s.product.id} sale={s} />
+          ))}
         </Tbody>
       </Table>
     </TableContainer>

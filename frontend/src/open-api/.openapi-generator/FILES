@@ -30,6 +30,8 @@ models/payment-url-dto.ts
 models/product-dto.ts
 models/product-item-dto.ts
 models/register-user-dto.ts
+models/sales-dto.ts
+models/sales-item-dto.ts
 models/tokens-dto.ts
 models/transaction-dto.ts
 models/update-order-dto.ts

@@ -11,6 +11,7 @@ import {
 import { CartDTO } from '../cart/dto/cart.dto';
 import { CreateOrderItemDTO } from './dto/create-order-item.dto';
 import { OrderDTO } from './dto/order.dto';
+import { SalesDTO } from './dto/sales.dto';
 import { UpdateOrderStatusDTO } from './dto/update-order-status.dto';
 import { UpdateOrderDTO } from './dto/update-order.dto';
 import { OrderItemService } from './order-item.service';
@@ -22,6 +23,7 @@ export class OrderController {
   public static readonly ORDER_ID_API_ROUTE = '/order/:orderId';
   public static readonly ORDER_ITEM_API_ROUTE = '/order-item/:orderItemId';
   public static readonly COMPANY_API_ROUTE = '/company/:companyId';
+  public static readonly SALES_API_ROUTE = '/sales';
 
   constructor(
     private readonly orderService: OrderService,
@@ -103,5 +105,14 @@ export class OrderController {
     @Body() dto: UpdateOrderDTO
   ): Promise<void> {
     return this.orderService.updateOrder(orderId, dto);
+  }
+
+  @Get(
+    OrderController.ORDER_API_ROUTE +
+      OrderController.COMPANY_API_ROUTE +
+      OrderController.SALES_API_ROUTE
+  )
+  public getSales(@Param('companyId') companyId: string): Promise<SalesDTO[]> {
+    return this.orderItemService.getSales(companyId);
   }
 }

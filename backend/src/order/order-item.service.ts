@@ -1,15 +1,26 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import {
+  Company,
+  Order,
   OrderItem,
   Product,
   ProductItem,
   ProductItemStatus,
 } from '@prisma/client';
+import { CompanyService } from '../company/company.service';
 import { PrismaService } from '../global/prisma/prisma.service';
 import { ProductItemService } from '../product/product-item.service';
 import { ProductService } from '../product/product.service';
 import { CreateOrderItemDTO } from './dto/create-order-item.dto';
 import { OrderItemDTO } from './dto/order-item.dto';
+import { SalesItemDTO } from './dto/sales-item.dto';
+import { SalesDTO } from './dto/sales.dto';
+
+type OrderItemInclusive = OrderItem & {
+  order: Order & { fromCompany: Company };
+  product: Product;
+  productItems: ProductItem[];
+};
 
 @Injectable()
 export class OrderItemService {
@@ -72,6 +83,68 @@ export class OrderItemService {
         total: { decrement: orderItem.quantity * orderItem.product.price },
       },
     });
+  }
+
+  public async getSales(companyId: string) {
+    const orderItems = await this.prismaService.orderItem.findMany({
+      where: { owningCompanyId: companyId },
+      include: {
+        product: true,
+        order: { include: { fromCompany: true } },
+        productItems: true,
+      },
+    });
+
+    const sales: SalesDTO[] = [];
+    const mapByProductId = new Map<string, OrderItemInclusive[]>();
+
+    for (const orderItem of orderItems) {
+      mapByProductId.set(orderItem.productId, [
+        ...(mapByProductId.get(orderItem.productId) || []),
+        orderItem,
+      ]);
+    }
+
+    for (const productEntry of mapByProductId.entries()) {
+      const customers: Company[] = [];
+      const includedCustomerIds: string[] = [];
+
+      for (const orderItem of productEntry[1]) {
+        if (!includedCustomerIds.includes(orderItem.order.fromCompany.id)) {
+          const customer = orderItem.order.fromCompany;
+          customers.push(customer);
+          includedCustomerIds.push(customer.id);
+        }
+      }
+
+      const product = await this.prismaService.product.findUnique({
+        where: { id: productEntry[0] },
+      });
+
+      const productDTO = ProductService.convertToDTO(product);
+      const salesItems: SalesItemDTO[] = [];
+
+      const mapByCustomerId = new Map<string, OrderItemInclusive[]>();
+      for (const orderItem of productEntry[1]) {
+        mapByCustomerId.set(orderItem.order.fromCompany.id, [
+          ...(mapByCustomerId.get(orderItem.order.fromCompany.id) || []),
+          orderItem,
+        ]);
+      }
+
+      for (const customer of customers) {
+        salesItems.push({
+          customer: CompanyService.convertToDTO(customer),
+          orderItems: mapByCustomerId
+            .get(customer.id)
+            .map((o) => OrderItemService.convertToDTO(o)),
+        });
+      }
+
+      sales.push({ product: productDTO, salesItems });
+    }
+
+    return sales;
   }
 
   private async validateInStock(
