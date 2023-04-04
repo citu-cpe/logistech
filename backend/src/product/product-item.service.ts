@@ -1,9 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { ProductItem } from '@prisma/client';
+import { Product, ProductItem } from '@prisma/client';
 import { PostgresErrorCode } from '../shared/constants/postgress-error-codes.enum';
 import { PrismaService } from '../global/prisma/prisma.service';
 import { CreateProductItemDTO } from './dto/create-product-item.dto';
 import { ProductItemDTO, ProductItemStatusEnum } from './dto/product-item.dto';
+import { ProductService } from './product.service';
 
 @Injectable()
 export class ProductItemService {
@@ -80,10 +81,26 @@ export class ProductItemService {
     });
   }
 
-  public static convertToDTO(productItem: ProductItem): ProductItemDTO {
+  public async getProductItemsByStatus(
+    status: ProductItemStatusEnum,
+    companyId: string
+  ) {
+    const productItems = await this.prismaService.productItem.findMany({
+      where: { status, product: { companyId } },
+      include: { product: true },
+    });
+
+    return productItems.map((p) => ProductItemService.convertToDTO(p));
+  }
+
+  public static convertToDTO(
+    productItem: ProductItem & { product?: Product }
+  ): ProductItemDTO {
     return {
       ...productItem,
       status: productItem.status as ProductItemStatusEnum,
+      product:
+        productItem.product && ProductService.convertToDTO(productItem.product),
     };
   }
 }

@@ -55,6 +55,8 @@ import { CreateProductDTO } from '../models';
 // @ts-ignore
 import { CreateProductItemDTO } from '../models';
 // @ts-ignore
+import { CreateReportDTO } from '../models';
+// @ts-ignore
 import { LoginResponseDTO } from '../models';
 // @ts-ignore
 import { LoginUserDTO } from '../models';
@@ -67,9 +69,13 @@ import { PaymentUrlDTO } from '../models';
 // @ts-ignore
 import { ProductDTO } from '../models';
 // @ts-ignore
+import { ProductItemByStatusDTO } from '../models';
+// @ts-ignore
 import { ProductItemDTO } from '../models';
 // @ts-ignore
 import { RegisterUserDTO } from '../models';
+// @ts-ignore
+import { ReportDTO } from '../models';
 // @ts-ignore
 import { SalesDTO } from '../models';
 // @ts-ignore
@@ -531,6 +537,55 @@ export const DefaultApiAxiosParamCreator = function (
     },
     /**
      *
+     * @param {CreateReportDTO} createReportDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createReport: async (
+      createReportDTO: CreateReportDTO,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'createReportDTO' is not null or undefined
+      assertParamExists('createReport', 'createReportDTO', createReportDTO);
+      const localVarPath = `/api/v1/report`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'POST',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        createReportDTO,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @param {string} orderItemId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -621,23 +676,21 @@ export const DefaultApiAxiosParamCreator = function (
     },
     /**
      *
-     * @param {string} productId
-     * @param {string} id
+     * @param {string} productItemId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     deleteProductItem: async (
-      productId: string,
-      id: string,
+      productItemId: string,
       options: any = {}
     ): Promise<RequestArgs> => {
-      // verify required parameter 'productId' is not null or undefined
-      assertParamExists('deleteProductItem', 'productId', productId);
-      // verify required parameter 'id' is not null or undefined
-      assertParamExists('deleteProductItem', 'id', id);
-      const localVarPath = `/api/v1/product/{productId}/product-item/{id}`
-        .replace(`{${'productId'}}`, encodeURIComponent(String(productId)))
-        .replace(`{${'id'}}`, encodeURIComponent(String(id)));
+      // verify required parameter 'productItemId' is not null or undefined
+      assertParamExists('deleteProductItem', 'productItemId', productItemId);
+      const localVarPath =
+        `/api/v1/product/product-item/{productItemId}`.replace(
+          `{${'productItemId'}}`,
+          encodeURIComponent(String(productItemId))
+        );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -785,31 +838,29 @@ export const DefaultApiAxiosParamCreator = function (
     },
     /**
      *
-     * @param {string} productId
-     * @param {string} id
+     * @param {string} productItemId
      * @param {CreateProductItemDTO} createProductItemDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     editProductItem: async (
-      productId: string,
-      id: string,
+      productItemId: string,
       createProductItemDTO: CreateProductItemDTO,
       options: any = {}
     ): Promise<RequestArgs> => {
-      // verify required parameter 'productId' is not null or undefined
-      assertParamExists('editProductItem', 'productId', productId);
-      // verify required parameter 'id' is not null or undefined
-      assertParamExists('editProductItem', 'id', id);
+      // verify required parameter 'productItemId' is not null or undefined
+      assertParamExists('editProductItem', 'productItemId', productItemId);
       // verify required parameter 'createProductItemDTO' is not null or undefined
       assertParamExists(
         'editProductItem',
         'createProductItemDTO',
         createProductItemDTO
       );
-      const localVarPath = `/api/v1/product/{productId}/product-item/{id}`
-        .replace(`{${'productId'}}`, encodeURIComponent(String(productId)))
-        .replace(`{${'id'}}`, encodeURIComponent(String(id)));
+      const localVarPath =
+        `/api/v1/product/product-item/{productItemId}`.replace(
+          `{${'productItemId'}}`,
+          encodeURIComponent(String(productItemId))
+        );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -1405,6 +1456,66 @@ export const DefaultApiAxiosParamCreator = function (
     /**
      *
      * @param {string} companyId
+     * @param {ProductItemByStatusDTO} productItemByStatusDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getProductItemsByStatus: async (
+      companyId: string,
+      productItemByStatusDTO: ProductItemByStatusDTO,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'companyId' is not null or undefined
+      assertParamExists('getProductItemsByStatus', 'companyId', companyId);
+      // verify required parameter 'productItemByStatusDTO' is not null or undefined
+      assertParamExists(
+        'getProductItemsByStatus',
+        'productItemByStatusDTO',
+        productItemByStatusDTO
+      );
+      const localVarPath = `/api/v1/product/company/{companyId}/status`.replace(
+        `{${'companyId'}}`,
+        encodeURIComponent(String(companyId))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'POST',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        productItemByStatusDTO,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} companyId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -1415,6 +1526,51 @@ export const DefaultApiAxiosParamCreator = function (
       // verify required parameter 'companyId' is not null or undefined
       assertParamExists('getProductsForCompany', 'companyId', companyId);
       const localVarPath = `/api/v1/product/company/{companyId}`.replace(
+        `{${'companyId'}}`,
+        encodeURIComponent(String(companyId))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getReports: async (
+      companyId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'companyId' is not null or undefined
+      assertParamExists('getReports', 'companyId', companyId);
+      const localVarPath = `/api/v1/report/company/{companyId}`.replace(
         `{${'companyId'}}`,
         encodeURIComponent(String(companyId))
       );
@@ -2200,6 +2356,29 @@ export const DefaultApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @param {CreateReportDTO} createReportDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async createReport(
+      createReportDTO: CreateReportDTO,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.createReport(
+        createReportDTO,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
      * @param {string} orderItemId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -2246,22 +2425,19 @@ export const DefaultApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @param {string} productId
-     * @param {string} id
+     * @param {string} productItemId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async deleteProductItem(
-      productId: string,
-      id: string,
+      productItemId: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.deleteProductItem(
-          productId,
-          id,
+          productItemId,
           options
         );
       return createRequestFunction(
@@ -2325,23 +2501,20 @@ export const DefaultApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @param {string} productId
-     * @param {string} id
+     * @param {string} productItemId
      * @param {CreateProductItemDTO} createProductItemDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async editProductItem(
-      productId: string,
-      id: string,
+      productItemId: string,
       createProductItemDTO: CreateProductItemDTO,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.editProductItem(
-        productId,
-        id,
+        productItemId,
         createProductItemDTO,
         options
       );
@@ -2656,6 +2829,36 @@ export const DefaultApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} companyId
+     * @param {ProductItemByStatusDTO} productItemByStatusDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getProductItemsByStatus(
+      companyId: string,
+      productItemByStatusDTO: ProductItemByStatusDTO,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<ProductItemDTO>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getProductItemsByStatus(
+          companyId,
+          productItemByStatusDTO,
+          options
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} companyId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -2673,6 +2876,32 @@ export const DefaultApiFp = function (configuration?: Configuration) {
           companyId,
           options
         );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getReports(
+      companyId: string,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<ReportDTO>>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getReports(
+        companyId,
+        options
+      );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -3088,6 +3317,20 @@ export const DefaultApiFactory = function (
     },
     /**
      *
+     * @param {CreateReportDTO} createReportDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createReport(
+      createReportDTO: CreateReportDTO,
+      options?: any
+    ): AxiosPromise<void> {
+      return localVarFp
+        .createReport(createReportDTO, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @param {string} orderItemId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3110,18 +3353,16 @@ export const DefaultApiFactory = function (
     },
     /**
      *
-     * @param {string} productId
-     * @param {string} id
+     * @param {string} productItemId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     deleteProductItem(
-      productId: string,
-      id: string,
+      productItemId: string,
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
-        .deleteProductItem(productId, id, options)
+        .deleteProductItem(productItemId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -3158,20 +3399,18 @@ export const DefaultApiFactory = function (
     },
     /**
      *
-     * @param {string} productId
-     * @param {string} id
+     * @param {string} productItemId
      * @param {CreateProductItemDTO} createProductItemDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     editProductItem(
-      productId: string,
-      id: string,
+      productItemId: string,
       createProductItemDTO: CreateProductItemDTO,
       options?: any
     ): AxiosPromise<object> {
       return localVarFp
-        .editProductItem(productId, id, createProductItemDTO, options)
+        .editProductItem(productItemId, createProductItemDTO, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -3334,6 +3573,22 @@ export const DefaultApiFactory = function (
     /**
      *
      * @param {string} companyId
+     * @param {ProductItemByStatusDTO} productItemByStatusDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getProductItemsByStatus(
+      companyId: string,
+      productItemByStatusDTO: ProductItemByStatusDTO,
+      options?: any
+    ): AxiosPromise<Array<ProductItemDTO>> {
+      return localVarFp
+        .getProductItemsByStatus(companyId, productItemByStatusDTO, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} companyId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -3343,6 +3598,20 @@ export const DefaultApiFactory = function (
     ): AxiosPromise<Array<ProductDTO>> {
       return localVarFp
         .getProductsForCompany(companyId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getReports(
+      companyId: string,
+      options?: any
+    ): AxiosPromise<Array<ReportDTO>> {
+      return localVarFp
+        .getReports(companyId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -3633,6 +3902,19 @@ export class DefaultApi extends BaseAPI {
 
   /**
    *
+   * @param {CreateReportDTO} createReportDTO
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof DefaultApi
+   */
+  public createReport(createReportDTO: CreateReportDTO, options?: any) {
+    return DefaultApiFp(this.configuration)
+      .createReport(createReportDTO, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
    * @param {string} orderItemId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
@@ -3659,15 +3941,14 @@ export class DefaultApi extends BaseAPI {
 
   /**
    *
-   * @param {string} productId
-   * @param {string} id
+   * @param {string} productItemId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof DefaultApi
    */
-  public deleteProductItem(productId: string, id: string, options?: any) {
+  public deleteProductItem(productItemId: string, options?: any) {
     return DefaultApiFp(this.configuration)
-      .deleteProductItem(productId, id, options)
+      .deleteProductItem(productItemId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
@@ -3709,21 +3990,19 @@ export class DefaultApi extends BaseAPI {
 
   /**
    *
-   * @param {string} productId
-   * @param {string} id
+   * @param {string} productItemId
    * @param {CreateProductItemDTO} createProductItemDTO
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof DefaultApi
    */
   public editProductItem(
-    productId: string,
-    id: string,
+    productItemId: string,
     createProductItemDTO: CreateProductItemDTO,
     options?: any
   ) {
     return DefaultApiFp(this.configuration)
-      .editProductItem(productId, id, createProductItemDTO, options)
+      .editProductItem(productItemId, createProductItemDTO, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
@@ -3890,6 +4169,24 @@ export class DefaultApi extends BaseAPI {
   /**
    *
    * @param {string} companyId
+   * @param {ProductItemByStatusDTO} productItemByStatusDTO
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof DefaultApi
+   */
+  public getProductItemsByStatus(
+    companyId: string,
+    productItemByStatusDTO: ProductItemByStatusDTO,
+    options?: any
+  ) {
+    return DefaultApiFp(this.configuration)
+      .getProductItemsByStatus(companyId, productItemByStatusDTO, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {string} companyId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof DefaultApi
@@ -3897,6 +4194,19 @@ export class DefaultApi extends BaseAPI {
   public getProductsForCompany(companyId: string, options?: any) {
     return DefaultApiFp(this.configuration)
       .getProductsForCompany(companyId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {string} companyId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof DefaultApi
+   */
+  public getReports(companyId: string, options?: any) {
+    return DefaultApiFp(this.configuration)
+      .getReports(companyId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

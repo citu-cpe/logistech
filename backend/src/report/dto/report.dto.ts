@@ -6,6 +6,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { ProductItemDTO } from '../..//product/dto/product-item.dto';
+import { UserDTO } from '../../user/dto/user.dto';
 
 export class ReportDTO {
   @IsUUID()
@@ -16,6 +17,9 @@ export class ReportDTO {
 
   @IsDateString()
   public updatedAt: Date;
+
+  @ValidateNested()
+  public reportedBy: UserDTO;
 
   @IsString()
   @IsNotEmpty()

@@ -13,7 +13,7 @@ export const useCreateManyProductItems = (productId: string) => {
       api.createManyProductItems(productId, dto),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(PRODUCT_ITEMS_QUERY_KEY(productId));
+        queryClient.invalidateQueries(PRODUCT_ITEMS_QUERY_KEY);
       },
     }
   );

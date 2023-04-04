@@ -13,6 +13,7 @@ import { CommerceProductDTO } from './dto/commerce-product.dto';
 import { CreateManyProductItemsDTO } from './dto/create-many-product-items.dto';
 import { CreateProductItemDTO } from './dto/create-product-item.dto';
 import { CreateProductDTO } from './dto/create-product.dto';
+import { ProductItemByStatusDTO } from './dto/product-item-by-status.dto';
 import { ProductItemDTO } from './dto/product-item.dto';
 import { ProductDTO } from './dto/product.dto';
 import { ProductItemService } from './product-item.service';
@@ -93,24 +94,27 @@ export class ProductController {
     );
   }
 
-  @Put(
-    ProductController.PRODUCT_ITEM_API_ROUTE + ProductController.ID_API_ROUTE
-  )
+  @Put('/product-item/:productItemId')
   public editProductItem(
     @Body() dto: CreateProductItemDTO,
-    @Param('productId') _productId: string,
-    @Param('id') id: string
+    @Param('productItemId') id: string
   ) {
     return this.productItemService.editProductItem(dto, id);
   }
 
-  @Delete(
-    ProductController.PRODUCT_ITEM_API_ROUTE + ProductController.ID_API_ROUTE
-  )
-  public deleteProductItem(
-    @Param('productId') _productId: string,
-    @Param('id') id: string
-  ) {
+  @Delete('/product-item/:productItemId')
+  public deleteProductItem(@Param('productItemId') id: string) {
     return this.productItemService.deleteProductItem(id);
+  }
+
+  @Post(ProductController.COMPANY_API_ROUTE + '/status')
+  public getProductItemsByStatus(
+    @Param('companyId') companyId: string,
+    @Body() dto: ProductItemByStatusDTO
+  ): Promise<ProductItemDTO[]> {
+    return this.productItemService.getProductItemsByStatus(
+      dto.status,
+      companyId
+    );
   }
 }

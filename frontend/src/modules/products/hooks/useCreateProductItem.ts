@@ -12,7 +12,7 @@ export const useCreateProductItem = (productId: string) => {
     (dto: CreateProductItemDTO) => api.createProductItem(productId, dto),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(PRODUCT_ITEMS_QUERY_KEY(productId));
+        queryClient.invalidateQueries(PRODUCT_ITEMS_QUERY_KEY);
       },
     }
   );

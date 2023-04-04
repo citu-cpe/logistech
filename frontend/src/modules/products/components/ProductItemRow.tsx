@@ -91,7 +91,6 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
           <ModalBody>
             <EditProductItemForm
               productItem={productItem}
-              productId={productId as string}
               onClose={onEditProductItemClose}
             />
           </ModalBody>

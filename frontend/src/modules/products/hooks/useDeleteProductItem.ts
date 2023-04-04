@@ -9,7 +9,7 @@ export const useDeleteProductItem = (productId: string) => {
 
   return useMutation((id: string) => api.deleteProductItem(productId, id), {
     onSuccess: () => {
-      queryClient.invalidateQueries(PRODUCT_ITEMS_QUERY_KEY(productId));
+      queryClient.invalidateQueries(PRODUCT_ITEMS_QUERY_KEY);
     },
   });
 };
