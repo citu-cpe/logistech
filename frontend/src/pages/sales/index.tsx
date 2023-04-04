@@ -4,7 +4,7 @@ import { SalesTable } from '../../modules/sales/components/SalesTable';
 const Sales = () => {
   return (
     <Box>
-      <Heading>Sales</Heading>
+      <Heading mb='6'>Sales</Heading>
       <SalesTable />
     </Box>
   );

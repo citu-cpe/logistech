@@ -12,7 +12,6 @@ import { productItemFormValidationSchema } from './ProductItemForm';
 
 interface ProductItemFormProps {
   onClose?: () => void;
-  productId: string;
   productItem: ProductItemDTO;
 }
 
@@ -20,10 +19,9 @@ export const generateMockRfId = () => Math.random().toString(36).slice(-8);
 
 export const EditProductItemForm: React.FC<ProductItemFormProps> = ({
   onClose,
-  productId,
   productItem,
 }) => {
-  const ediProductItem = useEditProductItem(productItem.id, productId);
+  const ediProductItem = useEditProductItem(productItem.id);
 
   const onSubmit = (dto: CreateProductItemDTO) => {
     ediProductItem.mutate(dto, {

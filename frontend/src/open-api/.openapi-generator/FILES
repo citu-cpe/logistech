@@ -18,6 +18,7 @@ models/create-order-item-dto.ts
 models/create-payment-dto.ts
 models/create-product-dto.ts
 models/create-product-item-dto.ts
+models/create-report-dto.ts
 models/index.ts
 models/login-response-dto.ts
 models/login-user-dto.ts
@@ -28,8 +29,10 @@ models/order-item-group.ts
 models/payment-dto.ts
 models/payment-url-dto.ts
 models/product-dto.ts
+models/product-item-by-status-dto.ts
 models/product-item-dto.ts
 models/register-user-dto.ts
+models/report-dto.ts
 models/sales-dto.ts
 models/sales-item-dto.ts
 models/tokens-dto.ts

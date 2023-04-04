@@ -22,7 +22,8 @@ model User {
   company                   Company? @relation(fields: [companyId], references: [id], onDelete: Cascade)
   role                      UserRole
 
-  orders Order[] @relation("courierOrder")
+  orders Order[]  @relation("courierOrder")
+  reports Report[]
 }
 
 enum UserRole {
@@ -128,6 +129,9 @@ model Report {
 
   productItemId String
   productItem   ProductItem @relation(fields: [productItemId], references: [id], onDelete: Cascade)
+
+  reportedById String
+  reportedBy   User   @relation(fields: [reportedById], references: [id], onDelete: Cascade)
 }
 
 model Transaction {
