@@ -30,7 +30,7 @@
     "prepare": "cd ../ && husky install ./backend/.husky",
     "generate:api": "nest build && npm run generate:api:web && npm run generate:api:mobile",
     "generate:api:web": "rm -rf ../frontend/src/open-api && openapi-generator-cli generate -i http://localhost:5001/api-json -g typescript-axios -o ../frontend/src/open-api --config api.json && prettier --write \"../frontend/src/open-api/**/*.{ts,json,md}\" && cd ../frontend && npm install generated-api",
-    "generate:api:mobile": "rm -rf ../mobile/open-api && openapi-generator-cli generate -i http://localhost:5001/api-json -g typescript-axios -o ../mobile/open-api --config api.json && prettier --write \"../mobile/open-api/**/*.{ts,json,md}\" && cd ../mobile && npm install generated-api"
+    "generate:api:mobile": "rm -rf ../mobile/open-api && openapi-generator-cli generate -i http://localhost:5001/api-json -g typescript-axios -o ../mobile/open-api --config api.json && prettier --write \"../mobile/open-api/**/*.{ts,json,md}\" && cd ../mobile && npm install generated-api && cd open-api && npm run build"
   },
   "lint-staged": {
     "src/**/*.ts": [
