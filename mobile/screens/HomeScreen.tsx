@@ -1,35 +1,19 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useQueryClient } from "@tanstack/react-query";
-import { Button, StyleSheet, Text, View } from "react-native";
-import { RootStackParamList } from "../App";
-import { HELLO_WORLD_QUERY_KEY, useGetHelloWorld } from "./useGetHelloWorld";
+import { Box, Button, Text } from "native-base";
+import { useLogout } from "../shared/hooks/useLogout";
 
-export const HomeScreen = ({
-  navigation,
-}: NativeStackScreenProps<RootStackParamList, "Home">) => {
-  const { data } = useGetHelloWorld();
-  const queryClient = useQueryClient();
+export const HomeScreen = () => {
+  const logout = useLogout();
 
   return (
-    <View style={styles.container}>
-      <Text>LogisTech</Text>
-      <Text>Response: {data?.data}</Text>
+    <Box flex={1} justifyContent="center" alignItems="center" p={5}>
+      <Text mb={5}>LogisTech</Text>
       <Button
-        onPress={() => navigation.navigate("Profile", { userId: "a;dlkj;als" })}
-        title="Profile"
-      />
-      <Button
-        onPress={() => queryClient.invalidateQueries(HELLO_WORLD_QUERY_KEY)}
-        title="Reload"
-      />
-    </View>
+        w="full"
+        onPress={() => logout.mutate()}
+        isLoading={logout.isLoading}
+      >
+        Log out
+      </Button>
+    </Box>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
