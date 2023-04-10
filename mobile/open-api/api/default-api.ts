@@ -4070,7 +4070,6 @@ export class DefaultApi extends BaseAPI {
    * @memberof DefaultApi
    */
   public getHello(options?: any) {
-    console.log("test");
     return DefaultApiFp(this.configuration)
       .getHello(options)
       .then((request) => request(this.axios, this.basePath));
