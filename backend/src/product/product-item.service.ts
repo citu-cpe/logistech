@@ -93,6 +93,18 @@ export class ProductItemService {
     return productItems.map((p) => ProductItemService.convertToDTO(p));
   }
 
+  public async getProductItemsByStatusAndUser(
+    status: ProductItemStatusEnum,
+    userId: string
+  ) {
+    const productItems = await this.prismaService.productItem.findMany({
+      where: { status, customerId: userId },
+      include: { product: true },
+    });
+
+    return productItems.map((p) => ProductItemService.convertToDTO(p));
+  }
+
   public static convertToDTO(
     productItem: ProductItem & { product?: Product }
   ): ProductItemDTO {

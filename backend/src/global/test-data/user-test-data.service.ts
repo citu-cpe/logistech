@@ -182,5 +182,8 @@ export class UserTestDataService {
     await this.prismaService.user.create({
       data: { ...user, password: await bcrypt.hash(user.password, 10) },
     });
+    await this.prismaService.cart.create({
+      data: { total: 0, customerId: user.id },
+    });
   }
 }

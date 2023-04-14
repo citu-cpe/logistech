@@ -86,7 +86,7 @@ export const useAxios = () => {
 
           // FIXME
           toast.show({
-            description: description || "Something went wrong",
+            title: description || "Something went wrong",
             bgColor: "error.700",
             color: "error.50",
           });

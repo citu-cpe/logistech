@@ -22,8 +22,12 @@ model User {
   company                   Company? @relation(fields: [companyId], references: [id], onDelete: Cascade)
   role                      UserRole
 
-  orders Order[]  @relation("courierOrder")
-  reports Report[]
+  courierOrders  Order[]       @relation("courierOrder")
+  customerOrders Order[]       @relation("customerOrder")
+  reports        Report[]
+  productItems   ProductItem[]
+  cart           Cart?
+  transactions    Transaction[]
 }
 
 enum UserRole {
@@ -108,6 +112,9 @@ model ProductItem {
   orderItemId String?
   orderItem   OrderItem? @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
 
+  customerId String?
+  customer   User?   @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
   reports Report[]
 }
 
@@ -140,9 +147,11 @@ model Transaction {
   updatedAt DateTime @updatedAt
 
   sendingCompanyId   String
-  sendingCompany     Company @relation("sendingCompany", fields: [sendingCompanyId], references: [id])
-  receivingCompanyId String
-  receivingCompany   Company @relation("receivingCompany", fields: [receivingCompanyId], references: [id])
+  sendingCompany     Company  @relation("sendingCompany", fields: [sendingCompanyId], references: [id])
+  receivingCompanyId String?
+  receivingCompany   Company? @relation("receivingCompany", fields: [receivingCompanyId], references: [id])
+  customerId         String?
+  customer           User?    @relation(fields: [customerId], references: [id])
 
   productItems ProductItem[]
 }
@@ -153,8 +162,11 @@ model Cart {
   updatedAt DateTime @updatedAt
   total     Float
 
-  companyId String  @unique
-  company   Company @relation(fields: [companyId], references: [id])
+  companyId String?  @unique
+  company   Company? @relation(fields: [companyId], references: [id])
+
+  customerId String? @unique
+  customer   User?   @relation(fields: [customerId], references: [id])
 
   orderItems OrderItem[]
 }
@@ -192,16 +204,19 @@ model Order {
   orderItems OrderItem[]
   payments   Payment[]
 
-  fromCompanyId String
-  fromCompany   Company @relation("fromCompany", fields: [fromCompanyId], references: [id], onDelete: Cascade)
+  fromCompanyId String?
+  fromCompany   Company? @relation("fromCompany", fields: [fromCompanyId], references: [id], onDelete: Cascade)
   toCompanyId   String
-  toCompany     Company @relation("toCompany", fields: [toCompanyId], references: [id], onDelete: Cascade)
+  toCompany     Company  @relation("toCompany", fields: [toCompanyId], references: [id], onDelete: Cascade)
 
   storageFacilityId String?
   storageFacility   Company? @relation("storageFacilityOrder", fields: [storageFacilityId], references: [id])
 
   courierId String?
   courier   User?   @relation("courierOrder", fields: [courierId], references: [id])
+
+  customerId String?
+  customer   User?   @relation("customerOrder", fields: [customerId], references: [id])
 
   dueDate DateTime?
 

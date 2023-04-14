@@ -1,19 +1,60 @@
-import { Box, Button, Text } from "native-base";
-import { useLogout } from "../shared/hooks/useLogout";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { ProductItemByStatusDTOStatusEnum } from "generated-api";
+import { Button, Flex, Heading, ScrollView, Spacer } from "native-base";
+import { HomeStackParamList } from "./HomeStackScreen";
 
-export const HomeScreen = () => {
-  const logout = useLogout();
-
+export const HomeScreen = ({
+  navigation,
+}: NativeStackScreenProps<HomeStackParamList, "Home">) => {
   return (
-    <Box flex={1} justifyContent="center" alignItems="center" p={5}>
-      <Text mb={5}>LogisTech</Text>
-      <Button
-        w="full"
-        onPress={() => logout.mutate()}
-        isLoading={logout.isLoading}
-      >
-        Log out
+    <ScrollView
+      flex={1}
+      p={5}
+      backgroundColor="blueGray.700"
+      contentContainerStyle={{
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Flex flexDir="row" mb="2">
+        <Button
+          onPress={() =>
+            navigation.navigate("ProductItems", {
+              status: ProductItemByStatusDTOStatusEnum.InTransit,
+            })
+          }
+        >
+          In Transit
+        </Button>
+
+        <Spacer />
+
+        <Button
+          onPress={() =>
+            navigation.navigate("ProductItems", {
+              status: ProductItemByStatusDTOStatusEnum.OnHold,
+            })
+          }
+        >
+          On Hold
+        </Button>
+
+        <Spacer />
+
+        <Button
+          onPress={() =>
+            navigation.navigate("ProductItems", {
+              status: ProductItemByStatusDTOStatusEnum.RedFlag,
+            })
+          }
+        >
+          Red Flag
+        </Button>
+      </Flex>
+
+      <Button onPress={() => navigation.navigate("Commerce")} w="full">
+        Commerce
       </Button>
-    </Box>
+    </ScrollView>
   );
 };

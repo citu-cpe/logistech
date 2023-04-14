@@ -8,7 +8,9 @@ import {
   Param,
   Post,
   Put,
+  Req,
 } from '@nestjs/common';
+import { RequestWithUser } from '../authentication/types/request-with-user.interface';
 import { CommerceProductDTO } from './dto/commerce-product.dto';
 import { CreateManyProductItemsDTO } from './dto/create-many-product-items.dto';
 import { CreateProductItemDTO } from './dto/create-product-item.dto';
@@ -115,6 +117,17 @@ export class ProductController {
     return this.productItemService.getProductItemsByStatus(
       dto.status,
       companyId
+    );
+  }
+
+  @Post('/product-item/status/user')
+  public getProductItemsByStatusAndUser(
+    @Req() { user }: RequestWithUser,
+    @Body() dto: ProductItemByStatusDTO
+  ): Promise<ProductItemDTO[]> {
+    return this.productItemService.getProductItemsByStatusAndUser(
+      dto.status,
+      user.id
     );
   }
 }

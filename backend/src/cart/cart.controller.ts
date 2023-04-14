@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
+import { RequestWithUser } from '../authentication/types/request-with-user.interface';
 import { CreateOrderItemDTO } from '../order/dto/create-order-item.dto';
 import { CartService } from './cart.service';
 import { CartDTO } from './dto/cart.dto';
@@ -18,8 +19,21 @@ export class CartController {
     return this.cartService.addOrderItemToCart(companyId, dto);
   }
 
+  @Post('/customer')
+  public addItemToCartCustomer(
+    @Req() { user }: RequestWithUser,
+    @Body() dto: CreateOrderItemDTO
+  ) {
+    return this.cartService.addOrderItemToCartCustomer(user.id, dto);
+  }
+
   @Get(CartController.COMPANY_API_ROUTE)
   public getCart(@Param('companyId') companyId: string): Promise<CartDTO> {
     return this.cartService.getCart(companyId);
+  }
+
+  @Get('/customer')
+  public getCartCustomer(@Req() { user }: RequestWithUser): Promise<CartDTO> {
+    return this.cartService.getCartCustomer(user.id);
   }
 }

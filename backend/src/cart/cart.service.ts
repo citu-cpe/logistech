@@ -53,9 +53,60 @@ export class CartService {
     });
   }
 
+  public async addOrderItemToCartCustomer(
+    userId: string,
+    dto: CreateOrderItemDTO
+  ) {
+    const cart = await this.prismaService.cart.findUnique({
+      where: { customerId: userId },
+      include: { orderItems: { include: { product: true } } },
+    });
+    await this.validateInStock(dto.productId, dto.quantity, cart.id);
+    const productIds = cart.orderItems.map((o) => o.productId);
+    if (productIds.includes(dto.productId)) {
+      const products = cart.orderItems.map((o) => o.product);
+      const product = products.find((p) => p.id === dto.productId);
+
+      await this.prismaService.cart.update({
+        where: { customerId: userId },
+        data: { total: { increment: product.price } },
+      });
+
+      await this.prismaService.orderItem.updateMany({
+        where: {
+          cartId: cart.id,
+          productId: dto.productId,
+        },
+        data: { quantity: { increment: 1 } },
+      });
+
+      return;
+    }
+    const orderItem = await this.orderItemService.createOrderItem(dto, cart.id);
+
+    await this.prismaService.cart.update({
+      where: { customerId: userId },
+      data: { total: { increment: orderItem.total } },
+    });
+  }
+
   public async getCart(companyId: string) {
     const cart = await this.prismaService.cart.findUnique({
       where: { companyId },
+      include: {
+        orderItems: {
+          include: { owningCompany: true, product: true },
+          orderBy: { createdAt: 'asc' },
+        },
+      },
+    });
+
+    return CartService.convertToDTO(cart);
+  }
+
+  public async getCartCustomer(userId: string) {
+    const cart = await this.prismaService.cart.findUnique({
+      where: { customerId: userId },
       include: {
         orderItems: {
           include: { owningCompany: true, product: true },

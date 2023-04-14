@@ -31,7 +31,7 @@ export class OrderService {
     private schedulerRegistry: SchedulerRegistry
   ) {}
 
-  public async createOrders(dto: CartDTO, companyId: string) {
+  public async createOrders(dto: CartDTO, companyId?: string, userId?: string) {
     if (dto.groupedOrderItems.length === 0) {
       throw new BadRequestException('No orders to create');
     }
@@ -64,6 +64,7 @@ export class OrderService {
         dueDate: null,
         invoiceNumber: lastCreatedOrderInvoiceNumber + i++,
         shippingFee: null,
+        customerId: userId,
       });
     }
 
@@ -113,6 +114,7 @@ export class OrderService {
           data: {
             status: ProductItemStatus.ON_HOLD,
             orderItemId: orderItem.id,
+            customerId: userId,
           },
         });
       }
@@ -123,6 +125,7 @@ export class OrderService {
         data: {
           sendingCompanyId: newOrder.toCompanyId,
           receivingCompanyId: newOrder.fromCompanyId,
+          customerId: newOrder.customerId,
           productItems: {
             connect: productItemIds.map((id) => ({ id })),
           },

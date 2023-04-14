@@ -69,6 +69,35 @@ exports.DefaultApiAxiosParamCreator = function (configuration) {
         }),
         /**
          *
+         * @param {CreateOrderItemDTO} createOrderItemDTO
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addItemToCartCustomer: (createOrderItemDTO, options = {}) => __awaiter(this, void 0, void 0, function* () {
+            // verify required parameter 'createOrderItemDTO' is not null or undefined
+            common_1.assertParamExists("addItemToCartCustomer", "createOrderItemDTO", createOrderItemDTO);
+            const localVarPath = `/api/v1/cart/customer`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = Object.assign(Object.assign({ method: "POST" }, baseOptions), options);
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            localVarHeaderParameter["Content-Type"] = "application/json";
+            common_1.setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = Object.assign(Object.assign(Object.assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
+            localVarRequestOptions.data = common_1.serializeDataIfNeeded(createOrderItemDTO, localVarRequestOptions, configuration);
+            return {
+                url: common_1.toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        }),
+        /**
+         *
          * @param {string} id
          * @param {AddStorageFacilityPartnerDTO} addStorageFacilityPartnerDTO
          * @param {*} [options] Override http request option.
@@ -168,6 +197,35 @@ exports.DefaultApiAxiosParamCreator = function (configuration) {
             // verify required parameter 'cartDTO' is not null or undefined
             common_1.assertParamExists("createOrders", "cartDTO", cartDTO);
             const localVarPath = `/api/v1/order/company/{companyId}`.replace(`{${"companyId"}}`, encodeURIComponent(String(companyId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = Object.assign(Object.assign({ method: "POST" }, baseOptions), options);
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            localVarHeaderParameter["Content-Type"] = "application/json";
+            common_1.setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = Object.assign(Object.assign(Object.assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
+            localVarRequestOptions.data = common_1.serializeDataIfNeeded(cartDTO, localVarRequestOptions, configuration);
+            return {
+                url: common_1.toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        }),
+        /**
+         *
+         * @param {CartDTO} cartDTO
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createOrdersForCustomer: (cartDTO, options = {}) => __awaiter(this, void 0, void 0, function* () {
+            // verify required parameter 'cartDTO' is not null or undefined
+            common_1.assertParamExists("createOrdersForCustomer", "cartDTO", cartDTO);
+            const localVarPath = `/api/v1/order/user`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
             let baseOptions;
@@ -542,6 +600,30 @@ exports.DefaultApiAxiosParamCreator = function (configuration) {
         }),
         /**
          *
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCartCustomer: (options = {}) => __awaiter(this, void 0, void 0, function* () {
+            const localVarPath = `/api/v1/cart/customer`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = Object.assign(Object.assign({ method: "GET" }, baseOptions), options);
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            common_1.setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = Object.assign(Object.assign(Object.assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
+            return {
+                url: common_1.toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        }),
+        /**
+         *
          * @param {string} companyId
          * @param {CommerceProductDTO} commerceProductDTO
          * @param {*} [options] Override http request option.
@@ -825,6 +907,35 @@ exports.DefaultApiAxiosParamCreator = function (configuration) {
             // verify required parameter 'productItemByStatusDTO' is not null or undefined
             common_1.assertParamExists("getProductItemsByStatus", "productItemByStatusDTO", productItemByStatusDTO);
             const localVarPath = `/api/v1/product/company/{companyId}/status`.replace(`{${"companyId"}}`, encodeURIComponent(String(companyId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = Object.assign(Object.assign({ method: "POST" }, baseOptions), options);
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            localVarHeaderParameter["Content-Type"] = "application/json";
+            common_1.setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = Object.assign(Object.assign(Object.assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
+            localVarRequestOptions.data = common_1.serializeDataIfNeeded(productItemByStatusDTO, localVarRequestOptions, configuration);
+            return {
+                url: common_1.toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        }),
+        /**
+         *
+         * @param {ProductItemByStatusDTO} productItemByStatusDTO
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getProductItemsByStatusAndUser: (productItemByStatusDTO, options = {}) => __awaiter(this, void 0, void 0, function* () {
+            // verify required parameter 'productItemByStatusDTO' is not null or undefined
+            common_1.assertParamExists("getProductItemsByStatusAndUser", "productItemByStatusDTO", productItemByStatusDTO);
+            const localVarPath = `/api/v1/product/product-item/status/user`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
             let baseOptions;
@@ -1239,6 +1350,18 @@ exports.DefaultApiFp = function (configuration) {
         },
         /**
          *
+         * @param {CreateOrderItemDTO} createOrderItemDTO
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addItemToCartCustomer(createOrderItemDTO, options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const localVarAxiosArgs = yield localVarAxiosParamCreator.addItemToCartCustomer(createOrderItemDTO, options);
+                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+            });
+        },
+        /**
+         *
          * @param {string} id
          * @param {AddStorageFacilityPartnerDTO} addStorageFacilityPartnerDTO
          * @param {*} [options] Override http request option.
@@ -1284,6 +1407,18 @@ exports.DefaultApiFp = function (configuration) {
         createOrders(companyId, cartDTO, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.createOrders(companyId, cartDTO, options);
+                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+            });
+        },
+        /**
+         *
+         * @param {CartDTO} cartDTO
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createOrdersForCustomer(cartDTO, options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const localVarAxiosArgs = yield localVarAxiosParamCreator.createOrdersForCustomer(cartDTO, options);
                 return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
             });
         },
@@ -1438,6 +1573,17 @@ exports.DefaultApiFp = function (configuration) {
         },
         /**
          *
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCartCustomer(options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const localVarAxiosArgs = yield localVarAxiosParamCreator.getCartCustomer(options);
+                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+            });
+        },
+        /**
+         *
          * @param {string} companyId
          * @param {CommerceProductDTO} commerceProductDTO
          * @param {*} [options] Override http request option.
@@ -1566,6 +1712,18 @@ exports.DefaultApiFp = function (configuration) {
         getProductItemsByStatus(companyId, productItemByStatusDTO, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.getProductItemsByStatus(companyId, productItemByStatusDTO, options);
+                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+            });
+        },
+        /**
+         *
+         * @param {ProductItemByStatusDTO} productItemByStatusDTO
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getProductItemsByStatusAndUser(productItemByStatusDTO, options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const localVarAxiosArgs = yield localVarAxiosParamCreator.getProductItemsByStatusAndUser(productItemByStatusDTO, options);
                 return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
             });
         },
@@ -1750,6 +1908,17 @@ exports.DefaultApiFactory = function (configuration, basePath, axios) {
         },
         /**
          *
+         * @param {CreateOrderItemDTO} createOrderItemDTO
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addItemToCartCustomer(createOrderItemDTO, options) {
+            return localVarFp
+                .addItemToCartCustomer(createOrderItemDTO, options)
+                .then((request) => request(axios, basePath));
+        },
+        /**
+         *
          * @param {string} id
          * @param {AddStorageFacilityPartnerDTO} addStorageFacilityPartnerDTO
          * @param {*} [options] Override http request option.
@@ -1792,6 +1961,17 @@ exports.DefaultApiFactory = function (configuration, basePath, axios) {
         createOrders(companyId, cartDTO, options) {
             return localVarFp
                 .createOrders(companyId, cartDTO, options)
+                .then((request) => request(axios, basePath));
+        },
+        /**
+         *
+         * @param {CartDTO} cartDTO
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createOrdersForCustomer(cartDTO, options) {
+            return localVarFp
+                .createOrdersForCustomer(cartDTO, options)
                 .then((request) => request(axios, basePath));
         },
         /**
@@ -1933,6 +2113,16 @@ exports.DefaultApiFactory = function (configuration, basePath, axios) {
         },
         /**
          *
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCartCustomer(options) {
+            return localVarFp
+                .getCartCustomer(options)
+                .then((request) => request(axios, basePath));
+        },
+        /**
+         *
          * @param {string} companyId
          * @param {CommerceProductDTO} commerceProductDTO
          * @param {*} [options] Override http request option.
@@ -2051,6 +2241,17 @@ exports.DefaultApiFactory = function (configuration, basePath, axios) {
         getProductItemsByStatus(companyId, productItemByStatusDTO, options) {
             return localVarFp
                 .getProductItemsByStatus(companyId, productItemByStatusDTO, options)
+                .then((request) => request(axios, basePath));
+        },
+        /**
+         *
+         * @param {ProductItemByStatusDTO} productItemByStatusDTO
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getProductItemsByStatusAndUser(productItemByStatusDTO, options) {
+            return localVarFp
+                .getProductItemsByStatusAndUser(productItemByStatusDTO, options)
                 .then((request) => request(axios, basePath));
         },
         /**
@@ -2222,6 +2423,18 @@ class DefaultApi extends base_1.BaseAPI {
     }
     /**
      *
+     * @param {CreateOrderItemDTO} createOrderItemDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    addItemToCartCustomer(createOrderItemDTO, options) {
+        return exports.DefaultApiFp(this.configuration)
+            .addItemToCartCustomer(createOrderItemDTO, options)
+            .then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     *
      * @param {string} id
      * @param {AddStorageFacilityPartnerDTO} addStorageFacilityPartnerDTO
      * @param {*} [options] Override http request option.
@@ -2268,6 +2481,18 @@ class DefaultApi extends base_1.BaseAPI {
     createOrders(companyId, cartDTO, options) {
         return exports.DefaultApiFp(this.configuration)
             .createOrders(companyId, cartDTO, options)
+            .then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     *
+     * @param {CartDTO} cartDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    createOrdersForCustomer(cartDTO, options) {
+        return exports.DefaultApiFp(this.configuration)
+            .createOrdersForCustomer(cartDTO, options)
             .then((request) => request(this.axios, this.basePath));
     }
     /**
@@ -2421,6 +2646,17 @@ class DefaultApi extends base_1.BaseAPI {
     }
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    getCartCustomer(options) {
+        return exports.DefaultApiFp(this.configuration)
+            .getCartCustomer(options)
+            .then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     *
      * @param {string} companyId
      * @param {CommerceProductDTO} commerceProductDTO
      * @param {*} [options] Override http request option.
@@ -2550,6 +2786,18 @@ class DefaultApi extends base_1.BaseAPI {
     getProductItemsByStatus(companyId, productItemByStatusDTO, options) {
         return exports.DefaultApiFp(this.configuration)
             .getProductItemsByStatus(companyId, productItemByStatusDTO, options)
+            .then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     *
+     * @param {ProductItemByStatusDTO} productItemByStatusDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    getProductItemsByStatusAndUser(productItemByStatusDTO, options) {
+        return exports.DefaultApiFp(this.configuration)
+            .getProductItemsByStatusAndUser(productItemByStatusDTO, options)
             .then((request) => request(this.axios, this.basePath));
     }
     /**

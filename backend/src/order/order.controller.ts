@@ -7,7 +7,9 @@ import {
   Patch,
   Post,
   Put,
+  Req,
 } from '@nestjs/common';
+import { RequestWithUser } from '../authentication/types/request-with-user.interface';
 import { CartDTO } from '../cart/dto/cart.dto';
 import { CreateOrderItemDTO } from './dto/create-order-item.dto';
 import { OrderDTO } from './dto/order.dto';
@@ -56,6 +58,14 @@ export class OrderController {
     @Body() dto: CartDTO
   ): Promise<void> {
     return this.orderService.createOrders(dto, companyId);
+  }
+
+  @Post(OrderController.ORDER_API_ROUTE + '/user')
+  public createOrdersForCustomer(
+    @Req() { user }: RequestWithUser,
+    @Body() dto: CartDTO
+  ): Promise<void> {
+    return this.orderService.createOrders(dto, undefined, user.id);
   }
 
   @Get(
