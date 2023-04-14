@@ -6,6 +6,7 @@ import {
   FormControl,
   Input,
   ScrollView,
+  Text,
   useToast,
 } from "native-base";
 import { Controller, useForm, SubmitHandler } from "react-hook-form";
@@ -24,7 +25,7 @@ export const LoginScreen = () => {
       onError: (e: any) => {
         if (e.response.data.statusCode === 404) {
           toast.show({
-            description: e.response.data.message,
+            title: e.response.data.message,
             bgColor: "error.700",
             color: "error.50",
           });
@@ -41,16 +42,20 @@ export const LoginScreen = () => {
         justifyContent: "center",
         alignItems: "center",
       }}
+      bg="blueGray.700"
     >
       <Box mb={5} w="full">
         <Controller
           control={control}
           render={({ field: { onChange, onBlur, value } }) => (
             <FormControl isInvalid={!!errors.email} mb={5}>
-              <FormControl.Label>Email</FormControl.Label>
+              <FormControl.Label>
+                <Text color="white">Email</Text>
+              </FormControl.Label>
               <Input
                 variant="outline"
                 p={2}
+                color="white"
                 onBlur={onBlur}
                 onChangeText={(value) => onChange(value)}
                 value={value}
@@ -68,10 +73,13 @@ export const LoginScreen = () => {
           control={control}
           render={({ field: { onChange, onBlur, value } }) => (
             <FormControl isInvalid={!!errors.password} mb={5}>
-              <FormControl.Label>Password</FormControl.Label>
+              <FormControl.Label color="white">
+                <Text color="white">Password</Text>
+              </FormControl.Label>
               <Input
                 variant="outline"
                 type="password"
+                color="white"
                 p={2}
                 onBlur={onBlur}
                 onChangeText={(value) => onChange(value)}

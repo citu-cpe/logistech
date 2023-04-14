@@ -1,17 +1,9 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Box, Text } from "native-base";
 
 export const SplashScreen = () => {
   return (
-    <View style={styles.container}>
-      <Text>Splash Screen...</Text>
-    </View>
+    <Box flex={1} justifyContent="center" alignItems="center">
+      <Text>Cart</Text>
+    </Box>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
