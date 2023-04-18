@@ -65,6 +65,7 @@ export class OrderService {
         invoiceNumber: lastCreatedOrderInvoiceNumber + i++,
         shippingFee: null,
         customerId: userId,
+        paidAt: null,
       });
     }
 
@@ -205,8 +206,9 @@ export class OrderService {
   }
 
   public async updateOrder(orderId: string, dto: UpdateOrderDTO) {
+    let courier: User;
     if (!!dto.courierId) {
-      const courier = await this.prismaService.user.findFirst({
+      courier = await this.prismaService.user.findFirst({
         where: { id: dto.courierId, role: UserRole.COURIER },
       });
 
@@ -217,7 +219,20 @@ export class OrderService {
 
     const order = await this.prismaService.order.findUniqueOrThrow({
       where: { id: orderId },
+      include: { orderItems: { include: { productItems: true } } },
     });
+
+    const productItemIds = [];
+    order.orderItems.forEach((o) =>
+      productItemIds.push(...o.productItems.map((p) => p.id))
+    );
+
+    if (!!courier) {
+      await this.prismaService.productItem.updateMany({
+        where: { id: { in: productItemIds } },
+        data: { status: ProductItemStatus.TO_BE_PICKED_UP },
+      });
+    }
 
     let newStatus: OrderStatus | undefined;
 

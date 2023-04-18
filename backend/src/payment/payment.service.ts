@@ -83,7 +83,7 @@ export class PaymentService {
       if (totalPaid === order.total + (order.shippingFee ?? 0)) {
         await this.prismaService.order.update({
           where: { id: orderId },
-          data: { status: OrderStatusEnum.PAID },
+          data: { status: OrderStatusEnum.PAID, paidAt: new Date() },
         });
       }
     }

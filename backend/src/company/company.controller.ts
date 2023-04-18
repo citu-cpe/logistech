@@ -15,6 +15,7 @@ export class CompanyController {
     '/:id/storage-facility/available';
   public static readonly SELLER_PARTNERS_API_ROUTE = '/:id/seller-partners';
   public static readonly COURIERS_API_ROUTE = '/:id/couriers';
+  public static readonly TOP_TEN_CUSTOMERS_API_ROUTE = '/:id/top-ten-customers';
 
   constructor(private readonly companyService: CompanyService) {}
 
@@ -35,6 +36,11 @@ export class CompanyController {
   @Get(CompanyController.SELLER_PARTNERS_API_ROUTE)
   public getSellerPartners(@Param('id') id: string): Promise<CompanyDTO[]> {
     return this.companyService.getSellerPartners(id);
+  }
+
+  @Get(CompanyController.TOP_TEN_CUSTOMERS_API_ROUTE)
+  public getTopTenCustomers(@Param('id') id: string): Promise<CompanyDTO[]> {
+    return this.companyService.getTopTenCustomers(id);
   }
 
   @Post(CompanyController.STORAGE_FACILITY_PARTNERS_API_ROUTE)

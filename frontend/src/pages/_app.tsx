@@ -53,7 +53,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         <QueryClientProvider client={queryClient}>
           {showPage &&
             getLayout(<Component isAuth={!!getUser()} {...pageProps} />)}
-          <ReactQueryDevtools initialIsOpen={false} />
+          <ReactQueryDevtools initialIsOpen={false} position='bottom-right' />
         </QueryClientProvider>
       </ApiProvider>
     </ChakraProvider>

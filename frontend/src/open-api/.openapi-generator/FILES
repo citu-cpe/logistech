@@ -23,6 +23,7 @@ models/index.ts
 models/login-response-dto.ts
 models/login-user-dto.ts
 models/logout-user-dto.ts
+models/manufacturer-chart-data-dto.ts
 models/order-dto.ts
 models/order-item-dto.ts
 models/order-item-group.ts
@@ -31,10 +32,14 @@ models/payment-url-dto.ts
 models/product-dto.ts
 models/product-item-by-status-dto.ts
 models/product-item-dto.ts
+models/product-item-status-quantity-dto.ts
 models/register-user-dto.ts
 models/report-dto.ts
+models/retailer-chart-data-dto.ts
 models/sales-dto.ts
 models/sales-item-dto.ts
+models/storage-facility-chart-data-dto.ts
+models/supplier-chart-data-dto.ts
 models/tokens-dto.ts
 models/transaction-dto.ts
 models/update-order-dto.ts

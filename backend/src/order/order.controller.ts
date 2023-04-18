@@ -11,9 +11,14 @@ import {
 } from '@nestjs/common';
 import { RequestWithUser } from '../authentication/types/request-with-user.interface';
 import { CartDTO } from '../cart/dto/cart.dto';
+import { ChartDataService } from './chart-data.service';
 import { CreateOrderItemDTO } from './dto/create-order-item.dto';
+import { ManufacturerChartDataDTO } from './dto/manufacturer-chart-data.dto';
 import { OrderDTO } from './dto/order.dto';
+import { RetailerChartDataDTO } from './dto/retailer-chart-data.dto';
 import { SalesDTO } from './dto/sales.dto';
+import { StorageFacilityChartDataDTO } from './dto/storage-facility-chart-data.dto';
+import { SupplierChartDataDTO } from './dto/supplier-chart-data.dto';
 import { UpdateOrderStatusDTO } from './dto/update-order-status.dto';
 import { UpdateOrderDTO } from './dto/update-order.dto';
 import { OrderItemService } from './order-item.service';
@@ -29,7 +34,8 @@ export class OrderController {
 
   constructor(
     private readonly orderService: OrderService,
-    private readonly orderItemService: OrderItemService
+    private readonly orderItemService: OrderItemService,
+    private readonly chartDataService: ChartDataService
   ) {}
 
   @Get(OrderController.ORDER_ID_API_ROUTE)
@@ -124,5 +130,49 @@ export class OrderController {
   )
   public getSales(@Param('companyId') companyId: string): Promise<SalesDTO[]> {
     return this.orderItemService.getSales(companyId);
+  }
+
+  @Get(
+    OrderController.ORDER_API_ROUTE +
+      OrderController.COMPANY_API_ROUTE +
+      '/supplier-chart-data'
+  )
+  public getSupplierChartData(
+    @Param('companyId') companyId: string
+  ): Promise<SupplierChartDataDTO[]> {
+    return this.chartDataService.getSupplierChartData(companyId);
+  }
+
+  @Get(
+    OrderController.ORDER_API_ROUTE +
+      OrderController.COMPANY_API_ROUTE +
+      '/manufacturer-chart-data'
+  )
+  public getManufacturerChartData(
+    @Param('companyId') companyId: string
+  ): Promise<ManufacturerChartDataDTO[]> {
+    return this.chartDataService.getManufacturerChartData(companyId);
+  }
+
+  @Get(
+    OrderController.ORDER_API_ROUTE +
+      OrderController.COMPANY_API_ROUTE +
+      '/retailer-chart-data'
+  )
+  public getRetailerChartData(
+    @Param('companyId') companyId: string
+  ): Promise<RetailerChartDataDTO[]> {
+    return this.chartDataService.getRetailerChartData(companyId);
+  }
+
+  @Get(
+    OrderController.ORDER_API_ROUTE +
+      OrderController.COMPANY_API_ROUTE +
+      '/storage-facility-chart-data'
+  )
+  public getStorageFacilityChartData(
+    @Param('companyId') companyId: string
+  ): Promise<StorageFacilityChartDataDTO[]> {
+    return this.chartDataService.getStorageFacilityChartData(companyId);
   }
 }

@@ -1,7 +1,15 @@
 import { Box, Button, Flex, Text } from '@chakra-ui/react';
 import { SupplierHomeChart } from './SupplierHomeChart';
+import NextLink from 'next/link';
+import { ProductItemByStatusDTOStatusEnum } from 'generated-api';
+import { useGlobalStore } from '../../../../../shared/stores';
+import { useGetTopTenProducts } from '../../../hooks/useGetTopTenProducts';
 
 export const Supplier = () => {
+  const getUser = useGlobalStore((state) => state.getUser);
+  const companyId = getUser()?.company?.id;
+  const { data } = useGetTopTenProducts(companyId);
+
   return (
     <Box>
       <SupplierHomeChart />
@@ -14,9 +22,9 @@ export const Supplier = () => {
           borderColor='gray.900'
           mb='10'
         >
-          {Array.from(Array(8)).map((_, i) => (
+          {data?.data.map((p) => (
             <Flex
-              key={i}
+              key={p.id}
               direction='column'
               align='center'
               flexBasis={{ base: '30%', md: '21%' }}
@@ -33,24 +41,41 @@ export const Supplier = () => {
               >
                 <Text fontSize={{ base: '2xl', md: '4xl' }}>X</Text>
               </Flex>
-              <Text fontSize={{ base: 'sm', md: 'lg' }}>Product</Text>
+              <Text fontSize={{ base: 'sm', md: 'lg' }}>{p.name}</Text>
             </Flex>
           ))}
         </Flex>
 
         <Flex justify='space-around' flexWrap='wrap' rowGap='6'>
-          <Button colorScheme='gray' flexBasis={{ base: '40%', md: 'auto' }}>
-            On hold
-          </Button>
-          <Button colorScheme='gray' flexBasis={{ base: '40%', md: 'auto' }}>
-            In Transit
-          </Button>
-          <Button colorScheme='gray' flexBasis={{ base: '40%', md: 'auto' }}>
-            Bulked
-          </Button>
-          <Button colorScheme='gray' flexBasis={{ base: '40%', md: 'auto' }}>
-            Customers
-          </Button>
+          <NextLink
+            href={`/products/product-items?status=${ProductItemByStatusDTOStatusEnum.OnHold}`}
+          >
+            <Button colorScheme='gray' flexBasis={{ base: '40%', md: 'auto' }}>
+              On hold
+            </Button>
+          </NextLink>
+
+          <NextLink
+            href={`/products/product-items?status=${ProductItemByStatusDTOStatusEnum.InTransit}`}
+          >
+            <Button colorScheme='gray' flexBasis={{ base: '40%', md: 'auto' }}>
+              In Transit
+            </Button>
+          </NextLink>
+
+          <NextLink
+            href={`/products/product-items?status=${ProductItemByStatusDTOStatusEnum.InStorage}`}
+          >
+            <Button colorScheme='gray' flexBasis={{ base: '40%', md: 'auto' }}>
+              In Storage
+            </Button>
+          </NextLink>
+
+          <NextLink href={'/customer'}>
+            <Button colorScheme='gray' flexBasis={{ base: '40%', md: 'auto' }}>
+              Customers
+            </Button>
+          </NextLink>
         </Flex>
       </Box>
     </Box>

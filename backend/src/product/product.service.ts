@@ -45,6 +45,20 @@ export class ProductService {
     return products.map((p) => ProductService.convertToDTO(p));
   }
 
+  public async getTopTenProducts(companyId: string) {
+    const products = await this.prismaService.product.findMany({
+      where: {
+        company: { id: companyId },
+      },
+      take: 10,
+      include: {
+        company: true,
+      },
+    });
+
+    return products.map((p) => ProductService.convertToDTO(p));
+  }
+
   public async createProduct(product: CreateProductDTO, companyId: string) {
     return this.prismaService.product.create({
       data: {

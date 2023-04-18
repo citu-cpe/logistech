@@ -1,10 +1,17 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Product, ProductItem } from '@prisma/client';
+import {
+  CompanyType,
+  OrderStatus,
+  Product,
+  ProductItem,
+  ProductItemStatus,
+} from '@prisma/client';
 import { PostgresErrorCode } from '../shared/constants/postgress-error-codes.enum';
 import { PrismaService } from '../global/prisma/prisma.service';
 import { CreateProductItemDTO } from './dto/create-product-item.dto';
 import { ProductItemDTO, ProductItemStatusEnum } from './dto/product-item.dto';
 import { ProductService } from './product.service';
+import { ProductItemStatusQuantityDTO } from './dto/product-item-status-quantity.dto';
 
 @Injectable()
 export class ProductItemService {
@@ -87,7 +94,6 @@ export class ProductItemService {
   ) {
     const productItems = await this.prismaService.productItem.findMany({
       where: { status, product: { companyId } },
-      include: { product: true },
     });
 
     return productItems.map((p) => ProductItemService.convertToDTO(p));
@@ -103,6 +109,70 @@ export class ProductItemService {
     });
 
     return productItems.map((p) => ProductItemService.convertToDTO(p));
+  }
+
+  public async getProductItemStatusQuantity(companyId: string) {
+    const company = await this.prismaService.company.findUnique({
+      where: { id: companyId },
+    });
+    const nonStorageFacilityWhere = { product: { companyId } };
+    const storageFacilityWhere = {
+      orderItem: { order: { storageFacilityId: companyId } },
+    };
+
+    const counts = await this.prismaService.productItem.groupBy({
+      by: ['status'],
+      where:
+        company.type === CompanyType.STORAGE_FACILITY
+          ? storageFacilityWhere
+          : nonStorageFacilityWhere,
+      _count: { id: true },
+    });
+
+    const orders = await this.prismaService.order.findMany({
+      where: {
+        storageFacilityId: companyId,
+        status: { not: OrderStatus.PAID },
+      },
+    });
+
+    const productItemStatusQuantity = new ProductItemStatusQuantityDTO();
+    productItemStatusQuantity.onHold = 0;
+    productItemStatusQuantity.inStorage = 0;
+    productItemStatusQuantity.toBePickedUp = 0;
+    productItemStatusQuantity.inTransit = 0;
+    productItemStatusQuantity.complete = 0;
+    productItemStatusQuantity.canceled = 0;
+    productItemStatusQuantity.redFlag = 0;
+    productItemStatusQuantity.orders = orders.length;
+
+    for (const count of counts) {
+      switch (count.status) {
+        case ProductItemStatus.ON_HOLD:
+          productItemStatusQuantity.onHold = count._count.id;
+          break;
+        case ProductItemStatus.IN_STORAGE:
+          productItemStatusQuantity.inStorage = count._count.id;
+          break;
+        case ProductItemStatus.TO_BE_PICKED_UP:
+          productItemStatusQuantity.toBePickedUp = count._count.id;
+          break;
+        case ProductItemStatus.IN_TRANSIT:
+          productItemStatusQuantity.inTransit = count._count.id;
+          break;
+        case ProductItemStatus.COMPLETE:
+          productItemStatusQuantity.complete = count._count.id;
+          break;
+        case ProductItemStatus.CANCELED:
+          productItemStatusQuantity.canceled = count._count.id;
+          break;
+        case ProductItemStatus.RED_FLAG:
+          productItemStatusQuantity.redFlag = count._count.id;
+          break;
+      }
+    }
+
+    return productItemStatusQuantity;
   }
 
   public static convertToDTO(
