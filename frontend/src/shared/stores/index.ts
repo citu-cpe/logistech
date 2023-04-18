@@ -8,6 +8,7 @@ interface GlobalState {
   removeUser: () => void;
 }
 
+// TODO: refactor
 export const useGlobalStore = create<GlobalState>(() => ({
   getUser: () => {
     const user = localStorage.getItem(LocalStorageKeys.USER);

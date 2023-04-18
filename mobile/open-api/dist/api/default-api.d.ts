@@ -25,14 +25,19 @@ import { CreateReportDTO } from "../models";
 import { LoginResponseDTO } from "../models";
 import { LoginUserDTO } from "../models";
 import { LogoutUserDTO } from "../models";
+import { ManufacturerChartDataDTO } from "../models";
 import { OrderDTO } from "../models";
 import { PaymentUrlDTO } from "../models";
 import { ProductDTO } from "../models";
 import { ProductItemByStatusDTO } from "../models";
 import { ProductItemDTO } from "../models";
+import { ProductItemStatusQuantityDTO } from "../models";
 import { RegisterUserDTO } from "../models";
 import { ReportDTO } from "../models";
+import { RetailerChartDataDTO } from "../models";
 import { SalesDTO } from "../models";
+import { StorageFacilityChartDataDTO } from "../models";
+import { SupplierChartDataDTO } from "../models";
 import { TokensDTO } from "../models";
 import { TransactionDTO } from "../models";
 import { UpdateOrderDTO } from "../models";
@@ -227,6 +232,13 @@ export declare const DefaultApiAxiosParamCreator: (configuration?: Configuration
     getIncomingTransactionsForCompany: (companyId: string, options?: any) => Promise<RequestArgs>;
     /**
      *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getManufacturerChartData: (companyId: string, options?: any) => Promise<RequestArgs>;
+    /**
+     *
      * @param {string} orderId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -253,6 +265,13 @@ export declare const DefaultApiAxiosParamCreator: (configuration?: Configuration
      * @throws {RequiredError}
      */
     getOutgoingTransactionsForCompany: (companyId: string, options?: any) => Promise<RequestArgs>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getProductItemStatusQuantity: (companyId: string, options?: any) => Promise<RequestArgs>;
     /**
      *
      * @param {string} productId
@@ -295,6 +314,13 @@ export declare const DefaultApiAxiosParamCreator: (configuration?: Configuration
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
+    getRetailerChartData: (companyId: string, options?: any) => Promise<RequestArgs>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
     getSales: (companyId: string, options?: any) => Promise<RequestArgs>;
     /**
      *
@@ -305,11 +331,39 @@ export declare const DefaultApiAxiosParamCreator: (configuration?: Configuration
     getSellerPartners: (id: string, options?: any) => Promise<RequestArgs>;
     /**
      *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getStorageFacilityChartData: (companyId: string, options?: any) => Promise<RequestArgs>;
+    /**
+     *
      * @param {string} id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getStorageFacilityPartners: (id: string, options?: any) => Promise<RequestArgs>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getSupplierChartData: (companyId: string, options?: any) => Promise<RequestArgs>;
+    /**
+     *
+     * @param {string} id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTopTenCustomers: (id: string, options?: any) => Promise<RequestArgs>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTopTenProducts: (companyId: string, options?: any) => Promise<RequestArgs>;
     /**
      *
      * @param {LoginUserDTO} loginUserDTO
@@ -558,6 +612,13 @@ export declare const DefaultApiFp: (configuration?: Configuration) => {
     getIncomingTransactionsForCompany(companyId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<TransactionDTO>>>;
     /**
      *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getManufacturerChartData(companyId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ManufacturerChartDataDTO>>>;
+    /**
+     *
      * @param {string} orderId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -584,6 +645,13 @@ export declare const DefaultApiFp: (configuration?: Configuration) => {
      * @throws {RequiredError}
      */
     getOutgoingTransactionsForCompany(companyId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<TransactionDTO>>>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getProductItemStatusQuantity(companyId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProductItemStatusQuantityDTO>>;
     /**
      *
      * @param {string} productId
@@ -626,6 +694,13 @@ export declare const DefaultApiFp: (configuration?: Configuration) => {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
+    getRetailerChartData(companyId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<RetailerChartDataDTO>>>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
     getSales(companyId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<SalesDTO>>>;
     /**
      *
@@ -636,11 +711,39 @@ export declare const DefaultApiFp: (configuration?: Configuration) => {
     getSellerPartners(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<CompanyDTO>>>;
     /**
      *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getStorageFacilityChartData(companyId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<StorageFacilityChartDataDTO>>>;
+    /**
+     *
      * @param {string} id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getStorageFacilityPartners(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<CompanyDTO>>>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getSupplierChartData(companyId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<SupplierChartDataDTO>>>;
+    /**
+     *
+     * @param {string} id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTopTenCustomers(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<CompanyDTO>>>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTopTenProducts(companyId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ProductDTO>>>;
     /**
      *
      * @param {LoginUserDTO} loginUserDTO
@@ -889,6 +992,13 @@ export declare const DefaultApiFactory: (configuration?: Configuration, basePath
     getIncomingTransactionsForCompany(companyId: string, options?: any): AxiosPromise<Array<TransactionDTO>>;
     /**
      *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getManufacturerChartData(companyId: string, options?: any): AxiosPromise<Array<ManufacturerChartDataDTO>>;
+    /**
+     *
      * @param {string} orderId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -915,6 +1025,13 @@ export declare const DefaultApiFactory: (configuration?: Configuration, basePath
      * @throws {RequiredError}
      */
     getOutgoingTransactionsForCompany(companyId: string, options?: any): AxiosPromise<Array<TransactionDTO>>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getProductItemStatusQuantity(companyId: string, options?: any): AxiosPromise<ProductItemStatusQuantityDTO>;
     /**
      *
      * @param {string} productId
@@ -957,6 +1074,13 @@ export declare const DefaultApiFactory: (configuration?: Configuration, basePath
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
+    getRetailerChartData(companyId: string, options?: any): AxiosPromise<Array<RetailerChartDataDTO>>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
     getSales(companyId: string, options?: any): AxiosPromise<Array<SalesDTO>>;
     /**
      *
@@ -967,11 +1091,39 @@ export declare const DefaultApiFactory: (configuration?: Configuration, basePath
     getSellerPartners(id: string, options?: any): AxiosPromise<Array<CompanyDTO>>;
     /**
      *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getStorageFacilityChartData(companyId: string, options?: any): AxiosPromise<Array<StorageFacilityChartDataDTO>>;
+    /**
+     *
      * @param {string} id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getStorageFacilityPartners(id: string, options?: any): AxiosPromise<Array<CompanyDTO>>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getSupplierChartData(companyId: string, options?: any): AxiosPromise<Array<SupplierChartDataDTO>>;
+    /**
+     *
+     * @param {string} id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTopTenCustomers(id: string, options?: any): AxiosPromise<Array<CompanyDTO>>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTopTenProducts(companyId: string, options?: any): AxiosPromise<Array<ProductDTO>>;
     /**
      *
      * @param {LoginUserDTO} loginUserDTO
@@ -1247,6 +1399,14 @@ export declare class DefaultApi extends BaseAPI {
     getIncomingTransactionsForCompany(companyId: string, options?: any): Promise<import("axios").AxiosResponse<TransactionDTO[]>>;
     /**
      *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    getManufacturerChartData(companyId: string, options?: any): Promise<import("axios").AxiosResponse<ManufacturerChartDataDTO[]>>;
+    /**
+     *
      * @param {string} orderId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1277,6 +1437,14 @@ export declare class DefaultApi extends BaseAPI {
      * @memberof DefaultApi
      */
     getOutgoingTransactionsForCompany(companyId: string, options?: any): Promise<import("axios").AxiosResponse<TransactionDTO[]>>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    getProductItemStatusQuantity(companyId: string, options?: any): Promise<import("axios").AxiosResponse<ProductItemStatusQuantityDTO>>;
     /**
      *
      * @param {string} productId
@@ -1325,6 +1493,14 @@ export declare class DefaultApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
+    getRetailerChartData(companyId: string, options?: any): Promise<import("axios").AxiosResponse<RetailerChartDataDTO[]>>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
     getSales(companyId: string, options?: any): Promise<import("axios").AxiosResponse<SalesDTO[]>>;
     /**
      *
@@ -1336,12 +1512,44 @@ export declare class DefaultApi extends BaseAPI {
     getSellerPartners(id: string, options?: any): Promise<import("axios").AxiosResponse<CompanyDTO[]>>;
     /**
      *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    getStorageFacilityChartData(companyId: string, options?: any): Promise<import("axios").AxiosResponse<StorageFacilityChartDataDTO[]>>;
+    /**
+     *
      * @param {string} id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
     getStorageFacilityPartners(id: string, options?: any): Promise<import("axios").AxiosResponse<CompanyDTO[]>>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    getSupplierChartData(companyId: string, options?: any): Promise<import("axios").AxiosResponse<SupplierChartDataDTO[]>>;
+    /**
+     *
+     * @param {string} id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    getTopTenCustomers(id: string, options?: any): Promise<import("axios").AxiosResponse<CompanyDTO[]>>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    getTopTenProducts(companyId: string, options?: any): Promise<import("axios").AxiosResponse<ProductDTO[]>>;
     /**
      *
      * @param {LoginUserDTO} loginUserDTO

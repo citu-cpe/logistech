@@ -3,17 +3,19 @@ import { ProductItemByStatusDTOStatusEnum } from 'generated-api';
 import { useContext } from 'react';
 import { ApiContext } from '../../../shared/providers/ApiProvider';
 
-export const RED_FLAGS_QUERY_KEY = ['red-flags'];
+export const PRODUCT_ITEMS_BY_STATUS_QUERY_KEY = (
+  status: ProductItemByStatusDTOStatusEnum
+) => ['product-items', status];
 
 export const useGetProductItemsByStatus = (
-  companyId: string,
-  status: ProductItemByStatusDTOStatusEnum
+  companyId?: string,
+  status?: ProductItemByStatusDTOStatusEnum
 ) => {
   const api = useContext(ApiContext);
 
   return useQuery({
-    queryKey: RED_FLAGS_QUERY_KEY,
-    queryFn: () => api.getProductItemsByStatus(companyId, { status }),
-    enabled: !!companyId,
+    queryKey: PRODUCT_ITEMS_BY_STATUS_QUERY_KEY(status!),
+    queryFn: () => api.getProductItemsByStatus(companyId!, { status: status! }),
+    enabled: !!companyId && !!status,
   });
 };

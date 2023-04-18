@@ -1,23 +1,9 @@
 import { Box, ChakraProps, useBreakpointValue } from '@chakra-ui/react';
+import { useState, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
+import { useGlobalStore } from '../../../../../shared/stores';
 import { getCssVariable } from '../../../../../shared/utils/cssVariables';
-
-interface ChartData {
-  date: string;
-  cost: number;
-  profit: number;
-}
-
-const data: ChartData[] = [
-  { date: '02/23', cost: 100, profit: 90 },
-  { date: '03/23', cost: 75, profit: 100 },
-  { date: '04/23', cost: 80, profit: 70 },
-  { date: '05/23', cost: 95, profit: 80 },
-  { date: '05/23', cost: 95, profit: 110 },
-  { date: '05/23', cost: 70, profit: 110 },
-];
-
-const labels = data.map((d) => d.date);
+import { useGetRetailerChartData } from '../../../hooks/useGetRetailerChartData';
 
 const options = {
   responsive: true,
@@ -26,27 +12,46 @@ const options = {
 
 export const RetailerHomeChart = (props: ChakraProps) => {
   const height = useBreakpointValue({ base: 300, md: 100 }, { ssr: false });
-  const chartjsData = {
-    labels,
-    datasets: [
-      {
-        label: 'Cost',
-        data: data.map((d) => d.cost),
-        borderColor: getCssVariable('--chakra-colors-teal-400'),
-        backgroundColor: getCssVariable('--chakra-colors-teal-400'),
-      },
-      {
-        label: 'Profit',
-        data: data.map((d) => d.profit),
-        borderColor: getCssVariable('--chakra-colors-teal-700'),
-        backgroundColor: getCssVariable('--chakra-colors-teal-700'),
-      },
-    ],
-  };
+  const getUser = useGlobalStore((state) => state.getUser);
+  const companyId = getUser()?.company?.id;
+  const { data } = useGetRetailerChartData(companyId);
+
+  const [chartjsData, setChartjsData] = useState<{
+    labels: string[] | undefined;
+    datasets: {
+      label: string;
+      data: number[] | undefined;
+      backgroundColor: string;
+    }[];
+  }>();
+
+  useEffect(() => {
+    const newChartjsData = {
+      labels: data?.data.map((d) => d.date),
+      datasets: [
+        {
+          label: 'Cost',
+          data: data?.data.map((d) => d.cost),
+          borderColor: getCssVariable('--chakra-colors-teal-400'),
+          backgroundColor: getCssVariable('--chakra-colors-teal-400'),
+        },
+        {
+          label: 'Profit',
+          data: data?.data.map((d) => d.profit),
+          borderColor: getCssVariable('--chakra-colors-teal-700'),
+          backgroundColor: getCssVariable('--chakra-colors-teal-700'),
+        },
+      ],
+    };
+
+    setChartjsData(newChartjsData);
+  }, [data]);
 
   return (
     <Box w='full' {...props}>
-      <Line options={options} data={chartjsData} height={height} />
+      {chartjsData && (
+        <Line options={options} data={chartjsData} height={height} />
+      )}
     </Box>
   );
 };

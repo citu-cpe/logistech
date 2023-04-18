@@ -16,6 +16,7 @@ import { CreateManyProductItemsDTO } from './dto/create-many-product-items.dto';
 import { CreateProductItemDTO } from './dto/create-product-item.dto';
 import { CreateProductDTO } from './dto/create-product.dto';
 import { ProductItemByStatusDTO } from './dto/product-item-by-status.dto';
+import { ProductItemStatusQuantityDTO } from './dto/product-item-status-quantity.dto';
 import { ProductItemDTO } from './dto/product-item.dto';
 import { ProductDTO } from './dto/product.dto';
 import { ProductItemService } from './product-item.service';
@@ -41,6 +42,13 @@ export class ProductController {
     @Param('companyId') companyId: string
   ): Promise<ProductDTO[]> {
     return this.productService.getProductsForCompany(companyId);
+  }
+
+  @Get(ProductController.COMPANY_API_ROUTE + '/top-ten')
+  public getTopTenProducts(
+    @Param('companyId') companyId: string
+  ): Promise<ProductDTO[]> {
+    return this.productService.getTopTenProducts(companyId);
   }
 
   @Post(ProductController.COMMERCE_API_ROUTE)
@@ -129,5 +137,12 @@ export class ProductController {
       dto.status,
       user.id
     );
+  }
+
+  @Post('/company/:companyId/product-item/status/quantity')
+  public getProductItemStatusQuantity(
+    @Param('companyId') companyId: string
+  ): Promise<ProductItemStatusQuantityDTO> {
+    return this.productItemService.getProductItemStatusQuantity(companyId);
   }
 }

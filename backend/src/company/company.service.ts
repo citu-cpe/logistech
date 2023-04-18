@@ -48,6 +48,19 @@ export class CompanyService {
     return sellerPartners.map((s) => CompanyService.convertToDTO(s));
   }
 
+  public async getTopTenCustomers(id: string) {
+    const customers = await this.prismaService.company.findMany({
+      where: {
+        id: { not: id },
+        type: {
+          in: [CompanyType.MANUFACTURER, CompanyType.RETAILER],
+        },
+      },
+    });
+
+    return customers.map((s) => CompanyService.convertToDTO(s));
+  }
+
   public async addStorageFacilityPartners(
     id: string,
     dto: AddStorageFacilityPartnerDTO

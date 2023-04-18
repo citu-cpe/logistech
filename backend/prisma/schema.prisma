@@ -27,7 +27,7 @@ model User {
   reports        Report[]
   productItems   ProductItem[]
   cart           Cart?
-  transactions    Transaction[]
+  transactions   Transaction[]
 }
 
 enum UserRole {
@@ -200,6 +200,7 @@ model Order {
   total         Float
   invoiceNumber Int
   finalized     Boolean     @default(false)
+  paidAt        DateTime?
 
   orderItems OrderItem[]
   payments   Payment[]

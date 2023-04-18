@@ -1,6 +1,9 @@
 import { Box, useBreakpointValue } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
+import { useGlobalStore } from '../../../../../shared/stores';
 import { getCssVariable } from '../../../../../shared/utils/cssVariables';
+import { useGetSupplierChartData } from '../../../hooks/useGetSupplierChartData';
 
 export const options = {
   responsive: true,
@@ -20,24 +23,40 @@ export const options = {
   },
 };
 
-const n = 50;
-
 export const SupplierHomeChart = () => {
   const height = useBreakpointValue({ base: 200, md: 100 }, { ssr: false });
-  const data = {
-    labels: Array.from(Array(n)).map(() => ''),
-    datasets: [
-      {
-        label: 'Sales',
-        data: Array.from(Array(n)).map(() => Math.floor(Math.random() * 101)),
-        backgroundColor: getCssVariable('--chakra-colors-teal-400'),
-      },
-    ],
-  };
+  const getUser = useGlobalStore((state) => state.getUser);
+  const companyId = getUser()?.company?.id;
+  const { data } = useGetSupplierChartData(companyId);
+  const [chartjsData, setChartjsData] = useState<{
+    labels: string[] | undefined;
+    datasets: {
+      label: string;
+      data: number[] | undefined;
+      backgroundColor: string;
+    }[];
+  }>();
+
+  useEffect(() => {
+    const newChartjsData = {
+      labels: data?.data.map((d) => d.date),
+      datasets: [
+        {
+          label: 'Sales',
+          data: data?.data.map((d) => d.sales),
+          backgroundColor: getCssVariable('--chakra-colors-teal-400'),
+        },
+      ],
+    };
+
+    setChartjsData(newChartjsData);
+  }, [data]);
 
   return (
     <Box w='full'>
-      <Bar data={data} options={options} height={height}></Bar>
+      {chartjsData && (
+        <Bar data={chartjsData} options={options} height={height}></Bar>
+      )}
     </Box>
   );
 };

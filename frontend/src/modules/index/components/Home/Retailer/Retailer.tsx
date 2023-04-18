@@ -10,45 +10,50 @@ import {
   Text,
   useBreakpointValue,
 } from '@chakra-ui/react';
+import {
+  ProductItemByStatusDTOStatusEnum,
+  ProductItemDTOStatusEnum,
+} from 'generated-api';
 import { LinkCard } from '../../../../../shared/components/LinkCard';
 import { StatusList } from '../../../../../shared/components/StatusList';
+import { useGlobalStore } from '../../../../../shared/stores';
+import { useGetProductItemStatusQuantity } from '../../../hooks/useGetProductItemStatusQuantity';
 import { RetailerHomeChart } from './RetailerHomeChart';
 
 export const Retailer = () => {
   const flexBasis = { base: '47%', md: '21%' };
   const showAccordion = useBreakpointValue({ base: true, md: false });
+  const getUser = useGlobalStore((state) => state.getUser);
+  const companyId = getUser()?.company?.id;
+  const { data } = useGetProductItemStatusQuantity(companyId);
 
   return (
     <Box>
       <RetailerHomeChart mb='8' />
 
       <Box rounded='md' backgroundColor='gray.900' p='6'>
-        <Flex justify='space-between' mb='8' flexWrap='wrap' rowGap='6'>
-          <LinkCard
-            title='On Hold'
-            n='nn'
-            href='/on-hold'
-            flexBasis={flexBasis}
-          />
-          <LinkCard
-            title='New Arrival'
-            n='n'
-            href='/new-arrival'
-            flexBasis={flexBasis}
-          />
-          <LinkCard
-            title='In Transit'
-            n='n'
-            href='/in-transit'
-            flexBasis={flexBasis}
-          />
-          <LinkCard
-            title='Couriers'
-            n='n'
-            href='/couriers'
-            flexBasis={flexBasis}
-          />
-        </Flex>
+        {data?.data && (
+          <Flex justify='space-between' mb='8' flexWrap='wrap' rowGap='6'>
+            <LinkCard
+              title='On Hold'
+              n={data.data.onHold}
+              href={`/products/product-items?status=${ProductItemDTOStatusEnum.OnHold}`}
+              flexBasis={flexBasis}
+            />
+            <LinkCard
+              title='New Arrival'
+              n={data.data.toBePickedUp}
+              href={`/products/product-items?status=${ProductItemDTOStatusEnum.ToBePickedUp}`}
+              flexBasis={flexBasis}
+            />
+            <LinkCard
+              title='In Transit'
+              n={data.data.inTransit}
+              href={`/products/product-items?status=${ProductItemDTOStatusEnum.InTransit}`}
+              flexBasis={flexBasis}
+            />
+          </Flex>
+        )}
 
         {showAccordion ? <AccordionComponent /> : <FlexComponent />}
       </Box>
@@ -64,7 +69,7 @@ const FlexComponent = () => {
           Currently Ordered
         </Heading>
 
-        <StatusList />
+        <StatusList status={ProductItemByStatusDTOStatusEnum.OnHold} />
       </Box>
 
       <Box rounded='md' backgroundColor='gray.700' p='6' flexBasis='47%'>
@@ -72,7 +77,7 @@ const FlexComponent = () => {
           Return Handling
         </Heading>
 
-        <StatusList />
+        <StatusList status={ProductItemByStatusDTOStatusEnum.Canceled} />
       </Box>
     </Flex>
   );
@@ -96,7 +101,7 @@ const AccordionComponent = () => {
         </AccordionButton>
 
         <AccordionPanel pb={4}>
-          <StatusList />
+          <StatusList status={ProductItemByStatusDTOStatusEnum.OnHold} />
         </AccordionPanel>
       </AccordionItem>
 
@@ -114,7 +119,7 @@ const AccordionComponent = () => {
           <AccordionIcon />
         </AccordionButton>
         <AccordionPanel pb={4}>
-          <StatusList />
+          <StatusList status={ProductItemByStatusDTOStatusEnum.Canceled} />
         </AccordionPanel>
       </AccordionItem>
     </Accordion>

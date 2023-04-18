@@ -11,7 +11,7 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { CompanyDTOTypeEnum } from 'generated-api';
+import { CompanyDTOTypeEnum, UserDTORoleEnum } from 'generated-api';
 import { useLogout } from '../../../modules/index/hooks/useLogout';
 import { useGlobalStore } from '../../stores';
 import { NavLink } from './NavLink';
@@ -57,7 +57,10 @@ export const Navbar = (props: ChakraProps) => {
 
           <NavLink href='/red-flags'>Red Flags</NavLink>
 
-          <NavLink href='/reports'>Reports</NavLink>
+          {user?.role !== UserDTORoleEnum.Customer &&
+            user?.role !== UserDTORoleEnum.Courier && (
+              <NavLink href='/reports'>Reports</NavLink>
+            )}
 
           {(companyType === CompanyDTOTypeEnum.Supplier ||
             companyType === CompanyDTOTypeEnum.Retailer) && (
@@ -97,8 +100,7 @@ export const Navbar = (props: ChakraProps) => {
             </>
           )}
 
-          {(companyType === CompanyDTOTypeEnum.Supplier ||
-            companyType === CompanyDTOTypeEnum.Manufacturer ||
+          {(companyType === CompanyDTOTypeEnum.Manufacturer ||
             companyType === CompanyDTOTypeEnum.Retailer) && (
             <>
               <NavLink href='/cart'>Cart</NavLink>

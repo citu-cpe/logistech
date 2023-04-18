@@ -1,21 +1,9 @@
 import { Box, ChakraProps, useBreakpointValue } from '@chakra-ui/react';
+import { useState, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
+import { useGlobalStore } from '../../../../../shared/stores';
 import { getCssVariable } from '../../../../../shared/utils/cssVariables';
-
-interface ChartData {
-  date: string;
-  ordered: number;
-  manufactured: number;
-  sold: number;
-}
-
-const data: ChartData[] = [
-  { date: '02/23', ordered: 25, manufactured: 35, sold: 30 },
-  { date: '03/23', ordered: 25, manufactured: 35, sold: 45 },
-  { date: '04/23', ordered: 15, manufactured: 25, sold: 45 },
-];
-
-const labels = data.map((d) => d.date);
+import { useGetManufacturerChartData } from '../../../hooks/useGetManufacturerChartData';
 
 const options = {
   responsive: true,
@@ -32,30 +20,49 @@ const options = {
 
 export const ManufacturerHomeChart = (props: ChakraProps) => {
   const height = useBreakpointValue({ base: 200, md: 150 }, { ssr: false });
-  const chartjsData = {
-    labels,
-    datasets: [
-      {
-        label: 'Ordered',
-        data: data.map((d) => d.ordered),
-        backgroundColor: getCssVariable('--chakra-colors-teal-400'),
-      },
-      {
-        label: 'Manufactured',
-        data: data.map((d) => d.manufactured),
-        backgroundColor: getCssVariable('--chakra-colors-teal-700'),
-      },
-      {
-        label: 'Sold',
-        data: data.map((d) => d.sold),
-        backgroundColor: getCssVariable('--chakra-colors-teal-900'),
-      },
-    ],
-  };
+  const getUser = useGlobalStore((state) => state.getUser);
+  const companyId = getUser()?.company?.id;
+  const { data } = useGetManufacturerChartData(companyId);
+
+  const [chartjsData, setChartjsData] = useState<{
+    labels: string[] | undefined;
+    datasets: {
+      label: string;
+      data: number[] | undefined;
+      backgroundColor: string;
+    }[];
+  }>();
+
+  useEffect(() => {
+    const newChartjsData = {
+      labels: data?.data.map((d) => d.date),
+      datasets: [
+        {
+          label: 'Ordered',
+          data: data?.data.map((d) => d.ordered),
+          backgroundColor: getCssVariable('--chakra-colors-teal-400'),
+        },
+        {
+          label: 'Manufactured',
+          data: data?.data.map((d) => d.manufactured),
+          backgroundColor: getCssVariable('--chakra-colors-teal-700'),
+        },
+        {
+          label: 'Sold',
+          data: data?.data.map((d) => d.sold),
+          backgroundColor: getCssVariable('--chakra-colors-teal-900'),
+        },
+      ],
+    };
+
+    setChartjsData(newChartjsData);
+  }, [data]);
 
   return (
     <Box {...props}>
-      <Bar options={options} data={chartjsData} height={height} />
+      {chartjsData && (
+        <Bar data={chartjsData} options={options} height={height} />
+      )}
     </Box>
   );
 };

@@ -63,6 +63,8 @@ import { LoginUserDTO } from '../models';
 // @ts-ignore
 import { LogoutUserDTO } from '../models';
 // @ts-ignore
+import { ManufacturerChartDataDTO } from '../models';
+// @ts-ignore
 import { OrderDTO } from '../models';
 // @ts-ignore
 import { PaymentUrlDTO } from '../models';
@@ -73,11 +75,19 @@ import { ProductItemByStatusDTO } from '../models';
 // @ts-ignore
 import { ProductItemDTO } from '../models';
 // @ts-ignore
+import { ProductItemStatusQuantityDTO } from '../models';
+// @ts-ignore
 import { RegisterUserDTO } from '../models';
 // @ts-ignore
 import { ReportDTO } from '../models';
 // @ts-ignore
+import { RetailerChartDataDTO } from '../models';
+// @ts-ignore
 import { SalesDTO } from '../models';
+// @ts-ignore
+import { StorageFacilityChartDataDTO } from '../models';
+// @ts-ignore
+import { SupplierChartDataDTO } from '../models';
 // @ts-ignore
 import { TokensDTO } from '../models';
 // @ts-ignore
@@ -1363,6 +1373,52 @@ export const DefaultApiAxiosParamCreator = function (
     },
     /**
      *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getManufacturerChartData: async (
+      companyId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'companyId' is not null or undefined
+      assertParamExists('getManufacturerChartData', 'companyId', companyId);
+      const localVarPath =
+        `/api/v1/order/company/{companyId}/manufacturer-chart-data`.replace(
+          `{${'companyId'}}`,
+          encodeURIComponent(String(companyId))
+        );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @param {string} orderId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1526,6 +1582,52 @@ export const DefaultApiAxiosParamCreator = function (
 
       const localVarRequestOptions = {
         method: 'GET',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getProductItemStatusQuantity: async (
+      companyId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'companyId' is not null or undefined
+      assertParamExists('getProductItemStatusQuantity', 'companyId', companyId);
+      const localVarPath =
+        `/api/v1/product/company/{companyId}/product-item/status/quantity`.replace(
+          `{${'companyId'}}`,
+          encodeURIComponent(String(companyId))
+        );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'POST',
         ...baseOptions,
         ...options,
       };
@@ -1800,6 +1902,52 @@ export const DefaultApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
+    getRetailerChartData: async (
+      companyId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'companyId' is not null or undefined
+      assertParamExists('getRetailerChartData', 'companyId', companyId);
+      const localVarPath =
+        `/api/v1/order/company/{companyId}/retailer-chart-data`.replace(
+          `{${'companyId'}}`,
+          encodeURIComponent(String(companyId))
+        );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
     getSales: async (
       companyId: string,
       options: any = {}
@@ -1886,6 +2034,52 @@ export const DefaultApiAxiosParamCreator = function (
     },
     /**
      *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getStorageFacilityChartData: async (
+      companyId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'companyId' is not null or undefined
+      assertParamExists('getStorageFacilityChartData', 'companyId', companyId);
+      const localVarPath =
+        `/api/v1/order/company/{companyId}/storage-facility-chart-data`.replace(
+          `{${'companyId'}}`,
+          encodeURIComponent(String(companyId))
+        );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @param {string} id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1900,6 +2094,143 @@ export const DefaultApiAxiosParamCreator = function (
         `/api/v1/company/{id}/storage-facility/partners`.replace(
           `{${'id'}}`,
           encodeURIComponent(String(id))
+        );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getSupplierChartData: async (
+      companyId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'companyId' is not null or undefined
+      assertParamExists('getSupplierChartData', 'companyId', companyId);
+      const localVarPath =
+        `/api/v1/order/company/{companyId}/supplier-chart-data`.replace(
+          `{${'companyId'}}`,
+          encodeURIComponent(String(companyId))
+        );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTopTenCustomers: async (
+      id: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'id' is not null or undefined
+      assertParamExists('getTopTenCustomers', 'id', id);
+      const localVarPath = `/api/v1/company/{id}/top-ten-customers`.replace(
+        `{${'id'}}`,
+        encodeURIComponent(String(id))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTopTenProducts: async (
+      companyId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'companyId' is not null or undefined
+      assertParamExists('getTopTenProducts', 'companyId', companyId);
+      const localVarPath =
+        `/api/v1/product/company/{companyId}/top-ten`.replace(
+          `{${'companyId'}}`,
+          encodeURIComponent(String(companyId))
         );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2960,6 +3291,33 @@ export const DefaultApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getManufacturerChartData(
+      companyId: string,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<ManufacturerChartDataDTO>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getManufacturerChartData(
+          companyId,
+          options
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
      * @param {string} orderId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3049,6 +3407,33 @@ export const DefaultApiFp = function (configuration?: Configuration) {
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getOutgoingTransactionsForCompany(
+          companyId,
+          options
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getProductItemStatusQuantity(
+      companyId: string,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<ProductItemStatusQuantityDTO>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getProductItemStatusQuantity(
           companyId,
           options
         );
@@ -3201,6 +3586,33 @@ export const DefaultApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
+    async getRetailerChartData(
+      companyId: string,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<RetailerChartDataDTO>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getRetailerChartData(
+          companyId,
+          options
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
     async getSales(
       companyId: string,
       options?: any
@@ -3247,6 +3659,33 @@ export const DefaultApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getStorageFacilityChartData(
+      companyId: string,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<StorageFacilityChartDataDTO>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getStorageFacilityChartData(
+          companyId,
+          options
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
      * @param {string} id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3262,6 +3701,81 @@ export const DefaultApiFp = function (configuration?: Configuration) {
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getStorageFacilityPartners(id, options);
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getSupplierChartData(
+      companyId: string,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<SupplierChartDataDTO>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getSupplierChartData(
+          companyId,
+          options
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getTopTenCustomers(
+      id: string,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<CompanyDTO>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getTopTenCustomers(id, options);
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getTopTenProducts(
+      companyId: string,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<ProductDTO>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getTopTenProducts(companyId, options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -3829,6 +4343,20 @@ export const DefaultApiFactory = function (
     },
     /**
      *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getManufacturerChartData(
+      companyId: string,
+      options?: any
+    ): AxiosPromise<Array<ManufacturerChartDataDTO>> {
+      return localVarFp
+        .getManufacturerChartData(companyId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @param {string} orderId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3878,6 +4406,20 @@ export const DefaultApiFactory = function (
     ): AxiosPromise<Array<TransactionDTO>> {
       return localVarFp
         .getOutgoingTransactionsForCompany(companyId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getProductItemStatusQuantity(
+      companyId: string,
+      options?: any
+    ): AxiosPromise<ProductItemStatusQuantityDTO> {
+      return localVarFp
+        .getProductItemStatusQuantity(companyId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -3958,6 +4500,20 @@ export const DefaultApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
+    getRetailerChartData(
+      companyId: string,
+      options?: any
+    ): AxiosPromise<Array<RetailerChartDataDTO>> {
+      return localVarFp
+        .getRetailerChartData(companyId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
     getSales(companyId: string, options?: any): AxiosPromise<Array<SalesDTO>> {
       return localVarFp
         .getSales(companyId, options)
@@ -3979,6 +4535,20 @@ export const DefaultApiFactory = function (
     },
     /**
      *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getStorageFacilityChartData(
+      companyId: string,
+      options?: any
+    ): AxiosPromise<Array<StorageFacilityChartDataDTO>> {
+      return localVarFp
+        .getStorageFacilityChartData(companyId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @param {string} id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3989,6 +4559,48 @@ export const DefaultApiFactory = function (
     ): AxiosPromise<Array<CompanyDTO>> {
       return localVarFp
         .getStorageFacilityPartners(id, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getSupplierChartData(
+      companyId: string,
+      options?: any
+    ): AxiosPromise<Array<SupplierChartDataDTO>> {
+      return localVarFp
+        .getSupplierChartData(companyId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTopTenCustomers(
+      id: string,
+      options?: any
+    ): AxiosPromise<Array<CompanyDTO>> {
+      return localVarFp
+        .getTopTenCustomers(id, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getTopTenProducts(
+      companyId: string,
+      options?: any
+    ): AxiosPromise<Array<ProductDTO>> {
+      return localVarFp
+        .getTopTenProducts(companyId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -4482,6 +5094,19 @@ export class DefaultApi extends BaseAPI {
 
   /**
    *
+   * @param {string} companyId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof DefaultApi
+   */
+  public getManufacturerChartData(companyId: string, options?: any) {
+    return DefaultApiFp(this.configuration)
+      .getManufacturerChartData(companyId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
    * @param {string} orderId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
@@ -4529,6 +5154,19 @@ export class DefaultApi extends BaseAPI {
   public getOutgoingTransactionsForCompany(companyId: string, options?: any) {
     return DefaultApiFp(this.configuration)
       .getOutgoingTransactionsForCompany(companyId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {string} companyId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof DefaultApi
+   */
+  public getProductItemStatusQuantity(companyId: string, options?: any) {
+    return DefaultApiFp(this.configuration)
+      .getProductItemStatusQuantity(companyId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
@@ -4612,6 +5250,19 @@ export class DefaultApi extends BaseAPI {
    * @throws {RequiredError}
    * @memberof DefaultApi
    */
+  public getRetailerChartData(companyId: string, options?: any) {
+    return DefaultApiFp(this.configuration)
+      .getRetailerChartData(companyId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {string} companyId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof DefaultApi
+   */
   public getSales(companyId: string, options?: any) {
     return DefaultApiFp(this.configuration)
       .getSales(companyId, options)
@@ -4633,6 +5284,19 @@ export class DefaultApi extends BaseAPI {
 
   /**
    *
+   * @param {string} companyId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof DefaultApi
+   */
+  public getStorageFacilityChartData(companyId: string, options?: any) {
+    return DefaultApiFp(this.configuration)
+      .getStorageFacilityChartData(companyId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
    * @param {string} id
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
@@ -4641,6 +5305,45 @@ export class DefaultApi extends BaseAPI {
   public getStorageFacilityPartners(id: string, options?: any) {
     return DefaultApiFp(this.configuration)
       .getStorageFacilityPartners(id, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {string} companyId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof DefaultApi
+   */
+  public getSupplierChartData(companyId: string, options?: any) {
+    return DefaultApiFp(this.configuration)
+      .getSupplierChartData(companyId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof DefaultApi
+   */
+  public getTopTenCustomers(id: string, options?: any) {
+    return DefaultApiFp(this.configuration)
+      .getTopTenCustomers(id, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {string} companyId
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof DefaultApi
+   */
+  public getTopTenProducts(companyId: string, options?: any) {
+    return DefaultApiFp(this.configuration)
+      .getTopTenProducts(companyId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
