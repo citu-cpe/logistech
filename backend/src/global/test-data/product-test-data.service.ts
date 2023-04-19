@@ -17,6 +17,8 @@ export const testSupplierProduct: Product = {
   bulk: true,
   bulkQuantity: 12,
   companyId: testSupplierCompany.id,
+  imageUrl: null,
+  cloudinaryPublicId: null,
 };
 
 export const testManufacturerProduct: Product = {
@@ -28,6 +30,8 @@ export const testManufacturerProduct: Product = {
   bulk: false,
   bulkQuantity: null,
   companyId: testManufacturerCompany.id,
+  imageUrl: null,
+  cloudinaryPublicId: null,
 };
 
 export const testRetailerProduct: Product = {
@@ -39,6 +43,8 @@ export const testRetailerProduct: Product = {
   bulk: false,
   bulkQuantity: null,
   companyId: testRetailerCompany.id,
+  imageUrl: null,
+  cloudinaryPublicId: null,
 };
 
 @Injectable()

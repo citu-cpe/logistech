@@ -58,6 +58,12 @@ export interface UserDTO {
      * @memberof UserDTO
      */
     role: UserDTORoleEnum;
+    /**
+     *
+     * @type {string}
+     * @memberof UserDTO
+     */
+    imageUrl?: string;
 }
 /**
  * @export

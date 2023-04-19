@@ -7,6 +7,7 @@ import {
   SwaggerModule,
   SwaggerDocumentOptions,
 } from '@nestjs/swagger';
+import { v2 as cloudinary } from 'cloudinary';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -30,6 +31,12 @@ async function bootstrap() {
 
   app.use(cookieParser());
   app.use(helmet());
+
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
 
   app.setGlobalPrefix('/api/v1');
 

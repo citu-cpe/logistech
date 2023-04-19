@@ -22,6 +22,8 @@ export const testCustomer: User = {
   currentHashedRefreshToken: undefined,
   companyId: undefined,
   role: UserRole.CUSTOMER,
+  imageUrl: null,
+  cloudinaryPublicId: null,
 };
 
 export const testSupplier: User = {
@@ -34,6 +36,8 @@ export const testSupplier: User = {
   currentHashedRefreshToken: undefined,
   role: UserRole.SUPPLIER_SUPERVISOR,
   companyId: testSupplierCompany.id,
+  imageUrl: null,
+  cloudinaryPublicId: null,
 };
 
 export const testStorageFacility: User = {
@@ -46,6 +50,8 @@ export const testStorageFacility: User = {
   currentHashedRefreshToken: undefined,
   role: UserRole.STORAGE_FACILITY_SUPERVISOR,
   companyId: testStorageFacilityCompany.id,
+  imageUrl: null,
+  cloudinaryPublicId: null,
 };
 
 export const testNewStorageFacility: User = {
@@ -58,6 +64,8 @@ export const testNewStorageFacility: User = {
   currentHashedRefreshToken: undefined,
   role: UserRole.STORAGE_FACILITY_SUPERVISOR,
   companyId: testNewStorageFacilityCompany.id,
+  imageUrl: null,
+  cloudinaryPublicId: null,
 };
 
 export const testCourier: User = {
@@ -70,6 +78,8 @@ export const testCourier: User = {
   currentHashedRefreshToken: undefined,
   role: UserRole.COURIER,
   companyId: testStorageFacilityCompany.id,
+  imageUrl: null,
+  cloudinaryPublicId: null,
 };
 
 export const testManufacturer: User = {
@@ -82,6 +92,8 @@ export const testManufacturer: User = {
   currentHashedRefreshToken: undefined,
   role: UserRole.MANUFACTURER_SUPERVISOR,
   companyId: testManufacturerCompany.id,
+  imageUrl: null,
+  cloudinaryPublicId: null,
 };
 
 export const testRetailer: User = {
@@ -94,6 +106,8 @@ export const testRetailer: User = {
   currentHashedRefreshToken: undefined,
   role: UserRole.RETAILER_SUPERVISOR,
   companyId: testRetailerCompany.id,
+  imageUrl: null,
+  cloudinaryPublicId: null,
 };
 
 export const testNewRetailer: User = {
@@ -106,6 +120,8 @@ export const testNewRetailer: User = {
   currentHashedRefreshToken: undefined,
   role: UserRole.RETAILER_SUPERVISOR,
   companyId: testNewRetailerCompany.id,
+  imageUrl: null,
+  cloudinaryPublicId: null,
 };
 
 @Injectable()

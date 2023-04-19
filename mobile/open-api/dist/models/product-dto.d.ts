@@ -70,4 +70,10 @@ export interface ProductDTO {
      * @memberof ProductDTO
      */
     company?: CompanyDTO;
+    /**
+     *
+     * @type {string}
+     * @memberof ProductDTO
+     */
+    imageUrl?: string;
 }

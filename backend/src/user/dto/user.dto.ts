@@ -5,6 +5,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  IsUrl,
   IsUUID,
   ValidateNested,
 } from 'class-validator';
@@ -53,4 +54,8 @@ export class UserDTO {
 
   @IsEnum(UserRoleEnum)
   public role: UserRoleEnum;
+
+  @IsOptional()
+  @IsUrl()
+  public imageUrl?: string;
 }
