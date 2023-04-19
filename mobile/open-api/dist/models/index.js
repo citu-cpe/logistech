@@ -44,4 +44,5 @@ __exportStar(require("./tokens-dto"), exports);
 __exportStar(require("./transaction-dto"), exports);
 __exportStar(require("./update-order-dto"), exports);
 __exportStar(require("./update-order-status-dto"), exports);
+__exportStar(require("./update-user-dto"), exports);
 __exportStar(require("./user-dto"), exports);

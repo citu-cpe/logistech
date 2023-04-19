@@ -42,6 +42,7 @@ import { TokensDTO } from "../models";
 import { TransactionDTO } from "../models";
 import { UpdateOrderDTO } from "../models";
 import { UpdateOrderStatusDTO } from "../models";
+import { UpdateUserDTO } from "../models";
 import { UserDTO } from "../models";
 /**
  * DefaultApi - axios parameter creator
@@ -366,6 +367,12 @@ export declare const DefaultApiAxiosParamCreator: (configuration?: Configuration
     getTopTenProducts: (companyId: string, options?: any) => Promise<RequestArgs>;
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUser: (options?: any) => Promise<RequestArgs>;
+    /**
+     *
      * @param {LoginUserDTO} loginUserDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -422,6 +429,13 @@ export declare const DefaultApiAxiosParamCreator: (configuration?: Configuration
      * @throws {RequiredError}
      */
     updateOrderStatus: (orderId: string, updateOrderStatusDTO: UpdateOrderStatusDTO, options?: any) => Promise<RequestArgs>;
+    /**
+     *
+     * @param {UpdateUserDTO} updateUserDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateUser: (updateUserDTO: UpdateUserDTO, options?: any) => Promise<RequestArgs>;
 };
 /**
  * DefaultApi - functional programming interface
@@ -746,6 +760,12 @@ export declare const DefaultApiFp: (configuration?: Configuration) => {
     getTopTenProducts(companyId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ProductDTO>>>;
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUser(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserDTO>>;
+    /**
+     *
      * @param {LoginUserDTO} loginUserDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -802,6 +822,13 @@ export declare const DefaultApiFp: (configuration?: Configuration) => {
      * @throws {RequiredError}
      */
     updateOrderStatus(orderId: string, updateOrderStatusDTO: UpdateOrderStatusDTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
+     *
+     * @param {UpdateUserDTO} updateUserDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateUser(updateUserDTO: UpdateUserDTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserDTO>>;
 };
 /**
  * DefaultApi - factory interface
@@ -1126,6 +1153,12 @@ export declare const DefaultApiFactory: (configuration?: Configuration, basePath
     getTopTenProducts(companyId: string, options?: any): AxiosPromise<Array<ProductDTO>>;
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getUser(options?: any): AxiosPromise<UserDTO>;
+    /**
+     *
      * @param {LoginUserDTO} loginUserDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1182,6 +1215,13 @@ export declare const DefaultApiFactory: (configuration?: Configuration, basePath
      * @throws {RequiredError}
      */
     updateOrderStatus(orderId: string, updateOrderStatusDTO: UpdateOrderStatusDTO, options?: any): AxiosPromise<void>;
+    /**
+     *
+     * @param {UpdateUserDTO} updateUserDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateUser(updateUserDTO: UpdateUserDTO, options?: any): AxiosPromise<UserDTO>;
 };
 /**
  * DefaultApi - object-oriented interface
@@ -1552,6 +1592,13 @@ export declare class DefaultApi extends BaseAPI {
     getTopTenProducts(companyId: string, options?: any): Promise<import("axios").AxiosResponse<ProductDTO[]>>;
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    getUser(options?: any): Promise<import("axios").AxiosResponse<UserDTO>>;
+    /**
+     *
      * @param {LoginUserDTO} loginUserDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1616,4 +1663,12 @@ export declare class DefaultApi extends BaseAPI {
      * @memberof DefaultApi
      */
     updateOrderStatus(orderId: string, updateOrderStatusDTO: UpdateOrderStatusDTO, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
+     *
+     * @param {UpdateUserDTO} updateUserDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    updateUser(updateUserDTO: UpdateUserDTO, options?: any): Promise<import("axios").AxiosResponse<UserDTO>>;
 }

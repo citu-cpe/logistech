@@ -44,6 +44,7 @@ models/tokens-dto.ts
 models/transaction-dto.ts
 models/update-order-dto.ts
 models/update-order-status-dto.ts
+models/update-user-dto.ts
 models/user-dto.ts
 package.json
 tsconfig.json
