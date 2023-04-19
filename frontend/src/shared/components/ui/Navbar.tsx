@@ -13,13 +13,13 @@ import {
 } from '@chakra-ui/react';
 import { CompanyDTOTypeEnum, UserDTORoleEnum } from 'generated-api';
 import { useLogout } from '../../../modules/index/hooks/useLogout';
-import { useGlobalStore } from '../../stores';
+import { useGetUser } from '../../../modules/settings/hooks/useGetUser';
 import { NavLink } from './NavLink';
 
 export const Navbar = (props: ChakraProps) => {
   const logout = useLogout().mutate;
-  const getUser = useGlobalStore((state) => state.getUser);
-  const user = getUser();
+  const { data } = useGetUser();
+  const user = data?.data;
   const companyType = user?.company?.type;
 
   return (
@@ -127,7 +127,7 @@ export const Navbar = (props: ChakraProps) => {
           data-cy='user-profile-btn'
         >
           <Flex align='center' gap='4'>
-            <Avatar mr='2' />
+            <Avatar mr='2' name={user?.username} />
             <Text fontWeight='bold'>{user?.username}</Text>
           </Flex>
         </MenuButton>

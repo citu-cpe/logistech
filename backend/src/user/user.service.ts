@@ -5,13 +5,14 @@ import { PrismaService } from '../global/prisma/prisma.service';
 import { Company, User } from '@prisma/client';
 import { UserDTO, UserRoleEnum } from './dto/user.dto';
 import { CompanyTypeEnum } from '../company/dto/company.dto';
+import { UpdateUserDTO } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   public async findByEmail(email: string): Promise<User> {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prismaService.user.findUnique({
       where: { email },
       include: { company: true },
     });
@@ -24,7 +25,7 @@ export class UserService {
   }
 
   public async findById(id: string): Promise<User> {
-    const user = await this.prisma.user.findUnique({ where: { id } });
+    const user = await this.prismaService.user.findUnique({ where: { id } });
 
     if (user) {
       return user;
@@ -33,8 +34,17 @@ export class UserService {
     throw new NotFoundException('User with this id does not exist');
   }
 
+  public async getById(id: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id },
+      include: { company: true },
+    });
+
+    return UserService.convertToDTO(user);
+  }
+
   public async register(data: RegisterUserDTO): Promise<User> {
-    return this.prisma.user.create({ data });
+    return this.prismaService.user.create({ data });
   }
 
   public async setCurrentRefreshToken(
@@ -43,7 +53,7 @@ export class UserService {
   ): Promise<void> {
     const currentHashedRefreshToken = await bcrypt.hash(refreshToken, 10);
 
-    await this.prisma.user.update({
+    await this.prismaService.user.update({
       data: { currentHashedRefreshToken },
       where: { id: userId },
     });
@@ -66,10 +76,16 @@ export class UserService {
   }
 
   public async deleteRefreshToken(userId: string): Promise<User> {
-    return this.prisma.user.update({
+    return this.prismaService.user.update({
       data: { currentHashedRefreshToken: null },
       where: { id: userId },
     });
+  }
+
+  public async updateUser(userId: string, dto: UpdateUserDTO) {
+    await this.prismaService.user.update({ where: { id: userId }, data: dto });
+
+    return this.getById(userId);
   }
 
   public static convertToDTO(user: User & { company?: Company }): UserDTO {

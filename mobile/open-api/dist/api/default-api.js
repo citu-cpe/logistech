@@ -1281,6 +1281,30 @@ exports.DefaultApiAxiosParamCreator = function (configuration) {
         }),
         /**
          *
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUser: (options = {}) => __awaiter(this, void 0, void 0, function* () {
+            const localVarPath = `/api/v1/user`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = Object.assign(Object.assign({ method: "GET" }, baseOptions), options);
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            common_1.setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = Object.assign(Object.assign(Object.assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
+            return {
+                url: common_1.toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        }),
+        /**
+         *
          * @param {LoginUserDTO} loginUserDTO
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1510,6 +1534,35 @@ exports.DefaultApiAxiosParamCreator = function (configuration) {
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = Object.assign(Object.assign(Object.assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
             localVarRequestOptions.data = common_1.serializeDataIfNeeded(updateOrderStatusDTO, localVarRequestOptions, configuration);
+            return {
+                url: common_1.toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        }),
+        /**
+         *
+         * @param {UpdateUserDTO} updateUserDTO
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateUser: (updateUserDTO, options = {}) => __awaiter(this, void 0, void 0, function* () {
+            // verify required parameter 'updateUserDTO' is not null or undefined
+            common_1.assertParamExists("updateUser", "updateUserDTO", updateUserDTO);
+            const localVarPath = `/api/v1/user`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = Object.assign(Object.assign({ method: "POST" }, baseOptions), options);
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            localVarHeaderParameter["Content-Type"] = "application/json";
+            common_1.setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = Object.assign(Object.assign(Object.assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
+            localVarRequestOptions.data = common_1.serializeDataIfNeeded(updateUserDTO, localVarRequestOptions, configuration);
             return {
                 url: common_1.toPathString(localVarUrlObj),
                 options: localVarRequestOptions,
@@ -2062,6 +2115,17 @@ exports.DefaultApiFp = function (configuration) {
         },
         /**
          *
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUser(options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const localVarAxiosArgs = yield localVarAxiosParamCreator.getUser(options);
+                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+            });
+        },
+        /**
+         *
          * @param {LoginUserDTO} loginUserDTO
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2155,6 +2219,18 @@ exports.DefaultApiFp = function (configuration) {
         updateOrderStatus(orderId, updateOrderStatusDTO, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.updateOrderStatus(orderId, updateOrderStatusDTO, options);
+                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+            });
+        },
+        /**
+         *
+         * @param {UpdateUserDTO} updateUserDTO
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateUser(updateUserDTO, options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const localVarAxiosArgs = yield localVarAxiosParamCreator.updateUser(updateUserDTO, options);
                 return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
             });
         },
@@ -2661,6 +2737,16 @@ exports.DefaultApiFactory = function (configuration, basePath, axios) {
         },
         /**
          *
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUser(options) {
+            return localVarFp
+                .getUser(options)
+                .then((request) => request(axios, basePath));
+        },
+        /**
+         *
          * @param {LoginUserDTO} loginUserDTO
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2747,6 +2833,17 @@ exports.DefaultApiFactory = function (configuration, basePath, axios) {
         updateOrderStatus(orderId, updateOrderStatusDTO, options) {
             return localVarFp
                 .updateOrderStatus(orderId, updateOrderStatusDTO, options)
+                .then((request) => request(axios, basePath));
+        },
+        /**
+         *
+         * @param {UpdateUserDTO} updateUserDTO
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateUser(updateUserDTO, options) {
+            return localVarFp
+                .updateUser(updateUserDTO, options)
                 .then((request) => request(axios, basePath));
         },
     };
@@ -3296,6 +3393,17 @@ class DefaultApi extends base_1.BaseAPI {
     }
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    getUser(options) {
+        return exports.DefaultApiFp(this.configuration)
+            .getUser(options)
+            .then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     *
      * @param {LoginUserDTO} loginUserDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3390,6 +3498,18 @@ class DefaultApi extends base_1.BaseAPI {
     updateOrderStatus(orderId, updateOrderStatusDTO, options) {
         return exports.DefaultApiFp(this.configuration)
             .updateOrderStatus(orderId, updateOrderStatusDTO, options)
+            .then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     *
+     * @param {UpdateUserDTO} updateUserDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    updateUser(updateUserDTO, options) {
+        return exports.DefaultApiFp(this.configuration)
+            .updateUser(updateUserDTO, options)
             .then((request) => request(this.axios, this.basePath));
     }
 }

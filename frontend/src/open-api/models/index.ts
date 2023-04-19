@@ -32,4 +32,5 @@ export * from './tokens-dto';
 export * from './transaction-dto';
 export * from './update-order-dto';
 export * from './update-order-status-dto';
+export * from './update-user-dto';
 export * from './user-dto';
