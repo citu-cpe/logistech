@@ -2497,6 +2497,42 @@ export const DefaultApiAxiosParamCreator = function (
     },
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    removeProfilePicture: async (options: any = {}): Promise<RequestArgs> => {
+      const localVarPath = `/api/v1/user/profile-picture`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "DELETE",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @param {string} id
      * @param {string} storageFacilityId
      * @param {*} [options] Override http request option.
@@ -2746,6 +2782,42 @@ export const DefaultApiAxiosParamCreator = function (
         localVarRequestOptions,
         configuration
       );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    uploadProfilePicture: async (options: any = {}): Promise<RequestArgs> => {
+      const localVarPath = `/api/v1/user/profile-picture`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
 
       return {
         url: toPathString(localVarUrlObj),
@@ -3990,6 +4062,25 @@ export const DefaultApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async removeProfilePicture(
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserDTO>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.removeProfilePicture(options);
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
      * @param {string} id
      * @param {string} storageFacilityId
      * @param {*} [options] Override http request option.
@@ -4104,6 +4195,25 @@ export const DefaultApiFp = function (configuration?: Configuration) {
         updateUserDTO,
         options
       );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async uploadProfilePicture(
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserDTO>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.uploadProfilePicture(options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -4795,6 +4905,16 @@ export const DefaultApiFactory = function (
     },
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    removeProfilePicture(options?: any): AxiosPromise<UserDTO> {
+      return localVarFp
+        .removeProfilePicture(options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @param {string} id
      * @param {string} storageFacilityId
      * @param {*} [options] Override http request option.
@@ -4863,6 +4983,16 @@ export const DefaultApiFactory = function (
     ): AxiosPromise<UserDTO> {
       return localVarFp
         .updateUser(updateUserDTO, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    uploadProfilePicture(options?: any): AxiosPromise<UserDTO> {
+      return localVarFp
+        .uploadProfilePicture(options)
         .then((request) => request(axios, basePath));
     },
   };
@@ -5567,6 +5697,18 @@ export class DefaultApi extends BaseAPI {
 
   /**
    *
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof DefaultApi
+   */
+  public removeProfilePicture(options?: any) {
+    return DefaultApiFp(this.configuration)
+      .removeProfilePicture(options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
    * @param {string} id
    * @param {string} storageFacilityId
    * @param {*} [options] Override http request option.
@@ -5641,6 +5783,18 @@ export class DefaultApi extends BaseAPI {
   public updateUser(updateUserDTO: UpdateUserDTO, options?: any) {
     return DefaultApiFp(this.configuration)
       .updateUser(updateUserDTO, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof DefaultApi
+   */
+  public uploadProfilePicture(options?: any) {
+    return DefaultApiFp(this.configuration)
+      .uploadProfilePicture(options)
       .then((request) => request(this.axios, this.basePath));
   }
 }

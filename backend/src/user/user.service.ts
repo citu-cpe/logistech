@@ -6,6 +6,8 @@ import { Company, User } from '@prisma/client';
 import { UserDTO, UserRoleEnum } from './dto/user.dto';
 import { CompanyTypeEnum } from '../company/dto/company.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
+import { v2 as cloudinary } from 'cloudinary';
+import { deleteFile } from '../shared/utils/deleteFile';
 
 @Injectable()
 export class UserService {
@@ -25,7 +27,10 @@ export class UserService {
   }
 
   public async findById(id: string): Promise<User> {
-    const user = await this.prismaService.user.findUnique({ where: { id } });
+    const user = await this.prismaService.user.findUnique({
+      where: { id },
+      include: { company: true },
+    });
 
     if (user) {
       return user;
@@ -88,8 +93,56 @@ export class UserService {
     return this.getById(userId);
   }
 
+  public async uploadProfilePicture(
+    userId: string,
+    image: Express.Multer.File
+  ) {
+    let imageUrl: string;
+    let cloudinaryPublicId: string;
+
+    if (image) {
+      const { secure_url, public_id } = await cloudinary.uploader.upload(
+        image.path
+      );
+      imageUrl = secure_url;
+      cloudinaryPublicId = public_id;
+      deleteFile(image.path);
+    }
+
+    await this.prismaService.user.update({
+      where: { id: userId },
+      data: { imageUrl, cloudinaryPublicId },
+    });
+
+    return this.getById(userId);
+  }
+
+  public async removeProfilePicture(userId: string) {
+    const user = await this.findById(userId);
+
+    if (user.cloudinaryPublicId) {
+      cloudinary.uploader.destroy(user.cloudinaryPublicId);
+    }
+
+    await this.prismaService.user.update({
+      where: { id: userId },
+      data: { imageUrl: null, cloudinaryPublicId: null },
+    });
+
+    return this.getById(userId);
+  }
+
   public static convertToDTO(user: User & { company?: Company }): UserDTO {
-    const { id, createdAt, updatedAt, email, username, role, company } = user;
+    const {
+      id,
+      createdAt,
+      updatedAt,
+      email,
+      username,
+      role,
+      company,
+      imageUrl,
+    } = user;
 
     const userDTO: UserDTO = {
       id,
@@ -104,6 +157,7 @@ export class UserService {
           }
         : undefined,
       role: role as UserRoleEnum,
+      imageUrl,
     };
 
     return userDTO;

@@ -21,6 +21,8 @@ model User {
   companyId                 String?
   company                   Company? @relation(fields: [companyId], references: [id], onDelete: Cascade)
   role                      UserRole
+  imageUrl                  String?
+  cloudinaryPublicId        String?
 
   courierOrders  Order[]       @relation("courierOrder")
   customerOrders Order[]       @relation("customerOrder")
@@ -81,13 +83,15 @@ enum CompanyType {
 }
 
 model Product {
-  id           String   @id @default(uuid())
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  name         String
-  price        Float
-  bulk         Boolean
-  bulkQuantity Int?
+  id                 String   @id @default(uuid())
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  name               String
+  price              Float
+  bulk               Boolean
+  bulkQuantity       Int?
+  imageUrl           String?
+  cloudinaryPublicId String?
 
   companyId String
   company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)

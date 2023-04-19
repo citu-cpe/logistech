@@ -1421,6 +1421,30 @@ exports.DefaultApiAxiosParamCreator = function (configuration) {
         }),
         /**
          *
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        removeProfilePicture: (options = {}) => __awaiter(this, void 0, void 0, function* () {
+            const localVarPath = `/api/v1/user/profile-picture`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = Object.assign(Object.assign({ method: "DELETE" }, baseOptions), options);
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            common_1.setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = Object.assign(Object.assign(Object.assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
+            return {
+                url: common_1.toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        }),
+        /**
+         *
          * @param {string} id
          * @param {string} storageFacilityId
          * @param {*} [options] Override http request option.
@@ -1563,6 +1587,30 @@ exports.DefaultApiAxiosParamCreator = function (configuration) {
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = Object.assign(Object.assign(Object.assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
             localVarRequestOptions.data = common_1.serializeDataIfNeeded(updateUserDTO, localVarRequestOptions, configuration);
+            return {
+                url: common_1.toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        }),
+        /**
+         *
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        uploadProfilePicture: (options = {}) => __awaiter(this, void 0, void 0, function* () {
+            const localVarPath = `/api/v1/user/profile-picture`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = Object.assign(Object.assign({ method: "POST" }, baseOptions), options);
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            common_1.setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = Object.assign(Object.assign(Object.assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
             return {
                 url: common_1.toPathString(localVarUrlObj),
                 options: localVarRequestOptions,
@@ -2174,6 +2222,17 @@ exports.DefaultApiFp = function (configuration) {
         },
         /**
          *
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        removeProfilePicture(options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const localVarAxiosArgs = yield localVarAxiosParamCreator.removeProfilePicture(options);
+                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+            });
+        },
+        /**
+         *
          * @param {string} id
          * @param {string} storageFacilityId
          * @param {*} [options] Override http request option.
@@ -2231,6 +2290,17 @@ exports.DefaultApiFp = function (configuration) {
         updateUser(updateUserDTO, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.updateUser(updateUserDTO, options);
+                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+            });
+        },
+        /**
+         *
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        uploadProfilePicture(options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const localVarAxiosArgs = yield localVarAxiosParamCreator.uploadProfilePicture(options);
                 return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
             });
         },
@@ -2791,6 +2861,16 @@ exports.DefaultApiFactory = function (configuration, basePath, axios) {
         },
         /**
          *
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        removeProfilePicture(options) {
+            return localVarFp
+                .removeProfilePicture(options)
+                .then((request) => request(axios, basePath));
+        },
+        /**
+         *
          * @param {string} id
          * @param {string} storageFacilityId
          * @param {*} [options] Override http request option.
@@ -2844,6 +2924,16 @@ exports.DefaultApiFactory = function (configuration, basePath, axios) {
         updateUser(updateUserDTO, options) {
             return localVarFp
                 .updateUser(updateUserDTO, options)
+                .then((request) => request(axios, basePath));
+        },
+        /**
+         *
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        uploadProfilePicture(options) {
+            return localVarFp
+                .uploadProfilePicture(options)
                 .then((request) => request(axios, basePath));
         },
     };
@@ -3452,6 +3542,17 @@ class DefaultApi extends base_1.BaseAPI {
     }
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    removeProfilePicture(options) {
+        return exports.DefaultApiFp(this.configuration)
+            .removeProfilePicture(options)
+            .then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     *
      * @param {string} id
      * @param {string} storageFacilityId
      * @param {*} [options] Override http request option.
@@ -3510,6 +3611,17 @@ class DefaultApi extends base_1.BaseAPI {
     updateUser(updateUserDTO, options) {
         return exports.DefaultApiFp(this.configuration)
             .updateUser(updateUserDTO, options)
+            .then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    uploadProfilePicture(options) {
+        return exports.DefaultApiFp(this.configuration)
+            .uploadProfilePicture(options)
             .then((request) => request(this.axios, this.basePath));
     }
 }

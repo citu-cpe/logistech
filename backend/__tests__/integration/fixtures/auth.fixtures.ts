@@ -34,6 +34,8 @@ export const createUser = async (
     currentHashedRefreshToken: null,
     companyId: testSupplierCompany.id,
     role: UserRole.SUPPLIER_SUPERVISOR,
+    imageUrl: null,
+    cloudinaryPublicId: null,
   };
 
   if (user instanceof RegisterUserDTO) {

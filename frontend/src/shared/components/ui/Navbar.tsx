@@ -127,7 +127,7 @@ export const Navbar = (props: ChakraProps) => {
           data-cy='user-profile-btn'
         >
           <Flex align='center' gap='4'>
-            <Avatar mr='2' name={user?.username} />
+            <Avatar mr='2' name={user?.username} src={user?.imageUrl} />
             <Text fontWeight='bold'>{user?.username}</Text>
           </Flex>
         </MenuButton>

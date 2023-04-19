@@ -401,6 +401,12 @@ export declare const DefaultApiAxiosParamCreator: (configuration?: Configuration
     register: (registerUserDTO: RegisterUserDTO, options?: any) => Promise<RequestArgs>;
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    removeProfilePicture: (options?: any) => Promise<RequestArgs>;
+    /**
+     *
      * @param {string} id
      * @param {string} storageFacilityId
      * @param {*} [options] Override http request option.
@@ -436,6 +442,12 @@ export declare const DefaultApiAxiosParamCreator: (configuration?: Configuration
      * @throws {RequiredError}
      */
     updateUser: (updateUserDTO: UpdateUserDTO, options?: any) => Promise<RequestArgs>;
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    uploadProfilePicture: (options?: any) => Promise<RequestArgs>;
 };
 /**
  * DefaultApi - functional programming interface
@@ -794,6 +806,12 @@ export declare const DefaultApiFp: (configuration?: Configuration) => {
     register(registerUserDTO: RegisterUserDTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<LoginResponseDTO>>;
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    removeProfilePicture(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserDTO>>;
+    /**
+     *
      * @param {string} id
      * @param {string} storageFacilityId
      * @param {*} [options] Override http request option.
@@ -829,6 +847,12 @@ export declare const DefaultApiFp: (configuration?: Configuration) => {
      * @throws {RequiredError}
      */
     updateUser(updateUserDTO: UpdateUserDTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserDTO>>;
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    uploadProfilePicture(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserDTO>>;
 };
 /**
  * DefaultApi - factory interface
@@ -1187,6 +1211,12 @@ export declare const DefaultApiFactory: (configuration?: Configuration, basePath
     register(registerUserDTO: RegisterUserDTO, options?: any): AxiosPromise<LoginResponseDTO>;
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    removeProfilePicture(options?: any): AxiosPromise<UserDTO>;
+    /**
+     *
      * @param {string} id
      * @param {string} storageFacilityId
      * @param {*} [options] Override http request option.
@@ -1222,6 +1252,12 @@ export declare const DefaultApiFactory: (configuration?: Configuration, basePath
      * @throws {RequiredError}
      */
     updateUser(updateUserDTO: UpdateUserDTO, options?: any): AxiosPromise<UserDTO>;
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    uploadProfilePicture(options?: any): AxiosPromise<UserDTO>;
 };
 /**
  * DefaultApi - object-oriented interface
@@ -1631,6 +1667,13 @@ export declare class DefaultApi extends BaseAPI {
     register(registerUserDTO: RegisterUserDTO, options?: any): Promise<import("axios").AxiosResponse<LoginResponseDTO>>;
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    removeProfilePicture(options?: any): Promise<import("axios").AxiosResponse<UserDTO>>;
+    /**
+     *
      * @param {string} id
      * @param {string} storageFacilityId
      * @param {*} [options] Override http request option.
@@ -1671,4 +1714,11 @@ export declare class DefaultApi extends BaseAPI {
      * @memberof DefaultApi
      */
     updateUser(updateUserDTO: UpdateUserDTO, options?: any): Promise<import("axios").AxiosResponse<UserDTO>>;
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    uploadProfilePicture(options?: any): Promise<import("axios").AxiosResponse<UserDTO>>;
 }

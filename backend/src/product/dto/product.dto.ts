@@ -8,6 +8,7 @@ import {
   IsBoolean,
   Min,
   IsOptional,
+  IsUrl,
 } from 'class-validator';
 import { CompanyDTO } from '../../company/dto/company.dto';
 
@@ -42,4 +43,8 @@ export class ProductDTO {
   @IsOptional()
   @ValidateNested()
   public company?: CompanyDTO;
+
+  @IsOptional()
+  @IsUrl()
+  public imageUrl?: string;
 }
