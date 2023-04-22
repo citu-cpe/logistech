@@ -23,6 +23,7 @@ model User {
   role                      UserRole
   imageUrl                  String?
   cloudinaryPublicId        String?
+  address                   String
 
   courierOrders  Order[]       @relation("courierOrder")
   customerOrders Order[]       @relation("customerOrder")
@@ -56,7 +57,7 @@ model Company {
   updatedAt     DateTime    @updatedAt
   type          CompanyType
   name          String
-  address       String      @default("")
+  address       String
   contactNumber String      @default("")
   email         String      @default("")
 
@@ -101,11 +102,12 @@ model Product {
 }
 
 model ProductItem {
-  id        String            @id @default(uuid())
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
-  rfid      String            @unique
-  status    ProductItemStatus
+  id         String            @id @default(uuid())
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+  rfid       String            @unique
+  status     ProductItemStatus
+  returnedAt DateTime?
 
   productId String
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
@@ -130,6 +132,8 @@ enum ProductItemStatus {
   COMPLETE
   CANCELED
   RED_FLAG
+  RETURNING
+  RETURNED
 }
 
 model Report {

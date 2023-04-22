@@ -19,6 +19,7 @@ import {
   bottomTabBarStyles,
   stackHeaderStyles,
 } from "./shared/styles/navigationStyles";
+import { UserDTORoleEnum } from "generated-api";
 
 export type RootStackParamList = {
   Login: undefined;
@@ -39,6 +40,7 @@ const queryClient = new QueryClient();
 
 export default function App() {
   const { isLoading, getUser, isLogout, user } = useAuthStore();
+  const isCustomer = user?.role === UserDTORoleEnum.Customer;
 
   useEffect(() => {
     getUser();
@@ -75,47 +77,51 @@ export default function App() {
                         headerShown: false,
                       }}
                     />
-                    <Tab.Screen
-                      name="CartStack"
-                      component={CartStackScreen}
-                      options={{
-                        tabBarIcon: ({ color, size }) => (
-                          <MaterialCommunityIcons
-                            name="cart"
-                            color={color}
-                            size={size}
-                          />
-                        ),
-                        title: "Cart",
-                        headerShown: false,
-                      }}
-                    />
-                    <Tab.Screen
-                      name="History"
-                      component={HistoryScreen}
-                      options={{
-                        tabBarIcon: ({ color, size }) => (
-                          <MaterialCommunityIcons
-                            name="history"
-                            color={color}
-                            size={size}
-                          />
-                        ),
-                      }}
-                    />
-                    <Tab.Screen
-                      name="Returns"
-                      component={ReturnsScreen}
-                      options={{
-                        tabBarIcon: ({ color, size }) => (
-                          <MaterialCommunityIcons
-                            name="keyboard-return"
-                            color={color}
-                            size={size}
-                          />
-                        ),
-                      }}
-                    />
+                    {isCustomer && (
+                      <>
+                        <Tab.Screen
+                          name="CartStack"
+                          component={CartStackScreen}
+                          options={{
+                            tabBarIcon: ({ color, size }) => (
+                              <MaterialCommunityIcons
+                                name="cart"
+                                color={color}
+                                size={size}
+                              />
+                            ),
+                            title: "Cart",
+                            headerShown: false,
+                          }}
+                        />
+                        <Tab.Screen
+                          name="History"
+                          component={HistoryScreen}
+                          options={{
+                            tabBarIcon: ({ color, size }) => (
+                              <MaterialCommunityIcons
+                                name="history"
+                                color={color}
+                                size={size}
+                              />
+                            ),
+                          }}
+                        />
+                        <Tab.Screen
+                          name="Returns"
+                          component={ReturnsScreen}
+                          options={{
+                            tabBarIcon: ({ color, size }) => (
+                              <MaterialCommunityIcons
+                                name="keyboard-return"
+                                color={color}
+                                size={size}
+                              />
+                            ),
+                          }}
+                        />
+                      </>
+                    )}
                     <Tab.Screen
                       name="Profile"
                       component={ProfileScreen}

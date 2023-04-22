@@ -18,6 +18,7 @@ export const RegisterForm = () => {
     email: '',
     username: '',
     password: '',
+    address: '',
     role: RegisterUserDTORoleEnum.Customer,
   };
 

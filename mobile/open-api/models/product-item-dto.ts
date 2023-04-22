@@ -13,6 +13,7 @@
  */
 
 import { ProductDTO } from "./product-dto";
+import { UserDTO } from "./user-dto";
 
 /**
  *
@@ -56,6 +57,12 @@ export interface ProductItemDTO {
    * @memberof ProductItemDTO
    */
   product?: ProductDTO;
+  /**
+   *
+   * @type {UserDTO}
+   * @memberof ProductItemDTO
+   */
+  customer?: UserDTO;
 }
 
 /**
@@ -70,4 +77,6 @@ export enum ProductItemDTOStatusEnum {
   Complete = "COMPLETE",
   Canceled = "CANCELED",
   RedFlag = "RED_FLAG",
+  Returning = "RETURNING",
+  Returned = "RETURNED",
 }

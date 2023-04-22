@@ -19,6 +19,7 @@ export const testRegisterUser: RegisterUserDTO = {
   password: 'test',
   companyId: testSupplierCompany.id,
   role: UserRoleEnum.SUPPLIER_SUPERVISOR,
+  address: 'Punta Princesa, Cebu City',
 };
 
 export const createUser = async (
@@ -36,6 +37,7 @@ export const createUser = async (
     role: UserRole.SUPPLIER_SUPERVISOR,
     imageUrl: null,
     cloudinaryPublicId: null,
+    address: 'Punta Princesa, Cebu City',
   };
 
   if (user instanceof RegisterUserDTO) {

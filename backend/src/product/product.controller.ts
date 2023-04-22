@@ -6,12 +6,14 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Put,
   Req,
 } from '@nestjs/common';
 import { RequestWithUser } from '../authentication/types/request-with-user.interface';
 import { CommerceProductDTO } from './dto/commerce-product.dto';
+import { CourierProductItemsDTO } from './dto/courier-product-items.dto';
 import { CreateManyProductItemsDTO } from './dto/create-many-product-items.dto';
 import { CreateProductItemDTO } from './dto/create-product-item.dto';
 import { CreateProductDTO } from './dto/create-product.dto';
@@ -19,6 +21,7 @@ import { ProductItemByStatusDTO } from './dto/product-item-by-status.dto';
 import { ProductItemStatusQuantityDTO } from './dto/product-item-status-quantity.dto';
 import { ProductItemDTO } from './dto/product-item.dto';
 import { ProductDTO } from './dto/product.dto';
+import { UpdateProductItemStatusDTO } from './dto/update-product-item-status.dto';
 import { ProductItemService } from './product-item.service';
 import { ProductService } from './product.service';
 
@@ -144,5 +147,35 @@ export class ProductController {
     @Param('companyId') companyId: string
   ): Promise<ProductItemStatusQuantityDTO> {
     return this.productItemService.getProductItemStatusQuantity(companyId);
+  }
+
+  @Post('/product-item/:productItemId')
+  public returnProductItem(
+    @Req() { user }: RequestWithUser,
+    @Param('productItemId') productItemId: string
+  ) {
+    return this.productItemService.returnProductItem(productItemId, user.id);
+  }
+
+  @Get('/product-item/courier')
+  public getCourierAssignedProductItems(
+    @Req() { user }: RequestWithUser
+  ): Promise<CourierProductItemsDTO> {
+    return this.productItemService.getCourierAssignedProductItems(user.id);
+  }
+
+  @Patch('/product-item/:productItemId/status')
+  public updateProductItemStatus(
+    @Param('productItemId') productItemId: string,
+    @Body() dto: UpdateProductItemStatusDTO
+  ) {
+    return this.productItemService.updateProductItemStatus(productItemId, dto);
+  }
+
+  @Get('/product-item/returned')
+  public getReturnedProductItems(
+    @Req() { user }: RequestWithUser
+  ): Promise<ProductItemDTO[]> {
+    return this.productItemService.getReturnedProductItems(user.id);
   }
 }

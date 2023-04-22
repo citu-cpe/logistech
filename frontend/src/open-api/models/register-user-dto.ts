@@ -35,6 +35,12 @@ export interface RegisterUserDTO {
    * @type {string}
    * @memberof RegisterUserDTO
    */
+  address: string;
+  /**
+   *
+   * @type {string}
+   * @memberof RegisterUserDTO
+   */
   password: string;
   /**
    *

@@ -1,6 +1,6 @@
 import { Box, Button } from '@chakra-ui/react';
 import { Field, FieldProps, Form, Formik } from 'formik';
-import { CreateProductItemDTO, UpdateUserDTO } from 'generated-api';
+import { UpdateUserDTO } from 'generated-api';
 import { useGetUser } from '../hooks/useGetUser';
 import { useUpdateUser } from '../hooks/useUpdateUser';
 import * as Yup from 'yup';
@@ -32,6 +32,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ onClose }) => {
     <Formik
       initialValues={{
         username: data?.data.username,
+        address: data?.data.address,
       }}
       onSubmit={onSubmit}
     >
@@ -39,13 +40,27 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ onClose }) => {
         <Form noValidate>
           <Box mb='4'>
             <Field name='username' type='text'>
-              {(fieldProps: FieldProps<string, CreateProductItemDTO>) => (
+              {(fieldProps: FieldProps<string, UpdateUserDTO>) => (
                 <Input
                   fieldProps={fieldProps}
                   name='username'
                   label='Username'
                   type='text'
                   id='username'
+                  borderColor='gray.300'
+                  bgColor='gray.50'
+                  color='gray.800'
+                />
+              )}
+            </Field>
+            <Field name='address' type='text'>
+              {(fieldProps: FieldProps<string, UpdateUserDTO>) => (
+                <Input
+                  fieldProps={fieldProps}
+                  name='address'
+                  label='Address'
+                  type='text'
+                  id='address'
                   borderColor='gray.300'
                   bgColor='gray.50'
                   color='gray.800'

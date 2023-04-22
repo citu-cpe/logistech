@@ -656,6 +656,30 @@ exports.DefaultApiAxiosParamCreator = function (configuration) {
         }),
         /**
          *
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCourierAssignedProductItems: (options = {}) => __awaiter(this, void 0, void 0, function* () {
+            const localVarPath = `/api/v1/product/product-item/courier`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = Object.assign(Object.assign({ method: "GET" }, baseOptions), options);
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            common_1.setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = Object.assign(Object.assign(Object.assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
+            return {
+                url: common_1.toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        }),
+        /**
+         *
          * @param {string} id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1092,6 +1116,30 @@ exports.DefaultApiAxiosParamCreator = function (configuration) {
         }),
         /**
          *
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getReturnedProductItems: (options = {}) => __awaiter(this, void 0, void 0, function* () {
+            const localVarPath = `/api/v1/product/product-item/returned`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = Object.assign(Object.assign({ method: "GET" }, baseOptions), options);
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            common_1.setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = Object.assign(Object.assign(Object.assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
+            return {
+                url: common_1.toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        }),
+        /**
+         *
          * @param {string} companyId
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1477,6 +1525,33 @@ exports.DefaultApiAxiosParamCreator = function (configuration) {
         }),
         /**
          *
+         * @param {string} productItemId
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        returnProductItem: (productItemId, options = {}) => __awaiter(this, void 0, void 0, function* () {
+            // verify required parameter 'productItemId' is not null or undefined
+            common_1.assertParamExists("returnProductItem", "productItemId", productItemId);
+            const localVarPath = `/api/v1/product/product-item/{productItemId}`.replace(`{${"productItemId"}}`, encodeURIComponent(String(productItemId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = Object.assign(Object.assign({ method: "POST" }, baseOptions), options);
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            common_1.setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = Object.assign(Object.assign(Object.assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
+            return {
+                url: common_1.toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        }),
+        /**
+         *
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1558,6 +1633,38 @@ exports.DefaultApiAxiosParamCreator = function (configuration) {
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = Object.assign(Object.assign(Object.assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
             localVarRequestOptions.data = common_1.serializeDataIfNeeded(updateOrderStatusDTO, localVarRequestOptions, configuration);
+            return {
+                url: common_1.toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        }),
+        /**
+         *
+         * @param {string} productItemId
+         * @param {UpdateProductItemStatusDTO} updateProductItemStatusDTO
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateProductItemStatus: (productItemId, updateProductItemStatusDTO, options = {}) => __awaiter(this, void 0, void 0, function* () {
+            // verify required parameter 'productItemId' is not null or undefined
+            common_1.assertParamExists("updateProductItemStatus", "productItemId", productItemId);
+            // verify required parameter 'updateProductItemStatusDTO' is not null or undefined
+            common_1.assertParamExists("updateProductItemStatus", "updateProductItemStatusDTO", updateProductItemStatusDTO);
+            const localVarPath = `/api/v1/product/product-item/{productItemId}/status`.replace(`{${"productItemId"}}`, encodeURIComponent(String(productItemId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = Object.assign(Object.assign({ method: "PATCH" }, baseOptions), options);
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            localVarHeaderParameter["Content-Type"] = "application/json";
+            common_1.setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = Object.assign(Object.assign(Object.assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
+            localVarRequestOptions.data = common_1.serializeDataIfNeeded(updateProductItemStatusDTO, localVarRequestOptions, configuration);
             return {
                 url: common_1.toPathString(localVarUrlObj),
                 options: localVarRequestOptions,
@@ -1887,6 +1994,17 @@ exports.DefaultApiFp = function (configuration) {
         },
         /**
          *
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCourierAssignedProductItems(options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const localVarAxiosArgs = yield localVarAxiosParamCreator.getCourierAssignedProductItems(options);
+                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+            });
+        },
+        /**
+         *
          * @param {string} id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2079,6 +2197,17 @@ exports.DefaultApiFp = function (configuration) {
         },
         /**
          *
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getReturnedProductItems(options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const localVarAxiosArgs = yield localVarAxiosParamCreator.getReturnedProductItems(options);
+                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+            });
+        },
+        /**
+         *
          * @param {string} companyId
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2246,6 +2375,18 @@ exports.DefaultApiFp = function (configuration) {
         },
         /**
          *
+         * @param {string} productItemId
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        returnProductItem(productItemId, options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const localVarAxiosArgs = yield localVarAxiosParamCreator.returnProductItem(productItemId, options);
+                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+            });
+        },
+        /**
+         *
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2278,6 +2419,19 @@ exports.DefaultApiFp = function (configuration) {
         updateOrderStatus(orderId, updateOrderStatusDTO, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.updateOrderStatus(orderId, updateOrderStatusDTO, options);
+                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+            });
+        },
+        /**
+         *
+         * @param {string} productItemId
+         * @param {UpdateProductItemStatusDTO} updateProductItemStatusDTO
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateProductItemStatus(productItemId, updateProductItemStatusDTO, options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const localVarAxiosArgs = yield localVarAxiosParamCreator.updateProductItemStatus(productItemId, updateProductItemStatusDTO, options);
                 return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
             });
         },
@@ -2554,6 +2708,16 @@ exports.DefaultApiFactory = function (configuration, basePath, axios) {
         },
         /**
          *
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCourierAssignedProductItems(options) {
+            return localVarFp
+                .getCourierAssignedProductItems(options)
+                .then((request) => request(axios, basePath));
+        },
+        /**
+         *
          * @param {string} id
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2730,6 +2894,16 @@ exports.DefaultApiFactory = function (configuration, basePath, axios) {
         },
         /**
          *
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getReturnedProductItems(options) {
+            return localVarFp
+                .getReturnedProductItems(options)
+                .then((request) => request(axios, basePath));
+        },
+        /**
+         *
          * @param {string} companyId
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2883,6 +3057,17 @@ exports.DefaultApiFactory = function (configuration, basePath, axios) {
         },
         /**
          *
+         * @param {string} productItemId
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        returnProductItem(productItemId, options) {
+            return localVarFp
+                .returnProductItem(productItemId, options)
+                .then((request) => request(axios, basePath));
+        },
+        /**
+         *
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -2913,6 +3098,18 @@ exports.DefaultApiFactory = function (configuration, basePath, axios) {
         updateOrderStatus(orderId, updateOrderStatusDTO, options) {
             return localVarFp
                 .updateOrderStatus(orderId, updateOrderStatusDTO, options)
+                .then((request) => request(axios, basePath));
+        },
+        /**
+         *
+         * @param {string} productItemId
+         * @param {UpdateProductItemStatusDTO} updateProductItemStatusDTO
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateProductItemStatus(productItemId, updateProductItemStatusDTO, options) {
+            return localVarFp
+                .updateProductItemStatus(productItemId, updateProductItemStatusDTO, options)
                 .then((request) => request(axios, basePath));
         },
         /**
@@ -3207,6 +3404,17 @@ class DefaultApi extends base_1.BaseAPI {
     }
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    getCourierAssignedProductItems(options) {
+        return exports.DefaultApiFp(this.configuration)
+            .getCourierAssignedProductItems(options)
+            .then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     *
      * @param {string} id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3399,6 +3607,17 @@ class DefaultApi extends base_1.BaseAPI {
     }
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    getReturnedProductItems(options) {
+        return exports.DefaultApiFp(this.configuration)
+            .getReturnedProductItems(options)
+            .then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     *
      * @param {string} companyId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -3566,6 +3785,18 @@ class DefaultApi extends base_1.BaseAPI {
     }
     /**
      *
+     * @param {string} productItemId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    returnProductItem(productItemId, options) {
+        return exports.DefaultApiFp(this.configuration)
+            .returnProductItem(productItemId, options)
+            .then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     *
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
@@ -3599,6 +3830,19 @@ class DefaultApi extends base_1.BaseAPI {
     updateOrderStatus(orderId, updateOrderStatusDTO, options) {
         return exports.DefaultApiFp(this.configuration)
             .updateOrderStatus(orderId, updateOrderStatusDTO, options)
+            .then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     *
+     * @param {string} productItemId
+     * @param {UpdateProductItemStatusDTO} updateProductItemStatusDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    updateProductItemStatus(productItemId, updateProductItemStatusDTO, options) {
+        return exports.DefaultApiFp(this.configuration)
+            .updateProductItemStatus(productItemId, updateProductItemStatusDTO, options)
             .then((request) => request(this.axios, this.basePath));
     }
     /**

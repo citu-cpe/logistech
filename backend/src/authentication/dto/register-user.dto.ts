@@ -38,6 +38,10 @@ export class RegisterUserDTO {
 
   @IsString()
   @IsNotEmpty()
+  public address: string;
+
+  @IsString()
+  @IsNotEmpty()
   @MinLength(4)
   public password: string;
 

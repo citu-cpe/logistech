@@ -24,4 +24,10 @@ export interface UpdateUserDTO {
    * @memberof UpdateUserDTO
    */
   username: string;
+  /**
+   *
+   * @type {string}
+   * @memberof UpdateUserDTO
+   */
+  address: string;
 }

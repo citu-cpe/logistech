@@ -27,4 +27,6 @@ var CreateProductItemDTOStatusEnum;
     CreateProductItemDTOStatusEnum["Complete"] = "COMPLETE";
     CreateProductItemDTOStatusEnum["Canceled"] = "CANCELED";
     CreateProductItemDTOStatusEnum["RedFlag"] = "RED_FLAG";
+    CreateProductItemDTOStatusEnum["Returning"] = "RETURNING";
+    CreateProductItemDTOStatusEnum["Returned"] = "RETURNED";
 })(CreateProductItemDTOStatusEnum = exports.CreateProductItemDTOStatusEnum || (exports.CreateProductItemDTOStatusEnum = {}));
