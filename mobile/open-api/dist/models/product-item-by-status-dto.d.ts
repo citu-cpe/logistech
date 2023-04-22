@@ -33,5 +33,7 @@ export declare enum ProductItemByStatusDTOStatusEnum {
     InTransit = "IN_TRANSIT",
     Complete = "COMPLETE",
     Canceled = "CANCELED",
-    RedFlag = "RED_FLAG"
+    RedFlag = "RED_FLAG",
+    Returning = "RETURNING",
+    Returned = "RETURNED"
 }

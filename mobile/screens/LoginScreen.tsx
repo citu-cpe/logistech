@@ -59,9 +59,10 @@ export const LoginScreen = () => {
                 onBlur={onBlur}
                 onChangeText={(value) => onChange(value)}
                 value={value}
+                autoCapitalize="none"
               />
               <FormControl.ErrorMessage>
-                {errors.password?.type === "required" && "Email is required"}
+                {errors.email?.type === "required" && "Email is required"}
               </FormControl.ErrorMessage>
             </FormControl>
           )}
@@ -84,6 +85,7 @@ export const LoginScreen = () => {
                 onBlur={onBlur}
                 onChangeText={(value) => onChange(value)}
                 value={value}
+                autoCapitalize="none"
               />
               <FormControl.ErrorMessage>
                 {errors.password?.type === "required" && "Password is required"}

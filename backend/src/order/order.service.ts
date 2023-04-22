@@ -69,6 +69,7 @@ export class OrderService {
       });
     }
 
+    const newOrders = [];
     for (const order of orders) {
       const actualOrder = { ...order, orderItemIds: undefined };
       const newOrder = await this.prismaService.order.create({
@@ -79,6 +80,7 @@ export class OrderService {
           },
         },
       });
+      newOrders.push(newOrder);
 
       await this.prismaService.cart.update({
         where: { id: dto.id },
@@ -133,6 +135,8 @@ export class OrderService {
         },
       });
     }
+
+    return newOrders.map((o) => OrderService.convertToDTO(o));
   }
 
   public async getIncomingOrders(companyId: string) {
@@ -332,7 +336,9 @@ export class OrderService {
 
     return {
       ...order,
-      orderItems: order.orderItems.map((o) => OrderItemService.convertToDTO(o)),
+      orderItems: order.orderItems?.map((o) =>
+        OrderItemService.convertToDTO(o)
+      ),
       status: order.status as OrderStatusEnum,
       toCompany,
       fromCompany,

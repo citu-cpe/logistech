@@ -48,6 +48,10 @@ export class UserDTO {
   @IsNotEmpty()
   public username: string;
 
+  @IsString()
+  @IsNotEmpty()
+  public address: string;
+
   @IsOptional()
   @ValidateNested()
   public company?: CompanyDTO;

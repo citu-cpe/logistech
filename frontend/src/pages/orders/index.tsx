@@ -90,7 +90,8 @@ const Orders = () => {
               <OrdersTable
                 orders={
                   storageFacilityOrdersQuery?.data?.data.filter(
-                    (o) => o.status === OrderDTOStatusEnum.Pending
+                    (o) =>
+                      o.status === OrderDTOStatusEnum.Pending && !!o.fromCompany
                   ) ?? []
                 }
                 allowEdit={true}
@@ -111,7 +112,8 @@ const Orders = () => {
               <OrdersTable
                 orders={
                   storageFacilityOrdersQuery?.data?.data.filter(
-                    (o) => o.status === OrderDTOStatusEnum.Billed
+                    (o) =>
+                      o.status === OrderDTOStatusEnum.Billed || !o.fromCompany
                   ) ?? []
                 }
                 allowEdit={true}

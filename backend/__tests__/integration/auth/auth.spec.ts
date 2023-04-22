@@ -91,6 +91,7 @@ describe('auth.spec.ts - Authentication Controller', () => {
         email: 'not an email',
         password: 'mock',
         role: UserRoleEnum.CUSTOMER,
+        address: 'Punta Princesa, Cebu City',
       };
 
       await request.post(registerRoute).expect(HttpStatus.BAD_REQUEST);

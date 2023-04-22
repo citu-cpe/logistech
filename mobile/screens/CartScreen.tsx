@@ -5,9 +5,7 @@ import {
   CUSTOMER_CART_QUERY_KEY,
   useGetCartCustomer,
 } from "../shared/hooks/useGetCartCustomer";
-import { useRemoveFromCart } from "../shared/hooks/useRemoveFromCart";
 import { CartStackParamList } from "./CartStackScreen";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useCreateOrdersForCustomer } from "../shared/hooks/useCreateOrdersCustomer";
 import { useQueryClient } from "@tanstack/react-query";
 import { RefreshControl } from "react-native";

@@ -29,6 +29,12 @@ export const ProductItemStatusBadge: React.FC<ProductItemStatusBadgeProps> = ({
     case ProductItemDTOStatusEnum.Canceled:
       colorScheme = 'gray';
       break;
+    case ProductItemDTOStatusEnum.Returning:
+      colorScheme = 'gray';
+      break;
+    case ProductItemDTOStatusEnum.Returned:
+      colorScheme = 'gray';
+      break;
     case ProductItemDTOStatusEnum.Complete:
       colorScheme = 'green';
       break;

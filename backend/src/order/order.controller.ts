@@ -62,7 +62,7 @@ export class OrderController {
   public createOrders(
     @Param('companyId') companyId: string,
     @Body() dto: CartDTO
-  ): Promise<void> {
+  ): Promise<OrderDTO[]> {
     return this.orderService.createOrders(dto, companyId);
   }
 
@@ -70,7 +70,7 @@ export class OrderController {
   public createOrdersForCustomer(
     @Req() { user }: RequestWithUser,
     @Body() dto: CartDTO
-  ): Promise<void> {
+  ): Promise<OrderDTO[]> {
     return this.orderService.createOrders(dto, undefined, user.id);
   }
 

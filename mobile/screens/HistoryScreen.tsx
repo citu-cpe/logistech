@@ -3,8 +3,9 @@ import {
   ProductItemByStatusDTOStatusEnum,
   ProductItemDTOStatusEnum,
 } from "generated-api";
-import { Box, ScrollView, Spinner, Text } from "native-base";
+import { Box, Divider, ScrollView, Spinner, Text } from "native-base";
 import { RefreshControl } from "react-native";
+import { CustomerProductItemComplete } from "../shared/components/CustomerProductItemComplete";
 import { ProductItemStatusBadge } from "../shared/components/ProductItemStatusBadge";
 import {
   PRODUCT_ITEMS_BY_STATUS_AND_USER_QUERY_KEY,
@@ -40,9 +41,9 @@ export const HistoryScreen = () => {
       {isInitialLoading && <Spinner />}
 
       {data?.data.map((p) => (
-        <Box w="full" py="2" key={p.id}>
-          <Text color="white">Product name: {p.product?.name}</Text>
-          <Text color="white">RFID: {p.rfid}</Text>
+        <Box key={p.id} w="full">
+          <CustomerProductItemComplete productItem={p} />
+          <Divider />
         </Box>
       ))}
 

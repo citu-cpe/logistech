@@ -77,7 +77,7 @@ const FlexComponent = () => {
           Return Handling
         </Heading>
 
-        <StatusList status={ProductItemByStatusDTOStatusEnum.Canceled} />
+        <StatusList status={ProductItemByStatusDTOStatusEnum.Returning} />
       </Box>
     </Flex>
   );

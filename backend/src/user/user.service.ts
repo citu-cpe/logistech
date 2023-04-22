@@ -142,6 +142,7 @@ export class UserService {
       role,
       company,
       imageUrl,
+      address,
     } = user;
 
     const userDTO: UserDTO = {
@@ -158,6 +159,7 @@ export class UserService {
         : undefined,
       role: role as UserRoleEnum,
       imageUrl,
+      address,
     };
 
     return userDTO;

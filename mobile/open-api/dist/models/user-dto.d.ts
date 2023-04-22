@@ -48,6 +48,12 @@ export interface UserDTO {
     username: string;
     /**
      *
+     * @type {string}
+     * @memberof UserDTO
+     */
+    address: string;
+    /**
+     *
      * @type {CompanyDTO}
      * @memberof UserDTO
      */

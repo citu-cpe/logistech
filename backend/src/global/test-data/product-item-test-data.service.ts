@@ -18,6 +18,7 @@ export const testSupplierProductItem: ProductItem = {
   transactionId: null,
   orderItemId: null,
   customerId: null,
+  returnedAt: null,
 };
 
 export const testManufacturerProductItem: ProductItem = {
@@ -30,6 +31,7 @@ export const testManufacturerProductItem: ProductItem = {
   transactionId: null,
   orderItemId: null,
   customerId: null,
+  returnedAt: null,
 };
 
 export const testRetailerProductItem: ProductItem = {
@@ -42,6 +44,7 @@ export const testRetailerProductItem: ProductItem = {
   transactionId: null,
   orderItemId: null,
   customerId: null,
+  returnedAt: null,
 };
 
 @Injectable()

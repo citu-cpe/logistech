@@ -38,4 +38,6 @@ export enum ProductItemByStatusDTOStatusEnum {
   Complete = 'COMPLETE',
   Canceled = 'CANCELED',
   RedFlag = 'RED_FLAG',
+  Returning = 'RETURNING',
+  Returned = 'RETURNED',
 }

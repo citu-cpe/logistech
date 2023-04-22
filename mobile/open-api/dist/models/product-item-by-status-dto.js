@@ -27,4 +27,6 @@ var ProductItemByStatusDTOStatusEnum;
     ProductItemByStatusDTOStatusEnum["Complete"] = "COMPLETE";
     ProductItemByStatusDTOStatusEnum["Canceled"] = "CANCELED";
     ProductItemByStatusDTOStatusEnum["RedFlag"] = "RED_FLAG";
+    ProductItemByStatusDTOStatusEnum["Returning"] = "RETURNING";
+    ProductItemByStatusDTOStatusEnum["Returned"] = "RETURNED";
 })(ProductItemByStatusDTOStatusEnum = exports.ProductItemByStatusDTOStatusEnum || (exports.ProductItemByStatusDTOStatusEnum = {}));

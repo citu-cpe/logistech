@@ -7,6 +7,7 @@ import {
   ValidateNested,
   IsOptional,
 } from 'class-validator';
+import { UserDTO } from '../../user/dto/user.dto';
 import { ProductDTO } from './product.dto';
 
 export enum ProductItemStatusEnum {
@@ -17,6 +18,8 @@ export enum ProductItemStatusEnum {
   COMPLETE = 'COMPLETE',
   CANCELED = 'CANCELED',
   RED_FLAG = 'RED_FLAG',
+  RETURNING = 'RETURNING',
+  RETURNED = 'RETURNED',
 }
 
 export class ProductItemDTO {
@@ -39,4 +42,8 @@ export class ProductItemDTO {
   @IsOptional()
   @ValidateNested()
   public product?: ProductDTO;
+
+  @IsOptional()
+  @ValidateNested()
+  public customer?: UserDTO;
 }

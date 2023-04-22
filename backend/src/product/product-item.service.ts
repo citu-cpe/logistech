@@ -1,10 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   CompanyType,
+  OrderItem,
   OrderStatus,
   Product,
   ProductItem,
   ProductItemStatus,
+  User,
 } from '@prisma/client';
 import { PostgresErrorCode } from '../shared/constants/postgress-error-codes.enum';
 import { PrismaService } from '../global/prisma/prisma.service';
@@ -12,6 +14,8 @@ import { CreateProductItemDTO } from './dto/create-product-item.dto';
 import { ProductItemDTO, ProductItemStatusEnum } from './dto/product-item.dto';
 import { ProductService } from './product.service';
 import { ProductItemStatusQuantityDTO } from './dto/product-item-status-quantity.dto';
+import { UpdateProductItemStatusDTO } from './dto/update-product-item-status.dto';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class ProductItemService {
@@ -69,6 +73,16 @@ export class ProductItemService {
     return this.prismaService.productItem.update({
       where: { id: productItemId },
       data: productItem,
+    });
+  }
+
+  public async updateProductItemStatus(
+    productItemId: string,
+    dto: UpdateProductItemStatusDTO
+  ) {
+    return this.prismaService.productItem.update({
+      where: { id: productItemId },
+      data: { status: dto.status },
     });
   }
 
@@ -175,14 +189,74 @@ export class ProductItemService {
     return productItemStatusQuantity;
   }
 
+  public async returnProductItem(productItemId: string, customerId: string) {
+    const customer = await this.prismaService.user.findUnique({
+      where: { id: customerId },
+    });
+
+    if (!customer) {
+      throw new BadRequestException('Only customers can return product items');
+    }
+
+    await this.prismaService.productItem.update({
+      where: { id: productItemId },
+      data: { status: ProductItemStatus.RETURNING, returnedAt: new Date() },
+    });
+  }
+
+  public async getCourierAssignedProductItems(userId: string) {
+    const orders = await this.prismaService.order.findMany({
+      where: { courierId: userId },
+      include: {
+        orderItems: {
+          include: {
+            productItems: { include: { product: true, customer: true } },
+          },
+        },
+      },
+    });
+
+    const orderItems: (OrderItem & { productItems: ProductItem[] })[] = [];
+
+    orders.forEach((o) => orderItems.push(...o.orderItems));
+
+    const productItems: ProductItem[] = [];
+
+    orderItems.forEach((o) => productItems.push(...o.productItems));
+
+    const toBePickedUpProductItems = productItems
+      .filter((p) => p.status === ProductItemStatusEnum.TO_BE_PICKED_UP)
+      .map((p) => ProductItemService.convertToDTO(p));
+    const inTransitProductItems = productItems
+      .filter((p) => p.status === ProductItemStatusEnum.IN_TRANSIT)
+      .map((p) => ProductItemService.convertToDTO(p));
+
+    return {
+      toBePickedUpProductItems,
+      inTransitProductItems,
+    };
+  }
+
+  public async getReturnedProductItems(userId: string) {
+    const productItems = await this.prismaService.productItem.findMany({
+      where: { customerId: userId, NOT: { returnedAt: null } },
+      include: { product: true },
+    });
+
+    return productItems.map((p) => ProductItemService.convertToDTO(p));
+  }
+
   public static convertToDTO(
-    productItem: ProductItem & { product?: Product }
+    productItem: ProductItem & { product?: Product; customer?: User }
   ): ProductItemDTO {
     return {
       ...productItem,
       status: productItem.status as ProductItemStatusEnum,
       product:
         productItem.product && ProductService.convertToDTO(productItem.product),
+      customer: productItem.customer
+        ? UserService.convertToDTO(productItem.customer)
+        : undefined,
     };
   }
 }

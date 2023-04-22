@@ -24,6 +24,7 @@ export const testCustomer: User = {
   role: UserRole.CUSTOMER,
   imageUrl: null,
   cloudinaryPublicId: null,
+  address: 'Punta Princesa, Cebu City',
 };
 
 export const testSupplier: User = {
@@ -38,6 +39,7 @@ export const testSupplier: User = {
   companyId: testSupplierCompany.id,
   imageUrl: null,
   cloudinaryPublicId: null,
+  address: '',
 };
 
 export const testStorageFacility: User = {
@@ -52,6 +54,7 @@ export const testStorageFacility: User = {
   companyId: testStorageFacilityCompany.id,
   imageUrl: null,
   cloudinaryPublicId: null,
+  address: '',
 };
 
 export const testNewStorageFacility: User = {
@@ -66,6 +69,7 @@ export const testNewStorageFacility: User = {
   companyId: testNewStorageFacilityCompany.id,
   imageUrl: null,
   cloudinaryPublicId: null,
+  address: '',
 };
 
 export const testCourier: User = {
@@ -80,6 +84,7 @@ export const testCourier: User = {
   companyId: testStorageFacilityCompany.id,
   imageUrl: null,
   cloudinaryPublicId: null,
+  address: '',
 };
 
 export const testManufacturer: User = {
@@ -94,6 +99,7 @@ export const testManufacturer: User = {
   companyId: testManufacturerCompany.id,
   imageUrl: null,
   cloudinaryPublicId: null,
+  address: '',
 };
 
 export const testRetailer: User = {
@@ -108,6 +114,7 @@ export const testRetailer: User = {
   companyId: testRetailerCompany.id,
   imageUrl: null,
   cloudinaryPublicId: null,
+  address: '',
 };
 
 export const testNewRetailer: User = {
@@ -122,6 +129,7 @@ export const testNewRetailer: User = {
   companyId: testNewRetailerCompany.id,
   imageUrl: null,
   cloudinaryPublicId: null,
+  address: '',
 };
 
 @Injectable()
