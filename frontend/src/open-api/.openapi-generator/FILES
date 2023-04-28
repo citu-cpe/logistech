@@ -33,6 +33,7 @@ models/payment-url-dto.ts
 models/product-dto.ts
 models/product-item-by-status-dto.ts
 models/product-item-dto.ts
+models/product-item-location-dto.ts
 models/product-item-status-quantity-dto.ts
 models/register-user-dto.ts
 models/report-dto.ts

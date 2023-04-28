@@ -1640,6 +1640,35 @@ exports.DefaultApiAxiosParamCreator = function (configuration) {
         }),
         /**
          *
+         * @param {ProductItemLocationDTO} productItemLocationDTO
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateProductItemLocation: (productItemLocationDTO, options = {}) => __awaiter(this, void 0, void 0, function* () {
+            // verify required parameter 'productItemLocationDTO' is not null or undefined
+            common_1.assertParamExists("updateProductItemLocation", "productItemLocationDTO", productItemLocationDTO);
+            const localVarPath = `/api/v1/gps/product-item`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = Object.assign(Object.assign({ method: "POST" }, baseOptions), options);
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            localVarHeaderParameter["Content-Type"] = "application/json";
+            common_1.setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = Object.assign(Object.assign(Object.assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
+            localVarRequestOptions.data = common_1.serializeDataIfNeeded(productItemLocationDTO, localVarRequestOptions, configuration);
+            return {
+                url: common_1.toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        }),
+        /**
+         *
          * @param {string} productItemId
          * @param {UpdateProductItemStatusDTO} updateProductItemStatusDTO
          * @param {*} [options] Override http request option.
@@ -2424,6 +2453,18 @@ exports.DefaultApiFp = function (configuration) {
         },
         /**
          *
+         * @param {ProductItemLocationDTO} productItemLocationDTO
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateProductItemLocation(productItemLocationDTO, options) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const localVarAxiosArgs = yield localVarAxiosParamCreator.updateProductItemLocation(productItemLocationDTO, options);
+                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+            });
+        },
+        /**
+         *
          * @param {string} productItemId
          * @param {UpdateProductItemStatusDTO} updateProductItemStatusDTO
          * @param {*} [options] Override http request option.
@@ -3098,6 +3139,17 @@ exports.DefaultApiFactory = function (configuration, basePath, axios) {
         updateOrderStatus(orderId, updateOrderStatusDTO, options) {
             return localVarFp
                 .updateOrderStatus(orderId, updateOrderStatusDTO, options)
+                .then((request) => request(axios, basePath));
+        },
+        /**
+         *
+         * @param {ProductItemLocationDTO} productItemLocationDTO
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateProductItemLocation(productItemLocationDTO, options) {
+            return localVarFp
+                .updateProductItemLocation(productItemLocationDTO, options)
                 .then((request) => request(axios, basePath));
         },
         /**
@@ -3830,6 +3882,18 @@ class DefaultApi extends base_1.BaseAPI {
     updateOrderStatus(orderId, updateOrderStatusDTO, options) {
         return exports.DefaultApiFp(this.configuration)
             .updateOrderStatus(orderId, updateOrderStatusDTO, options)
+            .then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     *
+     * @param {ProductItemLocationDTO} productItemLocationDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    updateProductItemLocation(productItemLocationDTO, options) {
+        return exports.DefaultApiFp(this.configuration)
+            .updateProductItemLocation(productItemLocationDTO, options)
             .then((request) => request(this.axios, this.basePath));
     }
     /**

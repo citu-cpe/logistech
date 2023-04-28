@@ -32,6 +32,7 @@ import { PaymentUrlDTO } from "../models";
 import { ProductDTO } from "../models";
 import { ProductItemByStatusDTO } from "../models";
 import { ProductItemDTO } from "../models";
+import { ProductItemLocationDTO } from "../models";
 import { ProductItemStatusQuantityDTO } from "../models";
 import { RegisterUserDTO } from "../models";
 import { ReportDTO } from "../models";
@@ -456,6 +457,13 @@ export declare const DefaultApiAxiosParamCreator: (configuration?: Configuration
      * @throws {RequiredError}
      */
     updateOrderStatus: (orderId: string, updateOrderStatusDTO: UpdateOrderStatusDTO, options?: any) => Promise<RequestArgs>;
+    /**
+     *
+     * @param {ProductItemLocationDTO} productItemLocationDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateProductItemLocation: (productItemLocationDTO: ProductItemLocationDTO, options?: any) => Promise<RequestArgs>;
     /**
      *
      * @param {string} productItemId
@@ -890,6 +898,13 @@ export declare const DefaultApiFp: (configuration?: Configuration) => {
     updateOrderStatus(orderId: string, updateOrderStatusDTO: UpdateOrderStatusDTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
      *
+     * @param {ProductItemLocationDTO} productItemLocationDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateProductItemLocation(productItemLocationDTO: ProductItemLocationDTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
+     *
      * @param {string} productItemId
      * @param {UpdateProductItemStatusDTO} updateProductItemStatusDTO
      * @param {*} [options] Override http request option.
@@ -1320,6 +1335,13 @@ export declare const DefaultApiFactory: (configuration?: Configuration, basePath
      * @throws {RequiredError}
      */
     updateOrderStatus(orderId: string, updateOrderStatusDTO: UpdateOrderStatusDTO, options?: any): AxiosPromise<void>;
+    /**
+     *
+     * @param {ProductItemLocationDTO} productItemLocationDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateProductItemLocation(productItemLocationDTO: ProductItemLocationDTO, options?: any): AxiosPromise<void>;
     /**
      *
      * @param {string} productItemId
@@ -1811,6 +1833,14 @@ export declare class DefaultApi extends BaseAPI {
      * @memberof DefaultApi
      */
     updateOrderStatus(orderId: string, updateOrderStatusDTO: UpdateOrderStatusDTO, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
+     *
+     * @param {ProductItemLocationDTO} productItemLocationDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    updateProductItemLocation(productItemLocationDTO: ProductItemLocationDTO, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      *
      * @param {string} productItemId

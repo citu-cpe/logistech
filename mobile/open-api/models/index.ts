@@ -21,6 +21,7 @@ export * from "./payment-url-dto";
 export * from "./product-dto";
 export * from "./product-item-by-status-dto";
 export * from "./product-item-dto";
+export * from "./product-item-location-dto";
 export * from "./product-item-status-quantity-dto";
 export * from "./register-user-dto";
 export * from "./report-dto";
