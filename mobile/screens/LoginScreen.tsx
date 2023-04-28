@@ -43,6 +43,7 @@ export const LoginScreen = () => {
         alignItems: "center",
       }}
       bg="blueGray.700"
+      keyboardShouldPersistTaps="handled"
     >
       <Box mb={5} w="full">
         <Controller

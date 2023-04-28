@@ -24,6 +24,7 @@ import { CartModule } from '../cart/cart.module';
 import { OrderModule } from '../order/order.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { PaymentModule } from '../payment/payment.module';
+import { GpsModule } from '../gps/gps.module';
 
 export const appModule: ModuleMetadata = {
   imports: [
@@ -59,6 +60,7 @@ export const appModule: ModuleMetadata = {
     CartModule,
     OrderModule,
     PaymentModule,
+    GpsModule,
   ],
   controllers: [AppController],
   providers: [

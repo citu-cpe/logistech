@@ -33,6 +33,7 @@ __exportStar(require("./payment-url-dto"), exports);
 __exportStar(require("./product-dto"), exports);
 __exportStar(require("./product-item-by-status-dto"), exports);
 __exportStar(require("./product-item-dto"), exports);
+__exportStar(require("./product-item-location-dto"), exports);
 __exportStar(require("./product-item-status-quantity-dto"), exports);
 __exportStar(require("./register-user-dto"), exports);
 __exportStar(require("./report-dto"), exports);

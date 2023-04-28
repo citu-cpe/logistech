@@ -20,6 +20,7 @@ import {
   stackHeaderStyles,
 } from "./shared/styles/navigationStyles";
 import { UserDTORoleEnum } from "generated-api";
+import { SocketProvider } from "./shared/providers/SocketProvider";
 
 export type RootStackParamList = {
   Login: undefined;
@@ -50,111 +51,113 @@ export default function App() {
     <NativeBaseProvider>
       <ApiProvider>
         <QueryClientProvider client={queryClient}>
-          <StatusBar barStyle="light-content" />
-          {isLoading ? (
-            <SplashScreen />
-          ) : (
-            <NavigationContainer>
-              {!!user ? (
-                <>
-                  <Tab.Navigator
+          <SocketProvider>
+            <StatusBar barStyle="light-content" />
+            {isLoading ? (
+              <SplashScreen />
+            ) : (
+              <NavigationContainer>
+                {!!user ? (
+                  <>
+                    <Tab.Navigator
+                      screenOptions={{
+                        ...bottomTabBarStyles,
+                      }}
+                    >
+                      <Tab.Screen
+                        name="HomeStack"
+                        component={HomeStackScreen}
+                        options={{
+                          tabBarIcon: ({ color, size }) => (
+                            <MaterialCommunityIcons
+                              name="home"
+                              color={color}
+                              size={size}
+                            />
+                          ),
+                          title: "Home",
+                          headerShown: false,
+                        }}
+                      />
+                      {isCustomer && (
+                        <>
+                          <Tab.Screen
+                            name="CartStack"
+                            component={CartStackScreen}
+                            options={{
+                              tabBarIcon: ({ color, size }) => (
+                                <MaterialCommunityIcons
+                                  name="cart"
+                                  color={color}
+                                  size={size}
+                                />
+                              ),
+                              title: "Cart",
+                              headerShown: false,
+                            }}
+                          />
+                          <Tab.Screen
+                            name="History"
+                            component={HistoryScreen}
+                            options={{
+                              tabBarIcon: ({ color, size }) => (
+                                <MaterialCommunityIcons
+                                  name="history"
+                                  color={color}
+                                  size={size}
+                                />
+                              ),
+                            }}
+                          />
+                          <Tab.Screen
+                            name="Returns"
+                            component={ReturnsScreen}
+                            options={{
+                              tabBarIcon: ({ color, size }) => (
+                                <MaterialCommunityIcons
+                                  name="keyboard-return"
+                                  color={color}
+                                  size={size}
+                                />
+                              ),
+                            }}
+                          />
+                        </>
+                      )}
+                      <Tab.Screen
+                        name="Profile"
+                        component={ProfileScreen}
+                        options={{
+                          tabBarIcon: ({ color, size }) => (
+                            <MaterialCommunityIcons
+                              name="account"
+                              color={color}
+                              size={size}
+                            />
+                          ),
+                        }}
+                      />
+                    </Tab.Navigator>
+                  </>
+                ) : (
+                  <Stack.Navigator
                     screenOptions={{
-                      ...bottomTabBarStyles,
+                      ...stackHeaderStyles,
                     }}
                   >
-                    <Tab.Screen
-                      name="HomeStack"
-                      component={HomeStackScreen}
+                    <Stack.Screen
+                      name="Login"
+                      component={LoginScreen}
                       options={{
-                        tabBarIcon: ({ color, size }) => (
-                          <MaterialCommunityIcons
-                            name="home"
-                            color={color}
-                            size={size}
-                          />
-                        ),
-                        title: "Home",
-                        headerShown: false,
+                        title: "Log in",
+                        animationTypeForReplace: isLogout ? "pop" : "push",
                       }}
                     />
-                    {isCustomer && (
-                      <>
-                        <Tab.Screen
-                          name="CartStack"
-                          component={CartStackScreen}
-                          options={{
-                            tabBarIcon: ({ color, size }) => (
-                              <MaterialCommunityIcons
-                                name="cart"
-                                color={color}
-                                size={size}
-                              />
-                            ),
-                            title: "Cart",
-                            headerShown: false,
-                          }}
-                        />
-                        <Tab.Screen
-                          name="History"
-                          component={HistoryScreen}
-                          options={{
-                            tabBarIcon: ({ color, size }) => (
-                              <MaterialCommunityIcons
-                                name="history"
-                                color={color}
-                                size={size}
-                              />
-                            ),
-                          }}
-                        />
-                        <Tab.Screen
-                          name="Returns"
-                          component={ReturnsScreen}
-                          options={{
-                            tabBarIcon: ({ color, size }) => (
-                              <MaterialCommunityIcons
-                                name="keyboard-return"
-                                color={color}
-                                size={size}
-                              />
-                            ),
-                          }}
-                        />
-                      </>
-                    )}
-                    <Tab.Screen
-                      name="Profile"
-                      component={ProfileScreen}
-                      options={{
-                        tabBarIcon: ({ color, size }) => (
-                          <MaterialCommunityIcons
-                            name="account"
-                            color={color}
-                            size={size}
-                          />
-                        ),
-                      }}
-                    />
-                  </Tab.Navigator>
-                </>
-              ) : (
-                <Stack.Navigator
-                  screenOptions={{
-                    ...stackHeaderStyles,
-                  }}
-                >
-                  <Stack.Screen
-                    name="Login"
-                    component={LoginScreen}
-                    options={{
-                      title: "Log in",
-                      animationTypeForReplace: isLogout ? "pop" : "push",
-                    }}
-                  />
-                </Stack.Navigator>
-              )}
-            </NavigationContainer>
-          )}
+                  </Stack.Navigator>
+                )}
+              </NavigationContainer>
+            )}
+          </SocketProvider>
         </QueryClientProvider>
       </ApiProvider>
     </NativeBaseProvider>
