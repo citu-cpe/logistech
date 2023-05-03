@@ -1,4 +1,4 @@
-import { Box, Heading } from '@chakra-ui/react';
+import { Box, Center, Heading, Spinner } from '@chakra-ui/react';
 import { ProductItemByStatusDTOStatusEnum } from 'generated-api';
 import { useRouter } from 'next/router';
 import { ProductItemTable } from '../../modules/products/components/ProductItemTable';
@@ -10,13 +10,19 @@ const ProductItems = () => {
   const status = router.query.status as ProductItemByStatusDTOStatusEnum;
   const getUser = useGlobalStore((state) => state.getUser);
   const companyId = getUser()?.company?.id;
-  const { data } = useGetProductItemsByStatus(companyId, status);
+  const { data, isLoading } = useGetProductItemsByStatus(companyId, status);
 
   return (
     <Box>
       <Heading mb='6'>Products</Heading>
 
-      <ProductItemTable productItems={data?.data ?? []} allowActions />
+      {isLoading ? (
+        <Center>
+          <Spinner />
+        </Center>
+      ) : (
+        <ProductItemTable productItems={data?.data ?? []} allowActions />
+      )}
     </Box>
   );
 };

@@ -10,7 +10,7 @@ const Sellers = () => {
 
   return (
     <Box>
-      <Heading mb='6'>Storage Facilities</Heading>
+      <Heading mb='6'>Sellers</Heading>
 
       <SellersTable sellers={sellersQuery?.data?.data ?? []} />
     </Box>

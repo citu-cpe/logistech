@@ -1,4 +1,13 @@
-import { TableContainer, Table, Thead, Tr, Th, Tbody } from '@chakra-ui/react';
+import {
+  TableContainer,
+  Table,
+  Thead,
+  Tr,
+  Th,
+  Tbody,
+  Center,
+  Spinner,
+} from '@chakra-ui/react';
 import { useGlobalStore } from '../../../shared/stores';
 import { useGetSales } from '../../orders/hooks/useGetSales';
 import { SalesRow } from './SalesRow';
@@ -8,9 +17,13 @@ interface SalesTableProps {}
 export const SalesTable: React.FC<SalesTableProps> = ({}) => {
   const getUser = useGlobalStore().getUser;
   const companyId = getUser()?.company?.id;
-  const { data } = useGetSales(companyId!);
+  const { data, isLoading } = useGetSales(companyId!);
 
-  return (
+  return isLoading ? (
+    <Center>
+      <Spinner />
+    </Center>
+  ) : (
     <TableContainer>
       <Table variant='simple'>
         <Thead>

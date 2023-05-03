@@ -10,6 +10,8 @@ import {
   ModalHeader,
   ModalCloseButton,
   ModalBody,
+  Center,
+  Spinner,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { ProductItemForm } from '../../modules/products/components/ProductItemForm';
@@ -20,7 +22,7 @@ import { useGetProductItems } from '../../modules/products/hooks/useGetProductIt
 const ProductItem = () => {
   const router = useRouter();
   const { id: productId } = router.query;
-  const { data } = useGetProductItems(productId as string);
+  const { data, isLoading } = useGetProductItems(productId as string);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -45,8 +47,16 @@ const ProductItem = () => {
         </ModalContent>
       </Modal>
 
-      {data?.data && (
-        <ProductItemTable productItems={data?.data} allowActions />
+      {isLoading ? (
+        <Center>
+          <Spinner />
+        </Center>
+      ) : (
+        <Box>
+          {data?.data && (
+            <ProductItemTable productItems={data?.data} allowActions />
+          )}
+        </Box>
       )}
     </Box>
   );

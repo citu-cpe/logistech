@@ -1,7 +1,9 @@
 import {
   Box,
+  Center,
   Flex,
   Heading,
+  Spinner,
   Tab,
   TabList,
   TabPanel,
@@ -51,32 +53,40 @@ const Orders = () => {
       <Heading mb='6'>Orders</Heading>
 
       {companyType !== CompanyDTOTypeEnum.StorageFacility && (
-        <Tabs isFitted>
-          <TabList mb='1em'>
-            <Tab>Outgoing</Tab>
-            <Tab>Incoming</Tab>
-          </TabList>
-          <TabPanels>
-            <TabPanel>
-              <OrdersTable
-                orders={outgoingOrdersQuery?.data?.data ?? []}
-                allowEdit={false}
-                incoming={false}
-                allowPayment={true}
-                showTotal={true}
-              />
-            </TabPanel>
-            <TabPanel>
-              <OrdersTable
-                orders={incomingOrdersQuery?.data?.data ?? []}
-                allowEdit={true}
-                incoming={true}
-                allowPayment={false}
-                showTotal={true}
-              />
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
+        <>
+          {incomingOrdersQuery.isLoading || outgoingOrdersQuery.isLoading ? (
+            <Center>
+              <Spinner />
+            </Center>
+          ) : (
+            <Tabs isFitted>
+              <TabList mb='1em'>
+                <Tab>Outgoing</Tab>
+                <Tab>Incoming</Tab>
+              </TabList>
+              <TabPanels>
+                <TabPanel>
+                  <OrdersTable
+                    orders={outgoingOrdersQuery?.data?.data ?? []}
+                    allowEdit={false}
+                    incoming={false}
+                    allowPayment={true}
+                    showTotal={true}
+                  />
+                </TabPanel>
+                <TabPanel>
+                  <OrdersTable
+                    orders={incomingOrdersQuery?.data?.data ?? []}
+                    allowEdit={true}
+                    incoming={true}
+                    allowPayment={false}
+                    showTotal={true}
+                  />
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
+          )}
+        </>
       )}
 
       {companyType === CompanyDTOTypeEnum.StorageFacility && (
@@ -86,21 +96,28 @@ const Orders = () => {
               Incoming
             </Heading>
 
-            <Box bg='gray.900' rounded='md' padding='8'>
-              <OrdersTable
-                orders={
-                  storageFacilityOrdersQuery?.data?.data.filter(
-                    (o) =>
-                      o.status === OrderDTOStatusEnum.Pending && !!o.fromCompany
-                  ) ?? []
-                }
-                allowEdit={true}
-                incoming={false}
-                allowPayment={false}
-                showTotal={false}
-                billed={false}
-              />
-            </Box>
+            {storageFacilityOrdersQuery.isLoading ? (
+              <Center>
+                <Spinner />
+              </Center>
+            ) : (
+              <Box bg='gray.900' rounded='md' padding='8'>
+                <OrdersTable
+                  orders={
+                    storageFacilityOrdersQuery?.data?.data.filter(
+                      (o) =>
+                        o.status === OrderDTOStatusEnum.Pending &&
+                        !!o.fromCompany
+                    ) ?? []
+                  }
+                  allowEdit={true}
+                  incoming={false}
+                  allowPayment={false}
+                  showTotal={false}
+                  billed={false}
+                />
+              </Box>
+            )}
           </Box>
 
           <Box width='50%'>
@@ -108,21 +125,27 @@ const Orders = () => {
               To Be Picked Up
             </Heading>
 
-            <Box bg='gray.900' rounded='md' padding='8'>
-              <OrdersTable
-                orders={
-                  storageFacilityOrdersQuery?.data?.data.filter(
-                    (o) =>
-                      o.status === OrderDTOStatusEnum.Billed || !o.fromCompany
-                  ) ?? []
-                }
-                allowEdit={true}
-                incoming={false}
-                allowPayment={false}
-                showTotal={false}
-                billed={true}
-              />
-            </Box>
+            {storageFacilityOrdersQuery.isLoading ? (
+              <Center>
+                <Spinner />
+              </Center>
+            ) : (
+              <Box bg='gray.900' rounded='md' padding='8'>
+                <OrdersTable
+                  orders={
+                    storageFacilityOrdersQuery?.data?.data.filter(
+                      (o) =>
+                        o.status === OrderDTOStatusEnum.Billed || !o.fromCompany
+                    ) ?? []
+                  }
+                  allowEdit={true}
+                  incoming={false}
+                  allowPayment={false}
+                  showTotal={false}
+                  billed={true}
+                />
+              </Box>
+            )}
           </Box>
         </Flex>
       )}

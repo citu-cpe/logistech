@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading } from '@chakra-ui/react';
+import { Box, Button, Center, Flex, Heading, Spinner } from '@chakra-ui/react';
 import { OrderItemGroup } from '../../modules/cart/components/OrderItemGroup';
 import { useGetCart } from '../../modules/cart/hooks/useGetCart';
 import { useCreateOrders } from '../../modules/orders/hooks/useCreateOrders';
@@ -8,10 +8,14 @@ import { useGlobalStore } from '../../shared/stores';
 const Cart = () => {
   const getUser = useGlobalStore((state) => state.getUser);
   const companyId = getUser()?.company?.id;
-  const { data } = useGetCart(companyId!);
+  const { data, isLoading } = useGetCart(companyId!);
   const createOrders = useCreateOrders(companyId!);
 
-  return (
+  return isLoading ? (
+    <Center>
+      <Spinner />
+    </Center>
+  ) : (
     <Box>
       {data?.data && (
         <>
