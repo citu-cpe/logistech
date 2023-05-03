@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Center,
   Flex,
   Heading,
   Modal,
@@ -9,6 +10,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Spinner,
   Table,
   TableContainer,
   Tbody,
@@ -25,7 +27,7 @@ import { useGlobalStore } from '../../shared/stores';
 const Products = () => {
   const getUser = useGlobalStore((state) => state.getUser);
   const companyId = getUser()?.company?.id;
-  const { data } = useGetProducts(companyId!);
+  const { data, isLoading } = useGetProducts(companyId!);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -47,24 +49,30 @@ const Products = () => {
         </ModalContent>
       </Modal>
 
-      <TableContainer>
-        <Table variant='simple'>
-          <Thead>
-            <Tr>
-              <Th>Product name</Th>
-              <Th isNumeric>Price</Th>
-              <Th>Bulk</Th>
-              <Th isNumeric>Bulk Quantity</Th>
-              <Th>Actions</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {data?.data.map((product) => (
-              <ProductRow key={product.id} product={product} />
-            ))}
-          </Tbody>
-        </Table>
-      </TableContainer>
+      {isLoading ? (
+        <Center>
+          <Spinner />
+        </Center>
+      ) : (
+        <TableContainer>
+          <Table variant='simple'>
+            <Thead>
+              <Tr>
+                <Th>Product name</Th>
+                <Th isNumeric>Price</Th>
+                <Th>Bulk</Th>
+                <Th isNumeric>Bulk Quantity</Th>
+                <Th>Actions</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {data?.data.map((product) => (
+                <ProductRow key={product.id} product={product} />
+              ))}
+            </Tbody>
+          </Table>
+        </TableContainer>
+      )}
     </Box>
   );
 };

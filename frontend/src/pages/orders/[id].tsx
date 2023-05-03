@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, Text } from '@chakra-ui/react';
+import { Box, Center, Flex, Heading, Spinner, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useGetOrder } from '../../modules/orders/hooks/useGetOrder';
 import { ProductItemTable } from '../../modules/products/components/ProductItemTable';
@@ -8,7 +8,7 @@ import { Peso } from '../../shared/components/Peso';
 const Order = () => {
   const router = useRouter();
   const { id: orderId } = router.query;
-  const { data } = useGetOrder(orderId as string);
+  const { data, isLoading } = useGetOrder(orderId as string);
   const order = data?.data;
 
   return (
@@ -32,25 +32,31 @@ const Order = () => {
               Total: <Peso amount={order.total} />
             </Text>
           </Box>
-          <Box>
-            {data?.data.orderItems.map((o) => (
-              <Box key={o.id} bg='gray.900' rounded='md' padding='8' mb='8'>
-                <Flex justify='space-between' align='center' mb='8'>
-                  <Heading size='lg'>{o.product.name}</Heading>
-                  <Box fontWeight='semibold' textAlign='right'>
-                    <Text>Quantity: {o.quantity}</Text>
-                    <Text>
-                      Total: <Peso amount={o.total} />
-                    </Text>
-                  </Box>
-                </Flex>
-                <Heading size='md' textAlign='center' mb='4'>
-                  Product Items
-                </Heading>
-                <ProductItemTable productItems={o.productItems!} />
-              </Box>
-            ))}
-          </Box>
+          {isLoading ? (
+            <Center>
+              <Spinner />
+            </Center>
+          ) : (
+            <Box>
+              {data?.data.orderItems.map((o) => (
+                <Box key={o.id} bg='gray.900' rounded='md' padding='8' mb='8'>
+                  <Flex justify='space-between' align='center' mb='8'>
+                    <Heading size='lg'>{o.product.name}</Heading>
+                    <Box fontWeight='semibold' textAlign='right'>
+                      <Text>Quantity: {o.quantity}</Text>
+                      <Text>
+                        Total: <Peso amount={o.total} />
+                      </Text>
+                    </Box>
+                  </Flex>
+                  <Heading size='md' textAlign='center' mb='4'>
+                    Product Items
+                  </Heading>
+                  <ProductItemTable productItems={o.productItems!} />
+                </Box>
+              ))}
+            </Box>
+          )}
         </>
       )}
     </Box>

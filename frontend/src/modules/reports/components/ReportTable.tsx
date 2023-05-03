@@ -1,4 +1,13 @@
-import { Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
+import {
+  Center,
+  Spinner,
+  Table,
+  TableContainer,
+  Tbody,
+  Th,
+  Thead,
+  Tr,
+} from '@chakra-ui/react';
 import { useGlobalStore } from '../../../shared/stores';
 import { useGetReports } from '../hooks/useGetReports';
 import { ReportRow } from './ReportRow';
@@ -9,9 +18,13 @@ export const ReportTable: React.FC<ReportTableProps> = () => {
   const getUser = useGlobalStore().getUser;
   const companyId = getUser()?.company?.id;
 
-  const { data } = useGetReports(companyId!);
+  const { data, isLoading } = useGetReports(companyId!);
 
-  return (
+  return isLoading ? (
+    <Center>
+      <Spinner></Spinner>
+    </Center>
+  ) : (
     <TableContainer>
       <Table variant='simple'>
         <Thead>

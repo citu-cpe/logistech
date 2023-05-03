@@ -1,4 +1,13 @@
-import { Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
+import {
+  Center,
+  Spinner,
+  Table,
+  TableContainer,
+  Tbody,
+  Th,
+  Thead,
+  Tr,
+} from '@chakra-ui/react';
 import { ProductItemByStatusDTOStatusEnum } from 'generated-api';
 import { useGlobalStore } from '../../../shared/stores';
 import { useGetProductItemsByStatus } from '../../products/hooks/useGetProductItemsByStatus';
@@ -10,12 +19,16 @@ export const RedFlagTable: React.FC<RedFlagTableProps> = () => {
   const getUser = useGlobalStore().getUser;
   const companyId = getUser()?.company?.id;
 
-  const { data } = useGetProductItemsByStatus(
+  const { data, isLoading } = useGetProductItemsByStatus(
     companyId!,
     ProductItemByStatusDTOStatusEnum.RedFlag
   );
 
-  return (
+  return isLoading ? (
+    <Center>
+      <Spinner />
+    </Center>
+  ) : (
     <TableContainer>
       <Table variant='simple'>
         <Thead>
