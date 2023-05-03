@@ -50,7 +50,7 @@ export const EditProductItemForm: React.FC<ProductItemFormProps> = ({
                 <Input
                   fieldProps={fieldProps}
                   name='rfid'
-                  label='RFID'
+                  label='EPC (Electronic Product Code)'
                   type='text'
                   id='rfid'
                   borderColor='gray.300'
