@@ -55,10 +55,10 @@ export const ProductRow: React.FC<ProductRowProps> = ({ product }) => {
       <Td isNumeric>{product.bulkQuantity ?? 'n/a'}</Td>
       <Td>
         <HStack spacing='4'>
-          <Button onClick={onEditProductOpen}>
+          <Button data-cy='edit-product' onClick={onEditProductOpen}>
             <EditIcon />
           </Button>
-          <Button onClick={onDeleteProductOpen}>
+          <Button data-cy='delete-product' onClick={onDeleteProductOpen}>
             <DeleteIcon />
           </Button>
         </HStack>

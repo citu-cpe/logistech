@@ -85,6 +85,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
               {(fieldProps: FieldProps<boolean, CreateProductDTO>) => (
                 <Input
                   fieldProps={fieldProps}
+                  data-cy='check-bulk'
                   name='bulk'
                   label='Bulk'
                   type='checkbox'
