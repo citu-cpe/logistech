@@ -18,6 +18,7 @@ import { CommerceProductDTO } from "../models";
 import { CompanyDTO } from "../models";
 import { CourierProductItemsDTO } from "../models";
 import { CreateManyProductItemsDTO } from "../models";
+import { CreateOrderFromOrderItemsDTO } from "../models";
 import { CreateOrderItemDTO } from "../models";
 import { CreatePaymentDTO } from "../models";
 import { CreateProductDTO } from "../models";
@@ -104,6 +105,21 @@ export declare const DefaultApiAxiosParamCreator: (configuration?: Configuration
      * @throws {RequiredError}
      */
     createOrdersForCustomer: (cartDTO: CartDTO, options?: any) => Promise<RequestArgs>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {CreateOrderFromOrderItemsDTO} createOrderFromOrderItemsDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createOrdersFromOrderItems: (companyId: string, createOrderFromOrderItemsDTO: CreateOrderFromOrderItemsDTO, options?: any) => Promise<RequestArgs>;
+    /**
+     *
+     * @param {CreateOrderFromOrderItemsDTO} createOrderFromOrderItemsDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createOrdersFromOrderItemsForCustomer: (createOrderFromOrderItemsDTO: CreateOrderFromOrderItemsDTO, options?: any) => Promise<RequestArgs>;
     /**
      *
      * @param {CreatePaymentDTO} createPaymentDTO
@@ -275,6 +291,13 @@ export declare const DefaultApiAxiosParamCreator: (configuration?: Configuration
      * @throws {RequiredError}
      */
     getOutgoingTransactionsForCompany: (companyId: string, options?: any) => Promise<RequestArgs>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getPaidOrdersForStorageFacility: (companyId: string, options?: any) => Promise<RequestArgs>;
     /**
      *
      * @param {string} companyId
@@ -545,6 +568,21 @@ export declare const DefaultApiFp: (configuration?: Configuration) => {
     createOrdersForCustomer(cartDTO: CartDTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<OrderDTO>>>;
     /**
      *
+     * @param {string} companyId
+     * @param {CreateOrderFromOrderItemsDTO} createOrderFromOrderItemsDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createOrdersFromOrderItems(companyId: string, createOrderFromOrderItemsDTO: CreateOrderFromOrderItemsDTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<OrderDTO>>>;
+    /**
+     *
+     * @param {CreateOrderFromOrderItemsDTO} createOrderFromOrderItemsDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createOrdersFromOrderItemsForCustomer(createOrderFromOrderItemsDTO: CreateOrderFromOrderItemsDTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<OrderDTO>>>;
+    /**
+     *
      * @param {CreatePaymentDTO} createPaymentDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -714,6 +752,13 @@ export declare const DefaultApiFp: (configuration?: Configuration) => {
      * @throws {RequiredError}
      */
     getOutgoingTransactionsForCompany(companyId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<TransactionDTO>>>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getPaidOrdersForStorageFacility(companyId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<OrderDTO>>>;
     /**
      *
      * @param {string} companyId
@@ -984,6 +1029,21 @@ export declare const DefaultApiFactory: (configuration?: Configuration, basePath
     createOrdersForCustomer(cartDTO: CartDTO, options?: any): AxiosPromise<Array<OrderDTO>>;
     /**
      *
+     * @param {string} companyId
+     * @param {CreateOrderFromOrderItemsDTO} createOrderFromOrderItemsDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createOrdersFromOrderItems(companyId: string, createOrderFromOrderItemsDTO: CreateOrderFromOrderItemsDTO, options?: any): AxiosPromise<Array<OrderDTO>>;
+    /**
+     *
+     * @param {CreateOrderFromOrderItemsDTO} createOrderFromOrderItemsDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createOrdersFromOrderItemsForCustomer(createOrderFromOrderItemsDTO: CreateOrderFromOrderItemsDTO, options?: any): AxiosPromise<Array<OrderDTO>>;
+    /**
+     *
      * @param {CreatePaymentDTO} createPaymentDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1153,6 +1213,13 @@ export declare const DefaultApiFactory: (configuration?: Configuration, basePath
      * @throws {RequiredError}
      */
     getOutgoingTransactionsForCompany(companyId: string, options?: any): AxiosPromise<Array<TransactionDTO>>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getPaidOrdersForStorageFacility(companyId: string, options?: any): AxiosPromise<Array<OrderDTO>>;
     /**
      *
      * @param {string} companyId
@@ -1432,6 +1499,23 @@ export declare class DefaultApi extends BaseAPI {
     createOrdersForCustomer(cartDTO: CartDTO, options?: any): Promise<import("axios").AxiosResponse<OrderDTO[]>>;
     /**
      *
+     * @param {string} companyId
+     * @param {CreateOrderFromOrderItemsDTO} createOrderFromOrderItemsDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    createOrdersFromOrderItems(companyId: string, createOrderFromOrderItemsDTO: CreateOrderFromOrderItemsDTO, options?: any): Promise<import("axios").AxiosResponse<OrderDTO[]>>;
+    /**
+     *
+     * @param {CreateOrderFromOrderItemsDTO} createOrderFromOrderItemsDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    createOrdersFromOrderItemsForCustomer(createOrderFromOrderItemsDTO: CreateOrderFromOrderItemsDTO, options?: any): Promise<import("axios").AxiosResponse<OrderDTO[]>>;
+    /**
+     *
      * @param {CreatePaymentDTO} createPaymentDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1625,6 +1709,14 @@ export declare class DefaultApi extends BaseAPI {
      * @memberof DefaultApi
      */
     getOutgoingTransactionsForCompany(companyId: string, options?: any): Promise<import("axios").AxiosResponse<TransactionDTO[]>>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    getPaidOrdersForStorageFacility(companyId: string, options?: any): Promise<import("axios").AxiosResponse<OrderDTO[]>>;
     /**
      *
      * @param {string} companyId

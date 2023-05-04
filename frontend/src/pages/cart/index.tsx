@@ -41,7 +41,7 @@ const Cart = () => {
             isLoading={createOrders.isLoading}
             isDisabled={data?.data.groupedOrderItems.length === 0}
           >
-            Order now
+            Order all
           </Button>
         </>
       )}

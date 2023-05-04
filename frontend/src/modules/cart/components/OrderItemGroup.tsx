@@ -50,7 +50,10 @@ export const OrderItemGroup: React.FC<OrderItemGroupProps> = ({
               <Tr key={oi.product.id}>
                 <Td>{oi.product.name}</Td>
                 <Td>
-                  <OrderItemQuantityInput orderItem={oi} />
+                  <OrderItemQuantityInput
+                    orderItem={oi}
+                    max={oi.product.numInStock}
+                  />
                 </Td>
                 <Td isNumeric>
                   <Peso amount={oi.total} />
