@@ -51,6 +51,12 @@ declare global {
        * @example cy.resetTestDataAndLogin('test@test.com', 'test')
        */
       resetTestDataAndLogin(email?: string, password?: string): void;
+      fillOutProductForm(
+        productName: string,
+        price,
+        bulk: boolean,
+        bulkQuantity
+      ): void;
     }
   }
 }

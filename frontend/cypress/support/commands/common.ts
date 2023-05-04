@@ -15,3 +15,16 @@ Cypress.Commands.add('getBySel', (selector: string, ...children: string[]) => {
 Cypress.Commands.add('containsBySel', (selector: string, text: string) => {
   return cy.contains(`[data-cy=${selector}]`, text);
 });
+Cypress.Commands.add(
+  'fillOutProductForm',
+  (productName: string, price, bulk: boolean, bulkQuantity) => {
+    //fill out the product form
+    cy.get('#name').clear().type(productName);
+    cy.get('#price').clear().type(price);
+    if (bulk) {
+      cy.get('.chakra-checkbox__label').click();
+      cy.get('#bulkQuantity').clear().type(bulkQuantity);
+    }
+    cy.get('button').contains('Save').click();
+  }
+);
