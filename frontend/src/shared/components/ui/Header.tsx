@@ -1,5 +1,6 @@
 import { HamburgerIcon } from '@chakra-ui/icons';
 import {
+  Box,
   Button,
   Drawer,
   DrawerContent,
@@ -8,10 +9,18 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
+import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Navbar } from './Navbar';
+import Link from 'next/link';
+import { useGetUser } from '../../../modules/settings/hooks/useGetUser';
+import { CompanyDTOTypeEnum } from 'generated-api';
 
 export const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { data } = useGetUser();
+  const user = data?.data;
+  const companyType = user?.company?.type;
 
   return (
     <>
@@ -27,6 +36,15 @@ export const Header = () => {
         >
           <HamburgerIcon />
         </Button>
+
+        {(companyType === CompanyDTOTypeEnum.Manufacturer ||
+          companyType === CompanyDTOTypeEnum.Retailer) && (
+          <Box mr='8'>
+            <Link href='/cart'>
+              <FontAwesomeIcon icon={faCartShopping} size='2xl' />
+            </Link>
+          </Box>
+        )}
 
         <Flex
           backgroundColor='gray.700'

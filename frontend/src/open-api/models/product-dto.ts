@@ -13,6 +13,7 @@
  */
 
 import { CompanyDTO } from './company-dto';
+import { OrderItemDTO } from './order-item-dto';
 
 /**
  *
@@ -80,4 +81,16 @@ export interface ProductDTO {
    * @memberof ProductDTO
    */
   imageUrl?: string;
+  /**
+   *
+   * @type {number}
+   * @memberof ProductDTO
+   */
+  numInCart: number;
+  /**
+   *
+   * @type {Array<OrderItemDTO>}
+   * @memberof ProductDTO
+   */
+  orderItems?: Array<OrderItemDTO>;
 }

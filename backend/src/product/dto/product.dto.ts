@@ -9,8 +9,10 @@ import {
   Min,
   IsOptional,
   IsUrl,
+  IsArray,
 } from 'class-validator';
 import { CompanyDTO } from '../../company/dto/company.dto';
+import { OrderItemDTO } from '../../order/dto/order-item.dto';
 
 export class ProductDTO {
   @IsUUID()
@@ -47,4 +49,11 @@ export class ProductDTO {
   @IsOptional()
   @IsUrl()
   public imageUrl?: string;
+
+  @IsNumber()
+  public numInCart: number;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  public orderItems?: OrderItemDTO[];
 }

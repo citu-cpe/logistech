@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import {
   Company,
+  CompanyType,
   Order,
   OrderItem,
   OrderStatus,
@@ -18,6 +19,7 @@ import { CompanyService } from '../company/company.service';
 import { PrismaService } from '../global/prisma/prisma.service';
 import { PaymentService } from '../payment/payment.service';
 import { UserService } from '../user/user.service';
+import { CreateOrderFromOrderItemsDTO } from './dto/create-order-from-order-items.dto';
 import { OrderDTO, OrderStatusEnum } from './dto/order.dto';
 import { UpdateOrderDTO } from './dto/update-order.dto';
 import { OrderItemService } from './order-item.service';
@@ -139,6 +141,124 @@ export class OrderService {
     return newOrders.map((o) => OrderService.convertToDTO(o));
   }
 
+  public async createOrdersFromOrderItems(
+    dto: CreateOrderFromOrderItemsDTO,
+    companyId?: string,
+    userId?: string
+  ) {
+    if (dto.orderItems.length === 0) {
+      throw new BadRequestException('No orders to create');
+    }
+
+    const lastCreatedOrder: Order | null =
+      await this.prismaService.order.findFirst({
+        orderBy: { createdAt: 'desc' },
+        take: 1,
+      });
+
+    const lastCreatedOrderInvoiceNumber = lastCreatedOrder?.invoiceNumber ?? 0;
+
+    const orders: (Omit<
+      Order,
+      'id' | 'createdAt' | 'updatedAt' | 'finalized'
+    > & {
+      orderItemIds: { id: string }[];
+    })[] = [];
+
+    let i = 1;
+    for (const orderItem of dto.orderItems) {
+      orders.push({
+        total: orderItem.total,
+        fromCompanyId: companyId,
+        toCompanyId: dto.owningCompanyId,
+        status: OrderStatusEnum.PENDING,
+        orderItemIds: [{ id: orderItem.id }],
+        storageFacilityId: null,
+        courierId: null,
+        dueDate: null,
+        invoiceNumber: lastCreatedOrderInvoiceNumber + i++,
+        shippingFee: null,
+        customerId: userId,
+        paidAt: null,
+      });
+    }
+
+    const cart = await this.prismaService.cart.findFirst({
+      where: {
+        OR: { customerId: userId, companyId },
+      },
+    });
+
+    const newOrders = [];
+    for (const order of orders) {
+      const actualOrder = { ...order, orderItemIds: undefined };
+      const newOrder = await this.prismaService.order.create({
+        data: {
+          ...actualOrder,
+          orderItems: {
+            connect: order.orderItemIds,
+          },
+        },
+      });
+      newOrders.push(newOrder);
+
+      await this.prismaService.cart.update({
+        where: { id: cart.id },
+        data: { orderItems: { disconnect: order.orderItemIds }, total: 0 },
+      });
+
+      const orderItems = await this.prismaService.orderItem.findMany({
+        where: { id: { in: order.orderItemIds.map((o) => o.id) } },
+      });
+
+      const productItems: ProductItem[] = [];
+
+      for (const orderItem of orderItems) {
+        const foundProductItems = await this.prismaService.productItem.findMany(
+          {
+            where: {
+              productId: orderItem.productId,
+              status: ProductItemStatus.IN_STORAGE,
+            },
+            take: orderItem.quantity,
+          }
+        );
+
+        productItems.push(...foundProductItems);
+
+        if (foundProductItems.length < orderItem.quantity) {
+          throw new BadRequestException('Not enough items in stock');
+        }
+
+        const orderProductItemIds = foundProductItems.map((p) => p.id);
+
+        await this.prismaService.productItem.updateMany({
+          where: { id: { in: orderProductItemIds } },
+          data: {
+            status: ProductItemStatus.ON_HOLD,
+            orderItemId: orderItem.id,
+            customerId: userId,
+          },
+        });
+      }
+
+      const productItemIds = productItems.map((p) => p.id);
+
+      await this.prismaService.transaction.create({
+        data: {
+          sendingCompanyId: newOrder.toCompanyId,
+          receivingCompanyId: newOrder.fromCompanyId,
+          customerId: newOrder.customerId,
+          productItems: {
+            connect: productItemIds.map((id) => ({ id })),
+          },
+        },
+      });
+    }
+
+    return newOrders.map((o) => OrderService.convertToDTO(o));
+  }
+
   public async getIncomingOrders(companyId: string) {
     const incomingOrders = await this.prismaService.order.findMany({
       where: { toCompanyId: companyId },
@@ -187,6 +307,25 @@ export class OrderService {
   public async getOrdersForStorageFacility(companyId: string) {
     const orders = await this.prismaService.order.findMany({
       where: { storageFacilityId: companyId },
+      include: {
+        orderItems: { include: { product: true } },
+        toCompany: true,
+        fromCompany: true,
+        storageFacility: true,
+        courier: true,
+      },
+    });
+
+    return orders.map((o) => OrderService.convertToDTO(o));
+  }
+
+  public async getPaidOrdersForStorageFacility(companyId: string) {
+    const orders = await this.prismaService.order.findMany({
+      where: {
+        storageFacilityId: companyId,
+        status: OrderStatus.PAID,
+        toCompany: { type: CompanyType.SUPPLIER },
+      },
       include: {
         orderItems: { include: { product: true } },
         toCompany: true,

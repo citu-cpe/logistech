@@ -15,6 +15,7 @@ models/commerce-product-dto.ts
 models/company-dto.ts
 models/courier-product-items-dto.ts
 models/create-many-product-items-dto.ts
+models/create-order-from-order-items-dto.ts
 models/create-order-item-dto.ts
 models/create-payment-dto.ts
 models/create-product-dto.ts
