@@ -11,10 +11,14 @@ import { useEditOrderItem } from '../hooks/useEditOrderItem';
 
 interface OrderItemQuantityInputProps {
   orderItem: OrderItemDTO;
+  disabled?: boolean;
+  max?: number;
 }
 
 export const OrderItemQuantityInput: React.FC<OrderItemQuantityInputProps> = ({
   orderItem,
+  disabled,
+  max,
 }) => {
   const editOrderItem = useEditOrderItem(orderItem.id);
 
@@ -29,9 +33,10 @@ export const OrderItemQuantityInput: React.FC<OrderItemQuantityInputProps> = ({
       defaultValue={orderItem.quantity}
       value={quantity}
       min={1}
+      max={max}
       w='5em'
       clampValueOnBlur={false}
-      isDisabled={editOrderItem.isLoading}
+      isDisabled={editOrderItem.isLoading || disabled}
       onChange={(val) => {
         if (val.length > 0) {
           const parsedVal = Number.parseInt(val);
@@ -53,7 +58,7 @@ export const OrderItemQuantityInput: React.FC<OrderItemQuantityInputProps> = ({
         }
       }}
     >
-      <NumberInputField />
+      <NumberInputField disabled={true} />
       <NumberInputStepper>
         <NumberIncrementStepper />
         <NumberDecrementStepper />

@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import {
   Company,
+  Order,
+  OrderItem,
   Product,
   ProductItem,
   ProductItemStatus,
 } from '@prisma/client';
 import { CompanyTypeEnum } from '../company/dto/company.dto';
 import { PrismaService } from '../global/prisma/prisma.service';
+import { OrderItemService } from '../order/order-item.service';
 import { CreateProductDTO } from './dto/create-product.dto';
 import { ProductDTO } from './dto/product.dto';
 
@@ -31,6 +34,10 @@ export class ProductService {
     companyTypes: CompanyTypeEnum[],
     companyId: string
   ): Promise<ProductDTO[]> {
+    const cart = await this.prismaService.cart.findFirst({
+      where: { companyId },
+    });
+
     const products = await this.prismaService.product.findMany({
       where: {
         company: { id: { not: companyId }, type: { in: companyTypes } },
@@ -39,6 +46,13 @@ export class ProductService {
       include: {
         company: true,
         productItems: { where: { status: ProductItemStatus.IN_STORAGE } },
+        orderItems: {
+          where: { cartId: cart.id, orderId: null },
+          include: {
+            product: true,
+            order: { include: { fromCompany: true, toCompany: true } },
+          },
+        },
       },
     });
 
@@ -81,7 +95,11 @@ export class ProductService {
   }
 
   public static convertToDTO(
-    product: Product & { company?: Company; productItems?: ProductItem[] }
+    product: Product & {
+      company?: Company;
+      productItems?: ProductItem[];
+      orderItems?: (OrderItem & { product: Product; order: Order })[];
+    }
   ): ProductDTO {
     return {
       ...product,
@@ -90,6 +108,12 @@ export class ProductService {
         ...product.company,
         type: product.company.type as CompanyTypeEnum,
       },
+      orderItems:
+        product.orderItems &&
+        product.orderItems.map((oi) => OrderItemService.convertToDTO(oi)),
+      numInCart: product.orderItems
+        ? product.orderItems.reduce((prev, next) => prev + next.quantity, 0)
+        : 0,
     };
   }
 }

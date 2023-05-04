@@ -12,6 +12,7 @@ import {
 import { RequestWithUser } from '../authentication/types/request-with-user.interface';
 import { CartDTO } from '../cart/dto/cart.dto';
 import { ChartDataService } from './chart-data.service';
+import { CreateOrderFromOrderItemsDTO } from './dto/create-order-from-order-items.dto';
 import { CreateOrderItemDTO } from './dto/create-order-item.dto';
 import { ManufacturerChartDataDTO } from './dto/manufacturer-chart-data.dto';
 import { OrderDTO } from './dto/order.dto';
@@ -66,12 +67,36 @@ export class OrderController {
     return this.orderService.createOrders(dto, companyId);
   }
 
+  @Post(
+    OrderController.ORDER_API_ROUTE +
+      OrderController.COMPANY_API_ROUTE +
+      '/from-order-items'
+  )
+  public createOrdersFromOrderItems(
+    @Param('companyId') companyId: string,
+    @Body() dto: CreateOrderFromOrderItemsDTO
+  ): Promise<OrderDTO[]> {
+    return this.orderService.createOrdersFromOrderItems(dto, companyId);
+  }
+
   @Post(OrderController.ORDER_API_ROUTE + '/user')
   public createOrdersForCustomer(
     @Req() { user }: RequestWithUser,
     @Body() dto: CartDTO
   ): Promise<OrderDTO[]> {
     return this.orderService.createOrders(dto, undefined, user.id);
+  }
+
+  @Post(OrderController.ORDER_API_ROUTE + '/from-order-items/user')
+  public createOrdersFromOrderItemsForCustomer(
+    @Req() { user }: RequestWithUser,
+    @Body() dto: CreateOrderFromOrderItemsDTO
+  ): Promise<OrderDTO[]> {
+    return this.orderService.createOrdersFromOrderItems(
+      dto,
+      undefined,
+      user.id
+    );
   }
 
   @Get(
@@ -105,6 +130,17 @@ export class OrderController {
     @Param('companyId') companyId: string
   ): Promise<OrderDTO[]> {
     return this.orderService.getOrdersForStorageFacility(companyId);
+  }
+
+  @Get(
+    OrderController.ORDER_API_ROUTE +
+      OrderController.COMPANY_API_ROUTE +
+      '/storage-facility/paid'
+  )
+  public getPaidOrdersForStorageFacility(
+    @Param('companyId') companyId: string
+  ): Promise<OrderDTO[]> {
+    return this.orderService.getPaidOrdersForStorageFacility(companyId);
   }
 
   @Patch(OrderController.ORDER_API_ROUTE + '/:orderId/status')

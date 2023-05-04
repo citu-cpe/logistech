@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { CreateOrderItemDTO } from 'generated-api';
 import { useContext } from 'react';
 import { ApiContext } from '../../../shared/providers/ApiProvider';
+import { COMMERCE_PRODUCTS_QUERY_KEY } from '../../commerce/hooks/useGetCommerceProducts';
 import { CART_QUERY_KEY } from './useGetCart';
 
 export const useAddToCart = (companyId: string) => {
@@ -15,6 +16,7 @@ export const useAddToCart = (companyId: string) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(CART_QUERY_KEY);
+        queryClient.invalidateQueries(COMMERCE_PRODUCTS_QUERY_KEY);
         toast({
           status: 'success',
           title: 'Added to cart',

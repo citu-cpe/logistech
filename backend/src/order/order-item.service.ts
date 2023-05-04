@@ -172,7 +172,12 @@ export class OrderItemService {
   }
 
   public static convertToDTO(
-    orderItem: OrderItem & { product: Product; productItems?: ProductItem[] }
+    orderItem: OrderItem & {
+      product: Product & {
+        orderItems?: (OrderItem & { product: Product; order: Order })[];
+      };
+      productItems?: ProductItem[];
+    }
   ): OrderItemDTO {
     return {
       ...orderItem,

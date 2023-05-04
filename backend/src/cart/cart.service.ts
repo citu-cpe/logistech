@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   Cart,
   Company,
+  Order,
   OrderItem,
   Product,
   ProductItemStatus,
@@ -95,7 +96,17 @@ export class CartService {
       where: { companyId },
       include: {
         orderItems: {
-          include: { owningCompany: true, product: true },
+          include: {
+            owningCompany: true,
+            product: {
+              include: {
+                productItems: {
+                  where: { status: ProductItemStatus.IN_STORAGE },
+                },
+                orderItems: { include: { product: true, order: true } },
+              },
+            },
+          },
           orderBy: { createdAt: 'asc' },
         },
       },
@@ -109,7 +120,14 @@ export class CartService {
       where: { customerId: userId },
       include: {
         orderItems: {
-          include: { owningCompany: true, product: true },
+          include: {
+            owningCompany: true,
+            product: {
+              include: {
+                orderItems: { include: { product: true, order: true } },
+              },
+            },
+          },
           orderBy: { createdAt: 'asc' },
         },
       },
@@ -121,7 +139,9 @@ export class CartService {
   private static convertToDTO(
     cart: Cart & {
       orderItems: (OrderItem & {
-        product: Product;
+        product: Product & {
+          orderItems: (OrderItem & { product: Product; order: Order })[];
+        };
         owningCompany: Company;
       })[];
     }

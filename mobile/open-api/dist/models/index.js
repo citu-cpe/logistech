@@ -16,6 +16,7 @@ __exportStar(require("./commerce-product-dto"), exports);
 __exportStar(require("./company-dto"), exports);
 __exportStar(require("./courier-product-items-dto"), exports);
 __exportStar(require("./create-many-product-items-dto"), exports);
+__exportStar(require("./create-order-from-order-items-dto"), exports);
 __exportStar(require("./create-order-item-dto"), exports);
 __exportStar(require("./create-payment-dto"), exports);
 __exportStar(require("./create-product-dto"), exports);

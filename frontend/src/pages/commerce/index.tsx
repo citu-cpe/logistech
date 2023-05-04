@@ -1,4 +1,4 @@
-import { Box, Flex } from '@chakra-ui/react';
+import { Box, Center, Flex, Spinner } from '@chakra-ui/react';
 import {
   CommerceProductDTOCompanyTypesEnum,
   CompanyDTOTypeEnum,
@@ -26,12 +26,16 @@ const Commerce = () => {
   const getUser = useGlobalStore((state) => state.getUser);
   const companyId = getUser()?.company?.id;
   const companyType = getUser()?.company?.type;
-  const { data } = useGetCommerceProducts(
+  const { data, isLoading } = useGetCommerceProducts(
     getCompanyTypes(companyType!),
     companyId!
   );
 
-  return (
+  return isLoading ? (
+    <Center>
+      <Spinner />
+    </Center>
+  ) : (
     <Box>
       {companyId && (
         <Flex flexWrap='wrap' gap='6'>
