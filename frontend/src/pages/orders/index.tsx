@@ -61,19 +61,23 @@ const Orders = () => {
           ) : (
             <Tabs isFitted>
               <TabList mb='1em'>
-                <Tab>Outgoing</Tab>
+                {companyType !== CompanyDTOTypeEnum.Supplier && (
+                  <Tab>Outgoing</Tab>
+                )}
                 <Tab>Incoming</Tab>
               </TabList>
               <TabPanels>
-                <TabPanel>
-                  <OrdersTable
-                    orders={outgoingOrdersQuery?.data?.data ?? []}
-                    allowEdit={false}
-                    incoming={false}
-                    allowPayment={true}
-                    showTotal={true}
-                  />
-                </TabPanel>
+                {companyType !== CompanyDTOTypeEnum.Supplier && (
+                  <TabPanel>
+                    <OrdersTable
+                      orders={outgoingOrdersQuery?.data?.data ?? []}
+                      allowEdit={false}
+                      incoming={false}
+                      allowPayment={true}
+                      showTotal={true}
+                    />
+                  </TabPanel>
+                )}
                 <TabPanel>
                   <OrdersTable
                     orders={incomingOrdersQuery?.data?.data ?? []}
