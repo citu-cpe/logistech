@@ -14,6 +14,7 @@
 
 import { CompanyDTO } from './company-dto';
 import { OrderItemDTO } from './order-item-dto';
+import { UserDTO } from './user-dto';
 
 /**
  *
@@ -26,7 +27,13 @@ export interface SalesItemDTO {
    * @type {CompanyDTO}
    * @memberof SalesItemDTO
    */
-  customer: CompanyDTO;
+  customer?: CompanyDTO;
+  /**
+   *
+   * @type {UserDTO}
+   * @memberof SalesItemDTO
+   */
+  user?: UserDTO;
   /**
    *
    * @type {Array<OrderItemDTO>}

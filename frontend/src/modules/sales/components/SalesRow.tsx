@@ -17,13 +17,15 @@ export const SalesRow: React.FC<SalesRowProps> = ({ sale }) => {
 
       <Td>
         {salesItems.map((s) => (
-          <Text key={s.customer.id}>{s.customer.name}</Text>
+          <Text key={s.customer?.id ?? s.user?.id}>
+            {s.customer?.name ?? s.user?.username}
+          </Text>
         ))}
       </Td>
 
       <Td isNumeric>
         {salesItems.map((s) => (
-          <Text key={s.customer.id}>
+          <Text key={s.customer?.id ?? s.user?.id}>
             {s.orderItems.reduce((quantity, o) => quantity + o.quantity, 0)}
           </Text>
         ))}
@@ -31,7 +33,7 @@ export const SalesRow: React.FC<SalesRowProps> = ({ sale }) => {
 
       <Td isNumeric>
         {salesItems.map((s) => (
-          <Box key={s.customer.id}>
+          <Box key={s.customer?.id ?? s.user?.id}>
             <Peso
               amount={s.orderItems.reduce((total, o) => total + o.total, 0)}
             />
@@ -41,7 +43,9 @@ export const SalesRow: React.FC<SalesRowProps> = ({ sale }) => {
 
       <Td>
         {salesItems.map((s) => (
-          <Text key={s.customer.id}>{s.customer.id}</Text>
+          <Text key={s.customer?.id ?? s.user?.id}>
+            {s.customer?.id ?? s.user?.id}
+          </Text>
         ))}
       </Td>
 
@@ -55,7 +59,7 @@ export const SalesRow: React.FC<SalesRowProps> = ({ sale }) => {
 
       <Td>
         {salesItems.map((s) => (
-          <Box key={s.customer.id}>
+          <Box key={s.customer?.id ?? s.user?.id}>
             <OrderStatusBadge status={s.orderItems[0].order?.status!} />
           </Box>
         ))}
@@ -63,7 +67,7 @@ export const SalesRow: React.FC<SalesRowProps> = ({ sale }) => {
 
       <Td>
         {salesItems.map((s) => (
-          <Box key={s.customer.id}>
+          <Box key={s.customer?.id ?? s.user?.id}>
             <ProductItemStatusBadge
               status={s.orderItems[0].productItems![0].status!}
             />
