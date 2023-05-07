@@ -99,6 +99,12 @@ export const EditProductItemForm: React.FC<ProductItemFormProps> = ({
                   <option value={CreateProductItemDTOStatusEnum.Complete}>
                     COMPLETE
                   </option>
+                  <option value={CreateProductItemDTOStatusEnum.Returned}>
+                    RETURNED
+                  </option>
+                  <option value={CreateProductItemDTOStatusEnum.Returning}>
+                    RETURNING
+                  </option>
                 </Select>
               )}
             </Field>

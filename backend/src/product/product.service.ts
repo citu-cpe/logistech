@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {
+  Cart,
   Company,
   Order,
   OrderItem,
+  Prisma,
   Product,
   ProductItem,
   ProductItemStatus,
@@ -10,6 +12,7 @@ import {
 import { CompanyTypeEnum } from '../company/dto/company.dto';
 import { PrismaService } from '../global/prisma/prisma.service';
 import { OrderItemService } from '../order/order-item.service';
+import { PostgresErrorCode } from '../shared/constants/postgress-error-codes.enum';
 import { CreateProductDTO } from './dto/create-product.dto';
 import { ProductDTO } from './dto/product.dto';
 
@@ -34,9 +37,19 @@ export class ProductService {
     companyTypes: CompanyTypeEnum[],
     companyId: string
   ): Promise<ProductDTO[]> {
-    const cart = await this.prismaService.cart.findFirst({
-      where: { companyId },
-    });
+    let cart: Cart;
+
+    try {
+      cart = await this.prismaService.cart.findFirstOrThrow({
+        where: { OR: [{ companyId }, { customerId: companyId }] },
+      });
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === PostgresErrorCode.NotFound) {
+          throw new NotFoundException('Cart not found');
+        }
+      }
+    }
 
     const products = await this.prismaService.product.findMany({
       where: {
