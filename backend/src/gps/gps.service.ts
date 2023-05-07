@@ -15,6 +15,9 @@ export class GpsService {
   ): Promise<void> {
     this.logger.log(`RFID ${this.counter++}: ${this.convertToHex(dto.rfid)}`);
 
+    this.logger.log(`Latitude: ${dto.latitude}`);
+    this.logger.log(`Longitude: ${dto.longitude}`);
+
     this.gpsGateway.server.emit('test', dto);
 
     return;
