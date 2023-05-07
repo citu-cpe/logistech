@@ -1,9 +1,12 @@
 import { OrderItemDTO } from "generated-api";
-import { Box, Button, Text } from "native-base";
+import { Box, Button, Flex, Text } from "native-base";
 import React from "react";
 import { useRemoveFromCart } from "../hooks/useRemoveFromCart";
 import { Peso } from "./Peso";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { useEditOrderItem } from "../hooks/useEditOrderItem";
+import { OrderItemQuantityInput } from "./OrderItemQuantityInput";
 
 interface OrderItemProps {
   orderItem: OrderItemDTO;
@@ -11,6 +14,10 @@ interface OrderItemProps {
 
 export const OrderItem: React.FC<OrderItemProps> = ({ orderItem }) => {
   const removeFromCart = useRemoveFromCart();
+  const editOrderItem = useEditOrderItem(orderItem.id);
+
+  const isLoading = removeFromCart.isLoading || editOrderItem.isLoading;
+
   return (
     <Box
       key={orderItem.id}
@@ -23,15 +30,22 @@ export const OrderItem: React.FC<OrderItemProps> = ({ orderItem }) => {
     >
       <Box>
         <Text color="white">{orderItem.product.name}</Text>
-        <Text color="white">Quantity: {orderItem.quantity}</Text>
         <Text>
           <Peso amount={orderItem.total} color="white" />
         </Text>
       </Box>
 
       <Box>
+        <OrderItemQuantityInput
+          orderItem={orderItem}
+          max={orderItem.product.numInStock}
+        />
+      </Box>
+
+      <Box>
         <Button
           onPress={() => removeFromCart.mutate(orderItem.id)}
+          isDisabled={isLoading}
           isLoading={removeFromCart.isLoading}
           backgroundColor="red.700"
         >

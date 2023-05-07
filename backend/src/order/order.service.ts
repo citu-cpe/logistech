@@ -185,7 +185,7 @@ export class OrderService {
 
     const cart = await this.prismaService.cart.findFirst({
       where: {
-        OR: { customerId: userId, companyId },
+        OR: [{ companyId }, { customerId: userId }],
       },
     });
 
