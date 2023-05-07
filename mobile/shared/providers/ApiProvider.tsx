@@ -9,7 +9,7 @@ if (process.env.NEXT_PUBLIC_VERCEL_GIT_IS_PULL_REQUEST === "1") {
   reviewAppUrl = `${process.env.NEXT_PUBLIC_PREVIEW_URL_PREFIX}${prNumber}.up.railway.app`;
 }
 
-export const platformUrl = "http://192.168.1.4:5001";
+export const platformUrl = "http://192.168.1.5:5001";
 
 export const baseURL =
   process.env.NEXT_PUBLIC_BASE_URL || reviewAppUrl || platformUrl;
