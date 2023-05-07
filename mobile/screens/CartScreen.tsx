@@ -71,7 +71,7 @@ export const CartScreen = ({}: NativeStackScreenProps<
           <Button
             onPress={() => createOrders.mutate(cart)}
             isLoading={createOrders.isLoading}
-            disabled={cart.groupedOrderItems.length === 0}
+            isDisabled={cart.groupedOrderItems.length === 0}
             backgroundColor="gray.500"
             w="full"
           >

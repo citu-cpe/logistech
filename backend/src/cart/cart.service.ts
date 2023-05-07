@@ -124,6 +124,9 @@ export class CartService {
             owningCompany: true,
             product: {
               include: {
+                productItems: {
+                  where: { status: ProductItemStatus.IN_STORAGE },
+                },
                 orderItems: { include: { product: true, order: true } },
               },
             },
