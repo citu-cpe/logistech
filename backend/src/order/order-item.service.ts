@@ -6,18 +6,20 @@ import {
   Product,
   ProductItem,
   ProductItemStatus,
+  User,
 } from '@prisma/client';
 import { CompanyService } from '../company/company.service';
 import { PrismaService } from '../global/prisma/prisma.service';
 import { ProductItemService } from '../product/product-item.service';
 import { ProductService } from '../product/product.service';
+import { UserService } from '../user/user.service';
 import { CreateOrderItemDTO } from './dto/create-order-item.dto';
 import { OrderItemDTO } from './dto/order-item.dto';
 import { SalesItemDTO } from './dto/sales-item.dto';
 import { SalesDTO } from './dto/sales.dto';
 
 type OrderItemInclusive = OrderItem & {
-  order: Order & { fromCompany: Company };
+  order: Order & { fromCompany?: Company; customer?: User };
   product: Product;
   productItems: ProductItem[];
 };
@@ -90,7 +92,7 @@ export class OrderItemService {
       where: { owningCompanyId: companyId },
       include: {
         product: true,
-        order: { include: { fromCompany: true } },
+        order: { include: { fromCompany: true, customer: true } },
         productItems: true,
       },
     });
@@ -106,14 +108,28 @@ export class OrderItemService {
     }
 
     for (const productEntry of mapByProductId.entries()) {
-      const customers: Company[] = [];
-      const includedCustomerIds: string[] = [];
+      const companyCustomers: Company[] = [];
+      const userCustomers: User[] = [];
+      const includedCompanyCustomerIds: string[] = [];
+      const includedUserCustomerIds: string[] = [];
 
       for (const orderItem of productEntry[1]) {
-        if (!includedCustomerIds.includes(orderItem.order.fromCompany.id)) {
+        if (
+          orderItem.order.fromCompany &&
+          !includedCompanyCustomerIds.includes(orderItem.order.fromCompany.id)
+        ) {
           const customer = orderItem.order.fromCompany;
-          customers.push(customer);
-          includedCustomerIds.push(customer.id);
+          companyCustomers.push(customer);
+          includedCompanyCustomerIds.push(customer.id);
+        }
+
+        if (
+          orderItem.order.customer &&
+          !includedUserCustomerIds.includes(orderItem.order.customer.id)
+        ) {
+          const user = orderItem.order.customer;
+          userCustomers.push(user);
+          includedUserCustomerIds.push(user.id);
         }
       }
 
@@ -126,17 +142,31 @@ export class OrderItemService {
 
       const mapByCustomerId = new Map<string, OrderItemInclusive[]>();
       for (const orderItem of productEntry[1]) {
-        mapByCustomerId.set(orderItem.order.fromCompany.id, [
-          ...(mapByCustomerId.get(orderItem.order.fromCompany.id) || []),
-          orderItem,
-        ]);
+        mapByCustomerId.set(
+          orderItem.order.fromCompany?.id ?? orderItem.order.customer?.id,
+          [
+            ...(mapByCustomerId.get(
+              orderItem.order.fromCompany?.id ?? orderItem.order.customer?.id
+            ) || []),
+            orderItem,
+          ]
+        );
       }
 
-      for (const customer of customers) {
+      for (const customer of companyCustomers) {
         salesItems.push({
           customer: CompanyService.convertToDTO(customer),
           orderItems: mapByCustomerId
             .get(customer.id)
+            .map((o) => OrderItemService.convertToDTO(o)),
+        });
+      }
+
+      for (const user of userCustomers) {
+        salesItems.push({
+          user: UserService.convertToDTO(user),
+          orderItems: mapByCustomerId
+            .get(user.id)
             .map((o) => OrderItemService.convertToDTO(o)),
         });
       }
