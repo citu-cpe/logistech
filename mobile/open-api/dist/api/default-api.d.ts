@@ -286,6 +286,12 @@ export declare const DefaultApiAxiosParamCreator: (configuration?: Configuration
     getOutgoingOrders: (companyId: string, options?: any) => Promise<RequestArgs>;
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getOutgoingOrdersForCustomer: (options?: any) => Promise<RequestArgs>;
+    /**
+     *
      * @param {string} companyId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -747,6 +753,12 @@ export declare const DefaultApiFp: (configuration?: Configuration) => {
     getOutgoingOrders(companyId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<OrderDTO>>>;
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getOutgoingOrdersForCustomer(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<OrderDTO>>>;
+    /**
+     *
      * @param {string} companyId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1206,6 +1218,12 @@ export declare const DefaultApiFactory: (configuration?: Configuration, basePath
      * @throws {RequiredError}
      */
     getOutgoingOrders(companyId: string, options?: any): AxiosPromise<Array<OrderDTO>>;
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getOutgoingOrdersForCustomer(options?: any): AxiosPromise<Array<OrderDTO>>;
     /**
      *
      * @param {string} companyId
@@ -1701,6 +1719,13 @@ export declare class DefaultApi extends BaseAPI {
      * @memberof DefaultApi
      */
     getOutgoingOrders(companyId: string, options?: any): Promise<import("axios").AxiosResponse<OrderDTO[]>>;
+    /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    getOutgoingOrdersForCustomer(options?: any): Promise<import("axios").AxiosResponse<OrderDTO[]>>;
     /**
      *
      * @param {string} companyId

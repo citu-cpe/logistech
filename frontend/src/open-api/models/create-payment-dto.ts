@@ -30,4 +30,10 @@ export interface CreatePaymentDTO {
    * @memberof CreatePaymentDTO
    */
   orderId: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof CreatePaymentDTO
+   */
+  isMobile?: boolean;
 }

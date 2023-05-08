@@ -1,10 +1,9 @@
 import { OrderItemDTO } from "generated-api";
-import { Box, Button, Flex, Text } from "native-base";
+import { Box, Button, Text } from "native-base";
 import React from "react";
 import { useRemoveFromCart } from "../hooks/useRemoveFromCart";
 import { Peso } from "./Peso";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useEditOrderItem } from "../hooks/useEditOrderItem";
 import { OrderItemQuantityInput } from "./OrderItemQuantityInput";
 

@@ -71,4 +71,8 @@ export class OrderDTO {
 
   @IsNumber()
   public remainingBalance: number;
+
+  @IsOptional()
+  @ValidateNested()
+  public customer?: UserDTO;
 }
