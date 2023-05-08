@@ -36,6 +36,14 @@ export class PaymentService {
       throw new BadRequestException('Amount is more than remaining balance');
     }
 
+    let successUrl = `${process.env.BASE_URL}/orders?success=true`;
+    let cancelUrl = `${process.env.BASE_URL}/orders?success=true`;
+
+    if (dto.isMobile) {
+      successUrl = `https://logistech-staging.vercel.app/payment?success=true`;
+      cancelUrl = `https://logistech-staging.vercel.app/payment?success=false`;
+    }
+
     const session = await this.stripe.checkout.sessions.create({
       line_items: [
         {
@@ -50,8 +58,8 @@ export class PaymentService {
         },
       ],
       mode: 'payment',
-      success_url: `${process.env.BASE_URL}/orders?success=true`,
-      cancel_url: `${process.env.BASE_URL}/orders?canceled=true`,
+      success_url: successUrl,
+      cancel_url: cancelUrl,
       metadata: { orderId: order.id, amount: dto.amount },
     });
 

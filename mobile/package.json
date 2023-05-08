@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo/html-elements": "^0.4.2",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/native-stack": "^6.9.12",
@@ -19,6 +20,7 @@
     "expo-location": "~15.1.1",
     "expo-secure-store": "~12.1.1",
     "expo-status-bar": "~1.4.4",
+    "expo-web-browser": "~12.1.1",
     "generated-api": "file:open-api",
     "native-base": "^3.4.28",
     "react": "18.2.0",
@@ -31,6 +33,7 @@
     "react-native-svg": "13.4.0",
     "react-native-url-polyfill": "^1.3.0",
     "react-native-vector-icons": "^9.2.0",
+    "react-native-webview": "11.26.0",
     "socket.io-client": "^4.6.1",
     "zustand": "^4.3.7"
   },

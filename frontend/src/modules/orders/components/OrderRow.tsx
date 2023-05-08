@@ -66,6 +66,7 @@ export const OrderRow: React.FC<OrderRowProps> = ({
         <Td>
           <Link href={`/orders/${order.id}`}>
             {incoming ? order.fromCompany?.name : order.toCompany?.name}
+            {order.customer && order.customer.username}
           </Link>
         </Td>
       )}

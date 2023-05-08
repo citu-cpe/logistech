@@ -121,6 +121,13 @@ export class OrderController {
     return this.orderService.getOutgoingOrders(companyId);
   }
 
+  @Get(OrderController.ORDER_API_ROUTE + '/customer/outgoing')
+  public getOutgoingOrdersForCustomer(
+    @Req() { user }: RequestWithUser
+  ): Promise<OrderDTO[]> {
+    return this.orderService.getOutgoingOrdersForCustomer(user.id);
+  }
+
   @Get(
     OrderController.ORDER_API_ROUTE +
       OrderController.COMPANY_API_ROUTE +

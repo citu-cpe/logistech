@@ -119,6 +119,12 @@ export interface OrderDTO {
    * @memberof OrderDTO
    */
   remainingBalance: number;
+  /**
+   *
+   * @type {UserDTO}
+   * @memberof OrderDTO
+   */
+  customer?: UserDTO;
 }
 
 /**
