@@ -10,18 +10,18 @@
 #define MAX_CODES 100   // Maximum number of codes to store
 
 SoftwareSerial ss(D7, D6);  // Rx, TX
-float longdecimalDegrees;
-float latdecimalDegrees;
+String longitudeString;
+String latitudeString;
 
 static const uint32_t BaudRate = 9600;
 
 //connecting to wifi
-const char* ssid = "PLDTHOMEFIBR0dae0"; 
-const char* password = "PLDTWIFI44ffx";
+const char* ssid = "John"; 
+const char* password = "1129bascos";
 
 WIEGAND wg;
 
-String serverName = "http://192.168.1.2:5001/api/v1/gps/product-item";
+String serverName = "http://192.168.43.109:5001/api/v1/gps/product-item";
 
 uint32_t codes[MAX_CODES];   // Array to store previous codes
 int num_codes = 0;   // Number of codes currently stored
@@ -76,7 +76,7 @@ void loop() {
      if (c == '\n') {
       buffer[i] = '\0'; // terminate the string
       i = 0; // reset the buffer index
-          if (strncmp(buffer, "$GPGLL", 6) == 0) { // check if the sentence is GPGLL
+          if (strncmp(buffer, "$GPGLL", 6) == 0 && strchr(buffer, '*') != NULL) { // check if the sentence is GPGLL
             char *token = strtok(buffer, ","); 
             token = strtok(NULL, ","); 
             float latitude = atof(token); 
@@ -87,15 +87,21 @@ void loop() {
             token = strtok(NULL, ",");
             token = strtok(NULL, ","); 
             if (strcmp(token, "A") == 0) { 
-              // convert latitude to degrees format
-              int degrees = (int)latitude / 100;
-              float minutes = latitude - (degrees * 100);
-              latdecimalDegrees = degrees + (minutes / 60);
+             // convert latitude to degrees format
+              int latDegrees = (int)latitude / 100;
+              float latMinutes = latitude - (latDegrees * 100);
+              float latSeconds = (latMinutes - (int)latMinutes) * 60;
+              latitudeString = String(latDegrees) + "° " + String((int)latMinutes) + "' " + String(latSeconds, 2) + "\"";
+              Serial.print("Latitude (DMS): ");
+              Serial.println(latitudeString);
               
-              // convert longitude to degrees format
-              degrees = (int)longitude / 100;
-              minutes = longitude - (degrees * 100);
-             longdecimalDegrees = degrees + (minutes / 60);
+          // convert longitude to degrees format
+              int longDegrees = (int)longitude / 100;
+              float longMinutes = longitude - (longDegrees * 100);
+              float longSeconds = (longMinutes - (int)longMinutes) * 60;
+              longitudeString = String(longDegrees) + "° " + String((int)longMinutes) + "' " + String(longSeconds, 2) + "\"";
+              Serial.print("Longitude (DMS): ");
+              Serial.println(longitudeString);
               break;
             }
         }
@@ -133,7 +139,10 @@ void loop() {
     //  float* latLong = getLatAndLong();
       
 
-      int httpResponseCode = http.POST("{\"longitude\": " + String(longdecimalDegrees, 6) + ", \"latitude\": " + String(latdecimalDegrees, 6) + ", \"rfid\": \"" + String(codes[num_codes]) + "\"}");
+      int httpResponseCode = http.POST("{\"longitude\": " + longitudeString + ", \"latitude\": " + latitudeString + ", \"rfid\": \"" + String(codes[num_codes]) + "\"}");
+      num_codes++;
+      Serial.print("unique siya");
+      Serial.println(num_codes);
 
 
       
@@ -150,18 +159,19 @@ void loop() {
       // Free resources
       
       http.end();
-      num_codes++;
       Serial.print("New unique code: ");
       Serial.println(new_code, HEX);
       Serial.print("Total unique codes: ");
       Serial.println(num_codes);
       Serial.print("Latitude (DMS): ");
-      Serial.println(latdecimalDegrees, 6);
+      Serial.println(latitudeString);
       Serial.print("Longitude (DMS): ");
-      Serial.println(longdecimalDegrees, 6);
+      Serial.println(longitudeString);
     }
     else if(!is_unique){
-      int httpResponseCode = http.POST("{\"longitude\": " + String(longdecimalDegrees, 6) + ", \"latitude\": " + String(latdecimalDegrees, 6) + ", \"rfid\": \"" + String(new_code) + "\"}");
+      Serial.print("dile siya unique ");
+      Serial.println(num_codes);
+      int httpResponseCode = http.POST("{\"longitude\": " + longitudeString + ", \"latitude\": " + latitudeString + ", \"rfid\": \"" + String(new_code) + "\"}");
       
       if (httpResponseCode>0) {
         Serial.print("HTTP Response code: ");
@@ -180,9 +190,9 @@ void loop() {
       Serial.print("Total unique codes: ");
       Serial.println(num_codes);
       Serial.print("Latitude (DMS): ");
-      Serial.println(latdecimalDegrees, 6);
+      Serial.println(latitudeString);
       Serial.print("Longitude (DMS): ");
-      Serial.println(longdecimalDegrees, 6);
+      Serial.println(longitudeString);
     }
    }else {
       Serial.println("WiFi Disconnected");
