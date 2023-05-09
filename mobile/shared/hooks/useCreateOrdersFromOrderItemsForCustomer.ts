@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { ApiContext } from "../providers/ApiProvider";
 import { CART_QUERY_KEY } from "./useGetCart";
 import { COMMERCE_PRODUCTS_QUERY_KEY } from "./useGetCommerceProducts";
+import { OUTGOING_ORDERS_FOR_CUSTOMER_QUERY_KEY } from "./useGetOutgoingOrdersForCustomers";
 
 export const useCreateOrdersFromOrderItemsForCustomer = () => {
   const api = useContext(ApiContext);
@@ -18,6 +19,7 @@ export const useCreateOrdersFromOrderItemsForCustomer = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(CART_QUERY_KEY);
         queryClient.invalidateQueries(COMMERCE_PRODUCTS_QUERY_KEY);
+        queryClient.invalidateQueries(OUTGOING_ORDERS_FOR_CUSTOMER_QUERY_KEY);
         toast.show({
           title: "Successfully placed order",
 

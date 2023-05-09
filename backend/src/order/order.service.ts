@@ -268,6 +268,7 @@ export class OrderService {
         storageFacility: true,
         courier: true,
         payments: true,
+        customer: true,
       },
     });
 
@@ -277,6 +278,21 @@ export class OrderService {
   public async getOutgoingOrders(companyId: string) {
     const outgoingOrders = await this.prismaService.order.findMany({
       where: { fromCompanyId: companyId },
+      include: {
+        orderItems: { include: { product: true } },
+        toCompany: true,
+        storageFacility: true,
+        courier: true,
+        payments: true,
+      },
+    });
+
+    return outgoingOrders.map((o) => OrderService.convertToDTO(o));
+  }
+
+  public async getOutgoingOrdersForCustomer(userId: string) {
+    const outgoingOrders = await this.prismaService.order.findMany({
+      where: { customerId: userId },
       include: {
         orderItems: { include: { product: true } },
         toCompany: true,
@@ -456,6 +472,7 @@ export class OrderService {
       storageFacility?: Company;
       courier?: User;
       payments?: Payment[];
+      customer?: User;
     }
   ): OrderDTO {
     const toCompany =
@@ -485,6 +502,7 @@ export class OrderService {
       courier,
       payments,
       remainingBalance: order.total + (order.shippingFee ?? 0) - sumPayments,
+      customer: order.customer && UserService.convertToDTO(order.customer),
     };
   }
 }

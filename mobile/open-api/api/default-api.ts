@@ -1717,6 +1717,44 @@ export const DefaultApiAxiosParamCreator = function (
     },
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getOutgoingOrdersForCustomer: async (
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/api/v1/order/customer/outgoing`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @param {string} companyId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -4048,6 +4086,28 @@ export const DefaultApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getOutgoingOrdersForCustomer(
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<OrderDTO>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getOutgoingOrdersForCustomer(options);
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
      * @param {string} companyId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -5306,6 +5366,16 @@ export const DefaultApiFactory = function (
     },
     /**
      *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getOutgoingOrdersForCustomer(options?: any): AxiosPromise<Array<OrderDTO>> {
+      return localVarFp
+        .getOutgoingOrdersForCustomer(options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @param {string} companyId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -6222,6 +6292,18 @@ export class DefaultApi extends BaseAPI {
   public getOutgoingOrders(companyId: string, options?: any) {
     return DefaultApiFp(this.configuration)
       .getOutgoingOrders(companyId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof DefaultApi
+   */
+  public getOutgoingOrdersForCustomer(options?: any) {
+    return DefaultApiFp(this.configuration)
+      .getOutgoingOrdersForCustomer(options)
       .then((request) => request(this.axios, this.basePath));
   }
 

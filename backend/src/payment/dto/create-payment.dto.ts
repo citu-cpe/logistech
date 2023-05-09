@@ -1,4 +1,4 @@
-import { IsUUID, IsNumber, Min } from 'class-validator';
+import { IsUUID, IsNumber, Min, IsBoolean, IsOptional } from 'class-validator';
 
 export class CreatePaymentDTO {
   @IsNumber()
@@ -7,4 +7,8 @@ export class CreatePaymentDTO {
 
   @IsUUID()
   public orderId: string;
+
+  @IsBoolean()
+  @IsOptional()
+  public isMobile?: boolean;
 }

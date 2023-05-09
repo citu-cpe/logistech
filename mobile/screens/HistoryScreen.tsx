@@ -1,21 +1,15 @@
 import { useQueryClient } from "@tanstack/react-query";
-import {
-  ProductItemByStatusDTOStatusEnum,
-  ProductItemDTOStatusEnum,
-} from "generated-api";
 import { Box, Divider, ScrollView, Spinner, Text } from "native-base";
 import { RefreshControl } from "react-native";
-import { CustomerProductItemComplete } from "../shared/components/CustomerProductItemComplete";
-import { ProductItemStatusBadge } from "../shared/components/ProductItemStatusBadge";
+import { HistoryItem } from "../shared/components/HistoryItem";
 import {
-  PRODUCT_ITEMS_BY_STATUS_AND_USER_QUERY_KEY,
-  useGetProductsByStatusAndUser,
-} from "../shared/hooks/useGetProductsByStatusAndUser";
+  OUTGOING_ORDERS_FOR_CUSTOMER_QUERY_KEY,
+  useGetOutgoingOrdersForCustomer,
+} from "../shared/hooks/useGetOutgoingOrdersForCustomers";
 
 export const HistoryScreen = () => {
-  const { data, isLoading, isInitialLoading } = useGetProductsByStatusAndUser(
-    ProductItemByStatusDTOStatusEnum.Complete
-  );
+  const { data, isLoading, isInitialLoading } =
+    useGetOutgoingOrdersForCustomer();
   const queryClient = useQueryClient();
 
   return (
@@ -29,9 +23,7 @@ export const HistoryScreen = () => {
           refreshing={isLoading && !isInitialLoading}
           onRefresh={() =>
             queryClient.invalidateQueries(
-              PRODUCT_ITEMS_BY_STATUS_AND_USER_QUERY_KEY(
-                ProductItemByStatusDTOStatusEnum.Complete
-              )
+              OUTGOING_ORDERS_FOR_CUSTOMER_QUERY_KEY
             )
           }
           tintColor="white"
@@ -40,20 +32,15 @@ export const HistoryScreen = () => {
     >
       {isInitialLoading && <Spinner />}
 
-      {data?.data.map((p) => (
-        <Box key={p.id} w="full">
-          <CustomerProductItemComplete productItem={p} />
+      {data?.data.map((o) => (
+        <Box key={o.id} w="full">
+          <HistoryItem order={o} />
+
           <Divider />
         </Box>
       ))}
 
-      {data?.data.length === 0 && (
-        <Text color="white">
-          No{" "}
-          <ProductItemStatusBadge status={ProductItemDTOStatusEnum.Complete} />{" "}
-          product items
-        </Text>
-      )}
+      {data?.data.length === 0 && <Text color="white">No orders</Text>}
     </ScrollView>
   );
 };
