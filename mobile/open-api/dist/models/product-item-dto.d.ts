@@ -59,6 +59,12 @@ export interface ProductItemDTO {
      * @memberof ProductItemDTO
      */
     customer?: UserDTO;
+    /**
+     *
+     * @type {UserDTO}
+     * @memberof ProductItemDTO
+     */
+    courier?: UserDTO;
 }
 /**
  * @export

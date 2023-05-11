@@ -52,10 +52,10 @@ export const CommerceItem: React.FC<CommerceItemProps> = ({ product }) => {
 
           <CompanyTypeBadge companyType={product.company?.type!} />
 
-          {outOfStock && <Text color="error.700">Out of stock</Text>}
+          {outOfStock && <Text color="error.500">Out of stock</Text>}
 
           {!outOfStock && product.numInStock < 5 && product.numInStock > 0 && (
-            <Text color="error.700">
+            <Text color="error.500">
               Only {product.numInStock} item{product.numInStock > 1 && "s"} left
               in stock!
             </Text>

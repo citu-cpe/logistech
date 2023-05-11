@@ -49,6 +49,11 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
     onOpen: toBePickedUpOnOpen,
     onClose: toBePickedUpOnClose,
   } = useDisclose();
+  const {
+    isOpen: returningIsOpen,
+    onOpen: returningOnOpen,
+    onClose: returningOnClose,
+  } = useDisclose();
   const queryClient = useQueryClient();
 
   const open = (onOpen: () => void) => {
@@ -132,6 +137,9 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
         <Button onPress={() => open(inTransitOnOpen)} bg="blueGray.700">
           Current Delivery
         </Button>
+        <Button onPress={() => open(returningOnOpen)} bg="blueGray.700">
+          Returning
+        </Button>
       </Flex>
 
       <Actionsheet isOpen={toBePickedUpIsOpen} onClose={toBePickedUpOnClose}>
@@ -168,6 +176,27 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
                 No{" "}
                 <ProductItemStatusBadge
                   status={ProductItemDTOStatusEnum.InTransit}
+                />{" "}
+                product items
+              </Text>
+            )}
+          </Box>
+        </Actionsheet.Content>
+      </Actionsheet>
+
+      <Actionsheet isOpen={returningIsOpen} onClose={returningOnClose}>
+        <Actionsheet.Content bg="blueGray.700">
+          <Box w="full">
+            <Heading color="white">Returning</Heading>
+            {data?.data.returningProductItems.map((p) => (
+              <CourierProductItemInTransit key={p.id} productItem={p} />
+            ))}
+
+            {data?.data.returningProductItems.length === 0 && (
+              <Text color="white" textAlign="center" mt="2">
+                No{" "}
+                <ProductItemStatusBadge
+                  status={ProductItemDTOStatusEnum.Returning}
                 />{" "}
                 product items
               </Text>

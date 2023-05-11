@@ -46,4 +46,8 @@ export class ProductItemDTO {
   @IsOptional()
   @ValidateNested()
   public customer?: UserDTO;
+
+  @IsOptional()
+  @ValidateNested()
+  public courier?: UserDTO;
 }

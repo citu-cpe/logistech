@@ -48,9 +48,9 @@ export default function App() {
   }, []);
 
   return (
-    <NativeBaseProvider>
-      <ApiProvider>
-        <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <NativeBaseProvider>
+        <ApiProvider>
           <SocketProvider>
             <StatusBar barStyle="light-content" />
             {isLoading ? (
@@ -158,8 +158,8 @@ export default function App() {
               </NavigationContainer>
             )}
           </SocketProvider>
-        </QueryClientProvider>
-      </ApiProvider>
-    </NativeBaseProvider>
+        </ApiProvider>
+      </NativeBaseProvider>
+    </QueryClientProvider>
   );
 }

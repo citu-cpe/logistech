@@ -1,10 +1,11 @@
+import React from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   ProductItemByStatusDTOStatusEnum,
   ProductItemDTOStatusEnum,
 } from "generated-api";
-import { Box, Divider, ScrollView, Spinner, Text } from "native-base";
+import { ScrollView, Spinner, Text } from "native-base";
 import { RefreshControl } from "react-native";
 import { ProductItemStatusBadge } from "../shared/components/ProductItemStatusBadge";
 import {
@@ -12,6 +13,7 @@ import {
   useGetProductsByStatusAndUser,
 } from "../shared/hooks/useGetProductsByStatusAndUser";
 import { HomeStackParamList } from "./HomeStackScreen";
+import { ProductItemItem } from "../shared/components/ProductItemItem";
 
 export interface ProductItemsScreenProps {
   companyId?: string;
@@ -49,15 +51,7 @@ export const ProductItemsScreen = ({
       {isInitialLoading && <Spinner />}
 
       {data?.data.map((p) => (
-        <Box key={p.id} w="full">
-          <Box p="2">
-            <Text color="white" fontWeight="bold" fontSize="lg">
-              {p.product?.name}
-            </Text>
-            <Text color="white">RFID: {p.rfid}</Text>
-          </Box>
-          <Divider />
-        </Box>
+        <ProductItemItem productItem={p} key={p.id} />
       ))}
 
       {data?.data.length === 0 && (
