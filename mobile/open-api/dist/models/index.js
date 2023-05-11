@@ -11,6 +11,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./add-storage-facility-partner-dto"), exports);
+__exportStar(require("./assign-courier-to-product-item-dto"), exports);
 __exportStar(require("./cart-dto"), exports);
 __exportStar(require("./commerce-product-dto"), exports);
 __exportStar(require("./company-dto"), exports);

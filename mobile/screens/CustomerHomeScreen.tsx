@@ -124,6 +124,20 @@ export const CustomerHomeScreen: React.FC<CustomerHomeScreenProps> = ({
               onPress={() => {
                 onClose();
                 navigation.navigate("ProductItems", {
+                  status: ProductItemByStatusDTOStatusEnum.Complete,
+                });
+              }}
+            >
+              Complete
+            </Button>
+
+            <Spacer />
+
+            <Button
+              bg="blueGray.700"
+              onPress={() => {
+                onClose();
+                navigation.navigate("ProductItems", {
                   status: ProductItemByStatusDTOStatusEnum.RedFlag,
                 });
               }}

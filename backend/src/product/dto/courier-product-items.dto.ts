@@ -7,4 +7,7 @@ export class CourierProductItemsDTO {
 
   @ValidateNested({ each: true })
   public toBePickedUpProductItems: ProductItemDTO[];
+
+  @ValidateNested({ each: true })
+  public returningProductItems: ProductItemDTO[];
 }

@@ -60,7 +60,7 @@ export const Manufacturer = () => {
             Return Handling
           </Heading>
 
-          <StatusList status={ProductItemByStatusDTOStatusEnum.Canceled} />
+          <StatusList status={ProductItemByStatusDTOStatusEnum.Returned} />
         </Box>
       </Flex>
     </Box>

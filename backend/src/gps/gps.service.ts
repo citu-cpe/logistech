@@ -18,9 +18,11 @@ export class GpsService {
     this.logger.log(`Latitude: ${dto.latitude}`);
     this.logger.log(`Longitude: ${dto.longitude}`);
 
-    this.gpsGateway.server.emit('test', dto);
+    if (dto.latitude === 0 || dto.longitude === 0) {
+      return;
+    }
 
-    return;
+    this.gpsGateway.server.emit('test', dto);
   }
 
   private convertToHex(text: string) {

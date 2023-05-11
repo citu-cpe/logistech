@@ -28,4 +28,10 @@ export interface CourierProductItemsDTO {
      * @memberof CourierProductItemsDTO
      */
     toBePickedUpProductItems: Array<ProductItemDTO>;
+    /**
+     *
+     * @type {Array<ProductItemDTO>}
+     * @memberof CourierProductItemsDTO
+     */
+    returningProductItems: Array<ProductItemDTO>;
 }

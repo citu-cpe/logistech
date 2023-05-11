@@ -1,4 +1,5 @@
 import axios from "axios";
+import { platformUrl } from "./variables";
 
 let reviewAppUrl;
 
@@ -11,7 +12,7 @@ const suffix = "/api/v1";
 const publicBaseUrl =
   process.env.NEXT_PUBLIC_BASE_URL && process.env.NEXT_PUBLIC_BASE_URL + suffix;
 
-const baseURL = publicBaseUrl || reviewAppUrl || "http://localhost:5001/api/v1";
+const baseURL = publicBaseUrl || reviewAppUrl || `${platformUrl}/api/v1`;
 
 export const createAxiosInstance = () => {
   return axios.create({

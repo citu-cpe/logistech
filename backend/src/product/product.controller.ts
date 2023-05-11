@@ -12,6 +12,7 @@ import {
   Req,
 } from '@nestjs/common';
 import { RequestWithUser } from '../authentication/types/request-with-user.interface';
+import { AssignCourierToProductItemDTO } from './dto/assign-courier-to-product-item.dto';
 import { CommerceProductDTO } from './dto/commerce-product.dto';
 import { CourierProductItemsDTO } from './dto/courier-product-items.dto';
 import { CreateManyProductItemsDTO } from './dto/create-many-product-items.dto';
@@ -170,6 +171,17 @@ export class ProductController {
     @Body() dto: UpdateProductItemStatusDTO
   ) {
     return this.productItemService.updateProductItemStatus(productItemId, dto);
+  }
+
+  @Patch('/product-item/:productItemId/courier')
+  public assignCourierToProductItem(
+    @Param('productItemId') productItemId: string,
+    @Body() dto: AssignCourierToProductItemDTO
+  ) {
+    return this.productItemService.assignCourierToProductItem(
+      productItemId,
+      dto.courierId
+    );
   }
 
   @Get('/product-item/returned')

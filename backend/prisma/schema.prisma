@@ -25,12 +25,13 @@ model User {
   cloudinaryPublicId        String?
   address                   String
 
-  courierOrders  Order[]       @relation("courierOrder")
-  customerOrders Order[]       @relation("customerOrder")
-  reports        Report[]
-  productItems   ProductItem[]
-  cart           Cart?
-  transactions   Transaction[]
+  courierOrders         Order[]       @relation("courierOrder")
+  customerOrders        Order[]       @relation("customerOrder")
+  reports               Report[]
+  productItems          ProductItem[] @relation("productItems")
+  returningProductItems ProductItem[] @relation("returningProductItems")
+  cart                  Cart?
+  transactions          Transaction[]
 }
 
 enum UserRole {
@@ -119,7 +120,10 @@ model ProductItem {
   orderItem   OrderItem? @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
 
   customerId String?
-  customer   User?   @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customer   User?   @relation("productItems", fields: [customerId], references: [id], onDelete: Cascade)
+
+  courierId String?
+  courier   User?   @relation("returningProductItems", fields: [courierId], references: [id], onDelete: Cascade)
 
   reports Report[]
 }

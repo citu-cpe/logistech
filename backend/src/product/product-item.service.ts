@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import {
+  Company,
   CompanyType,
   OrderItem,
   OrderStatus,
@@ -107,7 +108,14 @@ export class ProductItemService {
     companyId: string
   ) {
     const productItems = await this.prismaService.productItem.findMany({
-      where: { status, product: { companyId } },
+      where: {
+        status,
+        OR: [
+          { product: { companyId } },
+          { orderItem: { order: { storageFacilityId: companyId } } },
+        ],
+      },
+      include: { courier: true, customer: true },
     });
 
     return productItems.map((p) => ProductItemService.convertToDTO(p));
@@ -231,23 +239,56 @@ export class ProductItemService {
       .filter((p) => p.status === ProductItemStatusEnum.IN_TRANSIT)
       .map((p) => ProductItemService.convertToDTO(p));
 
+    const returningItems = await this.prismaService.productItem.findMany({
+      where: { courierId: userId, status: ProductItemStatus.RETURNING },
+      include: {
+        product: { include: { company: true } },
+        customer: true,
+        courier: true,
+      },
+    });
+
+    const returningProductItems = returningItems.map((r) =>
+      ProductItemService.convertToDTO(r)
+    );
+
     return {
       toBePickedUpProductItems,
       inTransitProductItems,
+      returningProductItems,
     };
   }
 
   public async getReturnedProductItems(userId: string) {
     const productItems = await this.prismaService.productItem.findMany({
-      where: { customerId: userId, NOT: { returnedAt: null } },
+      where: {
+        customerId: userId,
+        status: {
+          in: [ProductItemStatus.RETURNING, ProductItemStatus.RETURNED],
+        },
+      },
       include: { product: true },
     });
 
     return productItems.map((p) => ProductItemService.convertToDTO(p));
   }
 
+  public async assignCourierToProductItem(
+    productItemId: string,
+    courierId: string
+  ) {
+    await this.prismaService.productItem.update({
+      where: { id: productItemId },
+      data: { courier: { connect: { id: courierId } } },
+    });
+  }
+
   public static convertToDTO(
-    productItem: ProductItem & { product?: Product; customer?: User }
+    productItem: ProductItem & {
+      product?: Product & { company?: Company };
+      customer?: User;
+      courier?: User;
+    }
   ): ProductItemDTO {
     return {
       ...productItem,
@@ -256,6 +297,9 @@ export class ProductItemService {
         productItem.product && ProductService.convertToDTO(productItem.product),
       customer: productItem.customer
         ? UserService.convertToDTO(productItem.customer)
+        : undefined,
+      courier: productItem.courier
+        ? UserService.convertToDTO(productItem.courier)
         : undefined,
     };
   }
