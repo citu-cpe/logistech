@@ -3,6 +3,7 @@ import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
+  IsNumber,
   IsPhoneNumber,
   IsString,
   IsUUID,
@@ -34,6 +35,12 @@ export class CompanyDTO {
 
   @IsString()
   public address: string;
+
+  @IsNumber()
+  public addressLatitude: number;
+
+  @IsNumber()
+  public addressLongitude: number;
 
   @IsString()
   @IsPhoneNumber()

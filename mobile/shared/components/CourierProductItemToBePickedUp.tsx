@@ -2,9 +2,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   ProductItemByStatusDTOStatusEnum,
   ProductItemDTO,
+  ProductItemDTOStatusEnum,
   UpdateProductItemStatusDTOStatusEnum,
 } from "generated-api";
-import { Flex, Button, Text, Box, useToast } from "native-base";
+import { Flex, Button, Text, Box, useToast, Divider } from "native-base";
 import { useState } from "react";
 import { useAxios } from "../hooks/useAxios";
 import { COURIER_PRODUCT_ITEMS } from "../hooks/useGetCourierAssignedProductItems";
@@ -13,16 +14,19 @@ import { useUpdateProductItemStatus } from "../hooks/useUpdateProductItemStatus"
 
 interface CourierProductItemProps {
   productItem: ProductItemDTO;
+  onChangeStatus?: () => void;
 }
 
 export const CourierProductItemToBePickedUp: React.FC<
   CourierProductItemProps
-> = ({ productItem }) => {
+> = ({ productItem, onChangeStatus }) => {
   const updateProductItemStatus = useUpdateProductItemStatus(productItem.id);
   const axios = useAxios();
   const [isLoading, setIsLoading] = useState(false);
   const queryClient = useQueryClient();
   const toast = useToast();
+
+  const isReturning = productItem.status === ProductItemDTOStatusEnum.Returning;
 
   return (
     <Flex
@@ -34,7 +38,26 @@ export const CourierProductItemToBePickedUp: React.FC<
     >
       <Box>
         <Text color="white">{productItem.rfid}</Text>
-        <Text color="gray.400">{productItem.customer?.address}</Text>
+        {productItem.customer && (
+          <Text color="gray.400">
+            Customer address: {productItem.customer.address}
+          </Text>
+        )}
+
+        {productItem.buyer && (
+          <Text color="gray.400">
+            Buyer address: {productItem.buyer.address}
+          </Text>
+        )}
+
+        {isReturning && productItem.product?.company && (
+          <>
+            <Divider my="2" />
+            <Text color="gray.400">
+              Company address: {productItem.product?.company?.address}
+            </Text>
+          </>
+        )}
       </Box>
 
       <Button
@@ -56,6 +79,10 @@ export const CourierProductItemToBePickedUp: React.FC<
             backgroundColor: "green.700",
             color: "green.50",
           });
+
+          if (onChangeStatus) {
+            onChangeStatus();
+          }
         }}
       >
         Accept

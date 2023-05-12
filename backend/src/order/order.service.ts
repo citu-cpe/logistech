@@ -120,6 +120,7 @@ export class OrderService {
             status: ProductItemStatus.ON_HOLD,
             orderItemId: orderItem.id,
             customerId: userId,
+            buyerId: companyId,
           },
         });
       }
@@ -238,6 +239,7 @@ export class OrderService {
             status: ProductItemStatus.ON_HOLD,
             orderItemId: orderItem.id,
             customerId: userId,
+            buyerId: companyId,
           },
         });
       }

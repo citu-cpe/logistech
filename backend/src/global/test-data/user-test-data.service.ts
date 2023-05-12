@@ -25,6 +25,25 @@ export const testCustomer: User = {
   imageUrl: null,
   cloudinaryPublicId: null,
   address: 'Punta Princesa, Cebu City',
+  addressLatitude: 10.2948,
+  addressLongitude: 123.8676,
+};
+
+export const testNewCustomer: User = {
+  id: 'fb5c1ff2-4a15-4904-b296-2406ac9d9783',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  email: 'test_new_customer@test.com',
+  username: 'test_new_customer',
+  password: 'test',
+  currentHashedRefreshToken: undefined,
+  companyId: undefined,
+  role: UserRole.CUSTOMER,
+  imageUrl: null,
+  cloudinaryPublicId: null,
+  address: 'Minglanilla',
+  addressLatitude: 10.2433,
+  addressLongitude: 123.789,
 };
 
 export const testSupplier: User = {
@@ -40,6 +59,8 @@ export const testSupplier: User = {
   imageUrl: null,
   cloudinaryPublicId: null,
   address: '',
+  addressLatitude: null,
+  addressLongitude: null,
 };
 
 export const testStorageFacility: User = {
@@ -55,6 +76,8 @@ export const testStorageFacility: User = {
   imageUrl: null,
   cloudinaryPublicId: null,
   address: '',
+  addressLatitude: null,
+  addressLongitude: null,
 };
 
 export const testNewStorageFacility: User = {
@@ -70,6 +93,8 @@ export const testNewStorageFacility: User = {
   imageUrl: null,
   cloudinaryPublicId: null,
   address: '',
+  addressLatitude: null,
+  addressLongitude: null,
 };
 
 export const testCourier: User = {
@@ -85,6 +110,8 @@ export const testCourier: User = {
   imageUrl: null,
   cloudinaryPublicId: null,
   address: '',
+  addressLatitude: null,
+  addressLongitude: null,
 };
 
 export const testManufacturer: User = {
@@ -100,6 +127,8 @@ export const testManufacturer: User = {
   imageUrl: null,
   cloudinaryPublicId: null,
   address: '',
+  addressLatitude: null,
+  addressLongitude: null,
 };
 
 export const testRetailer: User = {
@@ -115,6 +144,8 @@ export const testRetailer: User = {
   imageUrl: null,
   cloudinaryPublicId: null,
   address: '',
+  addressLatitude: null,
+  addressLongitude: null,
 };
 
 export const testNewRetailer: User = {
@@ -130,6 +161,8 @@ export const testNewRetailer: User = {
   imageUrl: null,
   cloudinaryPublicId: null,
   address: '',
+  addressLatitude: null,
+  addressLongitude: null,
 };
 
 @Injectable()
@@ -143,6 +176,9 @@ export class UserTestDataService {
 
     const foundCustomer = await this.prismaService.user.findUnique({
       where: { id: testCustomer.id },
+    });
+    const foundNewCustomer = await this.prismaService.user.findUnique({
+      where: { id: testNewCustomer.id },
     });
     const foundSupplier = await this.prismaService.user.findUnique({
       where: { id: testSupplier.id },
@@ -169,6 +205,10 @@ export class UserTestDataService {
     if (!foundCustomer) {
       this.logger.log('GENERATING TEST CUSTOMER');
       await this.createUser(testCustomer);
+    }
+    if (!foundNewCustomer) {
+      this.logger.log('GENERATING NEW TEST CUSTOMER');
+      await this.createUser(testNewCustomer);
     }
     if (!foundSupplier) {
       this.logger.log('GENERATING TEST SUPPLIER');

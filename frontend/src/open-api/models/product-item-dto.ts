@@ -12,6 +12,7 @@
  * Do not edit the class manually.
  */
 
+import { CompanyDTO } from './company-dto';
 import { ProductDTO } from './product-dto';
 import { UserDTO } from './user-dto';
 
@@ -69,6 +70,12 @@ export interface ProductItemDTO {
    * @memberof ProductItemDTO
    */
   courier?: UserDTO;
+  /**
+   *
+   * @type {CompanyDTO}
+   * @memberof ProductItemDTO
+   */
+  buyer?: CompanyDTO;
 }
 
 /**

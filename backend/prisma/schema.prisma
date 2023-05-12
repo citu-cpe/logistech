@@ -24,6 +24,8 @@ model User {
   imageUrl                  String?
   cloudinaryPublicId        String?
   address                   String
+  addressLongitude          Float?
+  addressLatitude           Float?
 
   courierOrders         Order[]       @relation("courierOrder")
   customerOrders        Order[]       @relation("customerOrder")
@@ -53,14 +55,16 @@ enum UserRole {
 }
 
 model Company {
-  id            String      @id @default(uuid())
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  type          CompanyType
-  name          String
-  address       String
-  contactNumber String      @default("")
-  email         String      @default("")
+  id               String      @id @default(uuid())
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  type             CompanyType
+  name             String
+  address          String
+  addressLatitude  Float
+  addressLongitude Float
+  contactNumber    String      @default("")
+  email            String      @default("")
 
   products              Product[]
   employees             User[]
@@ -74,7 +78,8 @@ model Company {
   storageFacilityPartners Company[] @relation("storageFacilitySellerPartners")
   sellerPartners          Company[] @relation("storageFacilitySellerPartners")
 
-  orders Order[] @relation("storageFacilityOrder")
+  orders      Order[]       @relation("storageFacilityOrder")
+  productItems ProductItem[]
 }
 
 enum CompanyType {
@@ -124,6 +129,9 @@ model ProductItem {
 
   courierId String?
   courier   User?   @relation("returningProductItems", fields: [courierId], references: [id], onDelete: Cascade)
+
+  buyerId String?
+  buyer   Company? @relation(fields: [buyerId], references: [id], onDelete: Cascade)
 
   reports Report[]
 }

@@ -16,13 +16,17 @@ import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { HomeStackParamList } from "./HomeStackScreen";
 import { StyleSheet, Image } from "react-native";
 import * as Location from "expo-location";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { SocketContext } from "../shared/providers/SocketProvider";
 import {
   IMAGE_SIZE,
   LATITUDE_DELTA,
   LONGITUDE_DELTA,
 } from "../shared/constants/map";
+import { useAuthStore } from "../shared/stores/auth";
+import MapViewDirections from "react-native-maps-directions";
+import { edgePadding } from "../shared/variables";
+import { GOOGLE_MAPS_API_KEY } from "@env";
 
 interface CustomerHomeScreenProps {
   navigation: NativeStackNavigationProp<HomeStackParamList, "Home", undefined>;
@@ -38,6 +42,8 @@ export const CustomerHomeScreen: React.FC<CustomerHomeScreenProps> = ({
   const [latitude, setLatitude] = useState<number | undefined>();
   const [longitude, setLongitude] = useState<number | undefined>();
   const socket = useContext(SocketContext);
+  const { user } = useAuthStore();
+  const mapViewRef = useRef<MapView>(null);
 
   const { isOpen, onOpen, onClose } = useDisclose();
 
@@ -69,6 +75,22 @@ export const CustomerHomeScreen: React.FC<CustomerHomeScreenProps> = ({
       setLongitude(location.coords.longitude);
     })();
   }, []);
+
+  useEffect(() => {
+    if (mapViewRef.current) {
+      setTimeout(() => {
+        mapViewRef.current?.fitToSuppliedMarkers(["house", "truck"], {
+          animated: true,
+          edgePadding: {
+            top: edgePadding,
+            right: edgePadding,
+            bottom: edgePadding,
+            left: edgePadding,
+          },
+        });
+      }, 1000);
+    }
+  }, [mapViewRef.current]);
 
   return (
     <>
@@ -169,20 +191,50 @@ export const CustomerHomeScreen: React.FC<CustomerHomeScreenProps> = ({
           }}
           style={styles.map}
           provider={PROVIDER_GOOGLE}
+          ref={mapViewRef}
         >
-          {longitude && latitude && (
-            <Marker
-              coordinate={{
-                longitude: longitude,
-                latitude: latitude,
-              }}
-            >
-              <Image
-                source={require("./images/delivery-truck.png")}
-                style={{ height: IMAGE_SIZE, width: IMAGE_SIZE }}
-              />
-            </Marker>
-          )}
+          {longitude &&
+            latitude &&
+            user &&
+            user.addressLatitude &&
+            user.addressLongitude && (
+              <>
+                <MapViewDirections
+                  origin={{ latitude, longitude }}
+                  destination={{
+                    latitude: user.addressLatitude,
+                    longitude: user.addressLongitude,
+                  }}
+                  apikey={GOOGLE_MAPS_API_KEY ?? ""}
+                  strokeWidth={5}
+                  strokeColor="blue"
+                />
+                <Marker
+                  coordinate={{
+                    longitude: user.addressLongitude,
+                    latitude: user.addressLatitude,
+                  }}
+                  identifier="house"
+                >
+                  <Image
+                    source={require("./images/house.png")}
+                    style={{ height: IMAGE_SIZE, width: IMAGE_SIZE }}
+                  />
+                </Marker>
+                <Marker
+                  coordinate={{
+                    longitude,
+                    latitude,
+                  }}
+                  identifier="truck"
+                >
+                  <Image
+                    source={require("./images/delivery-truck.png")}
+                    style={{ height: IMAGE_SIZE, width: IMAGE_SIZE }}
+                  />
+                </Marker>
+              </>
+            )}
         </MapView>
       )}
     </>

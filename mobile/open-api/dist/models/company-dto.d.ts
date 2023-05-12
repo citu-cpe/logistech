@@ -53,6 +53,18 @@ export interface CompanyDTO {
     address: string;
     /**
      *
+     * @type {number}
+     * @memberof CompanyDTO
+     */
+    addressLatitude: number;
+    /**
+     *
+     * @type {number}
+     * @memberof CompanyDTO
+     */
+    addressLongitude: number;
+    /**
+     *
      * @type {string}
      * @memberof CompanyDTO
      */
