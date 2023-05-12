@@ -8,10 +8,19 @@ import { CompanyTypeEnum } from '../company/dto/company.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
 import { v2 as cloudinary } from 'cloudinary';
 import { deleteFile } from '../shared/utils/deleteFile';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
+import { ConfigService } from '@nestjs/config';
+import { EnvironmentVariableKeys } from '../shared/constants/environment-variable-keys';
+import { GoogleMapsGeocoding } from '../shared/types/google-maps-geocoding';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly prismaService: PrismaService,
+    private readonly configService: ConfigService
+  ) {}
 
   public async findByEmail(email: string): Promise<User> {
     const user = await this.prismaService.user.findUnique({
@@ -88,7 +97,33 @@ export class UserService {
   }
 
   public async updateUser(userId: string, dto: UpdateUserDTO) {
-    await this.prismaService.user.update({ where: { id: userId }, data: dto });
+    const user = await this.prismaService.user.findUnique({
+      where: { id: userId },
+    });
+
+    let addressLatitude: number;
+    let addressLongitude: number;
+
+    if (user.address !== dto.address) {
+      const uriEncodedAddress = encodeURI(dto.address);
+      const apiKey = this.configService.get(
+        EnvironmentVariableKeys.GOOGLE_MAPS_API_KEY
+      );
+
+      const response = await firstValueFrom(
+        this.httpService.get<GoogleMapsGeocoding>(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${uriEncodedAddress}&key=${apiKey}`
+        )
+      );
+
+      addressLatitude = response.data.results[0].geometry.location.lat;
+      addressLongitude = response.data.results[0].geometry.location.lng;
+    }
+
+    await this.prismaService.user.update({
+      where: { id: userId },
+      data: { ...dto, addressLatitude, addressLongitude },
+    });
 
     return this.getById(userId);
   }
@@ -143,6 +178,8 @@ export class UserService {
       company,
       imageUrl,
       address,
+      addressLongitude,
+      addressLatitude,
     } = user;
 
     const userDTO: UserDTO = {
@@ -160,6 +197,8 @@ export class UserService {
       role: role as UserRoleEnum,
       imageUrl,
       address,
+      addressLongitude,
+      addressLatitude,
     };
 
     return userDTO;

@@ -3,6 +3,7 @@ import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   IsUrl,
@@ -51,6 +52,14 @@ export class UserDTO {
   @IsString()
   @IsNotEmpty()
   public address: string;
+
+  @IsNumber()
+  @IsOptional()
+  public addressLatitude?: number;
+
+  @IsNumber()
+  @IsOptional()
+  public addressLongitude?: number;
 
   @IsOptional()
   @ValidateNested()

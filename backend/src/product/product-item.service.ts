@@ -17,6 +17,7 @@ import { ProductService } from './product.service';
 import { ProductItemStatusQuantityDTO } from './dto/product-item-status-quantity.dto';
 import { UpdateProductItemStatusDTO } from './dto/update-product-item-status.dto';
 import { UserService } from '../user/user.service';
+import { CompanyService } from '../company/company.service';
 
 @Injectable()
 export class ProductItemService {
@@ -115,7 +116,7 @@ export class ProductItemService {
           { orderItem: { order: { storageFacilityId: companyId } } },
         ],
       },
-      include: { courier: true, customer: true },
+      include: { courier: true, customer: true, buyer: true },
     });
 
     return productItems.map((p) => ProductItemService.convertToDTO(p));
@@ -127,7 +128,7 @@ export class ProductItemService {
   ) {
     const productItems = await this.prismaService.productItem.findMany({
       where: { status, customerId: userId },
-      include: { product: true },
+      include: { product: true, buyer: true, customer: true },
     });
 
     return productItems.map((p) => ProductItemService.convertToDTO(p));
@@ -218,7 +219,9 @@ export class ProductItemService {
       include: {
         orderItems: {
           include: {
-            productItems: { include: { product: true, customer: true } },
+            productItems: {
+              include: { product: true, customer: true, buyer: true },
+            },
           },
         },
       },
@@ -245,6 +248,7 @@ export class ProductItemService {
         product: { include: { company: true } },
         customer: true,
         courier: true,
+        buyer: true,
       },
     });
 
@@ -267,7 +271,7 @@ export class ProductItemService {
           in: [ProductItemStatus.RETURNING, ProductItemStatus.RETURNED],
         },
       },
-      include: { product: true },
+      include: { product: true, buyer: true, customer: true },
     });
 
     return productItems.map((p) => ProductItemService.convertToDTO(p));
@@ -288,6 +292,7 @@ export class ProductItemService {
       product?: Product & { company?: Company };
       customer?: User;
       courier?: User;
+      buyer?: Company;
     }
   ): ProductItemDTO {
     return {
@@ -300,6 +305,9 @@ export class ProductItemService {
         : undefined,
       courier: productItem.courier
         ? UserService.convertToDTO(productItem.courier)
+        : undefined,
+      buyer: productItem.buyer
+        ? CompanyService.convertToDTO(productItem.buyer)
         : undefined,
     };
   }

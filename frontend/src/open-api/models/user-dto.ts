@@ -58,6 +58,18 @@ export interface UserDTO {
   address: string;
   /**
    *
+   * @type {number}
+   * @memberof UserDTO
+   */
+  addressLatitude?: number;
+  /**
+   *
+   * @type {number}
+   * @memberof UserDTO
+   */
+  addressLongitude?: number;
+  /**
+   *
    * @type {CompanyDTO}
    * @memberof UserDTO
    */

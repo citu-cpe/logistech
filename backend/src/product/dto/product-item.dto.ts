@@ -7,6 +7,7 @@ import {
   ValidateNested,
   IsOptional,
 } from 'class-validator';
+import { CompanyDTO } from '../../company/dto/company.dto';
 import { UserDTO } from '../../user/dto/user.dto';
 import { ProductDTO } from './product.dto';
 
@@ -50,4 +51,8 @@ export class ProductItemDTO {
   @IsOptional()
   @ValidateNested()
   public courier?: UserDTO;
+
+  @IsOptional()
+  @ValidateNested()
+  public buyer?: CompanyDTO;
 }

@@ -3,6 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   ProductItemDTOStatusEnum,
   ProductItemLocationDTO,
+  UserDTO,
 } from "generated-api";
 import {
   Actionsheet,
@@ -32,6 +33,9 @@ import {
   LONGITUDE_DELTA,
 } from "../shared/constants/map";
 import MapViewDirections from "react-native-maps-directions";
+import { CompanyDTO } from "generated-api";
+import { edgePadding } from "../shared/variables";
+import { GOOGLE_MAPS_API_KEY } from "@env";
 
 interface CourierHomeScreenProps {
   navigation: NativeStackNavigationProp<HomeStackParamList, "Home", undefined>;
@@ -61,16 +65,18 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
     onOpen();
   };
 
+  const inTransitProductItems = data?.data.inTransitProductItems;
+
   const [location, setLocation] = useState<Location.LocationObject | undefined>(
     undefined
   );
   const [errorMsg, setErrorMsg] = useState<string | undefined>(undefined);
   const [latitude, setLatitude] = useState<number | undefined>();
   const [longitude, setLongitude] = useState<number | undefined>();
+  const [animateToggle, setAnimateToggle] = useState(false);
   const socket = useContext(SocketContext);
 
   const mapViewRef = useRef<MapView>(null);
-  const edgePadding = 75;
 
   useEffect(() => {
     if (socket) {
@@ -104,18 +110,53 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
   useEffect(() => {
     if (mapViewRef.current) {
       setTimeout(() => {
-        mapViewRef.current?.fitToSuppliedMarkers(["home", "truck"], {
-          animated: true,
-          edgePadding: {
-            top: edgePadding,
-            right: edgePadding,
-            bottom: edgePadding,
-            left: edgePadding,
-          },
-        });
+        mapViewRef.current?.fitToSuppliedMarkers(
+          ["house", "truck", "warehouse"],
+          {
+            animated: true,
+            edgePadding: {
+              top: edgePadding,
+              right: edgePadding,
+              bottom: edgePadding,
+              left: edgePadding,
+            },
+          }
+        );
       }, 1000);
     }
-  }, [mapViewRef.current]);
+  }, [mapViewRef.current, animateToggle]);
+
+  const getUniqueCustomers = () => {
+    if (inTransitProductItems) {
+      const customersMap = new Map<string, UserDTO>();
+
+      for (const p of inTransitProductItems) {
+        if (!!p.customer && !customersMap.has(p.customer.id)) {
+          customersMap.set(p.customer.id, p.customer);
+        }
+      }
+
+      return Array.from(customersMap, ([_id, customer]) => customer);
+    }
+  };
+
+  const getUniqueBuyers = () => {
+    if (inTransitProductItems) {
+      const buyersMap = new Map<string, CompanyDTO>();
+
+      for (const p of inTransitProductItems) {
+        if (!!p.buyer && !buyersMap.has(p.buyer.id)) {
+          buyersMap.set(p.buyer.id, p.buyer);
+        }
+      }
+
+      return Array.from(buyersMap, ([_id, buyer]) => buyer);
+    }
+  };
+
+  const toggleAnimation = () => {
+    setAnimateToggle((prev) => !prev);
+  };
 
   return (
     <>
@@ -147,7 +188,11 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
           <Box w="full">
             <Heading color="white">To Be Picked Up</Heading>
             {data?.data.toBePickedUpProductItems.map((p) => (
-              <CourierProductItemToBePickedUp key={p.id} productItem={p} />
+              <CourierProductItemToBePickedUp
+                key={p.id}
+                productItem={p}
+                onChangeStatus={toggleAnimation}
+              />
             ))}
 
             {data?.data.toBePickedUpProductItems.length === 0 && (
@@ -219,35 +264,71 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
         >
           {longitude && latitude && (
             <>
-              <MapViewDirections
-                origin={{ latitude: 10.2433, longitude: 123.789 }}
-                destination={{
-                  latitude: location.coords.latitude,
-                  longitude: location.coords.longitude,
-                }}
-                apikey={process.env.GOOGLE_MAPS_API_KEY ?? ""}
-              />
+              {getUniqueBuyers()?.map((b) => (
+                <React.Fragment key={b.id}>
+                  <MapViewDirections
+                    origin={{ latitude, longitude }}
+                    destination={{
+                      latitude: b.addressLatitude!,
+                      longitude: b.addressLongitude!,
+                    }}
+                    apikey={GOOGLE_MAPS_API_KEY ?? ""}
+                    strokeWidth={5}
+                    strokeColor="blue"
+                  />
+                  <Marker
+                    key={b.id}
+                    coordinate={{
+                      latitude: b.addressLatitude!,
+                      longitude: b.addressLongitude!,
+                    }}
+                    identifier="warehouse"
+                  >
+                    <Image
+                      source={require("./images/warehouse.png")}
+                      style={{ height: IMAGE_SIZE, width: IMAGE_SIZE }}
+                    />
+                  </Marker>
+                </React.Fragment>
+              ))}
+
+              {getUniqueCustomers()?.map((c) => (
+                <>
+                  <MapViewDirections
+                    origin={{ latitude, longitude }}
+                    destination={{
+                      latitude: c.addressLatitude!,
+                      longitude: c.addressLongitude!,
+                    }}
+                    apikey={GOOGLE_MAPS_API_KEY ?? ""}
+                    strokeWidth={5}
+                    strokeColor="blue"
+                  />
+                  <Marker
+                    key={c.id}
+                    coordinate={{
+                      latitude: c.addressLatitude!,
+                      longitude: c.addressLongitude!,
+                    }}
+                    identifier="house"
+                  >
+                    <Image
+                      source={require("./images/house.png")}
+                      style={{ height: IMAGE_SIZE, width: IMAGE_SIZE }}
+                    />
+                  </Marker>
+                </>
+              ))}
+
               <Marker
                 coordinate={{
-                  latitude: 10.2433,
-                  longitude: 123.789,
+                  latitude,
+                  longitude,
                 }}
                 identifier="truck"
               >
                 <Image
                   source={require("./images/delivery-truck.png")}
-                  style={{ height: IMAGE_SIZE, width: IMAGE_SIZE }}
-                />
-              </Marker>
-              <Marker
-                coordinate={{
-                  latitude: location.coords.latitude,
-                  longitude: location.coords.longitude,
-                }}
-                identifier="home"
-              >
-                <Image
-                  source={require("./images/house.png")}
                   style={{ height: IMAGE_SIZE, width: IMAGE_SIZE }}
                 />
               </Marker>

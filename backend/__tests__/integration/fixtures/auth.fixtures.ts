@@ -38,6 +38,8 @@ export const createUser = async (
     imageUrl: null,
     cloudinaryPublicId: null,
     address: 'Punta Princesa, Cebu City',
+    addressLatitude: 0,
+    addressLongitude: 0,
   };
 
   if (user instanceof RegisterUserDTO) {
