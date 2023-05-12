@@ -1,6 +1,8 @@
 import { Center, Heading, useToast, Text, Box, Flex } from '@chakra-ui/react';
+import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { CenterLayout } from '../../shared/components/ui/CenterLayout';
 
 const Payment = () => {
   const router = useRouter();
@@ -41,5 +43,15 @@ const Payment = () => {
     </Center>
   );
 };
+
+export const getStaticProps: GetStaticProps = () => {
+  return {
+    props: {
+      dontShowUser: true,
+    },
+  };
+};
+
+Payment.getLayout = CenterLayout;
 
 export default Payment;
