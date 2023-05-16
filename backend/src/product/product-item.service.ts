@@ -116,7 +116,12 @@ export class ProductItemService {
           { orderItem: { order: { storageFacilityId: companyId } } },
         ],
       },
-      include: { courier: true, customer: true, buyer: true },
+      include: {
+        product: { include: { company: true } },
+        courier: true,
+        customer: true,
+        buyer: true,
+      },
     });
 
     return productItems.map((p) => ProductItemService.convertToDTO(p));

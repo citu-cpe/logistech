@@ -92,6 +92,8 @@ export const Navbar = (props: ChakraProps) => {
             </>
           )}
 
+          <NavLink href='/map'>Map</NavLink>
+
           <NavLink href='/settings'>Settings</NavLink>
         </VStack>
       </Box>
