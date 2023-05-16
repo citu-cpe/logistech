@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading } from '@chakra-ui/react';
+import { Box, Flex, Heading } from '@chakra-ui/react';
 import {
   ProductItemByStatusDTOStatusEnum,
   ProductItemDTOStatusEnum,
@@ -17,18 +17,6 @@ export const Manufacturer = () => {
 
   return (
     <Box>
-      <Flex gap='4' mb='8'>
-        <Button colorScheme='gray' textTransform='uppercase'>
-          Book
-        </Button>
-        <Button colorScheme='gray' textTransform='uppercase'>
-          Invoice
-        </Button>
-        <Button colorScheme='gray' textTransform='uppercase'>
-          Customer
-        </Button>
-      </Flex>
-
       {data?.data && (
         <Flex justify='center' mb='8' gap='14' flexWrap='wrap'>
           <LinkCard

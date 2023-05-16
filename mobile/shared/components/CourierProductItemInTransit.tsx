@@ -5,7 +5,7 @@ import {
   UpdateProductItemStatusDTOStatusEnum,
 } from "generated-api";
 import { ProductItemDTOStatusEnum } from "generated-api/dist/models/product-item-dto";
-import { Flex, Button, Text, Box, useToast, Divider } from "native-base";
+import { Flex, Button, Text, Box, useToast } from "native-base";
 import { useState } from "react";
 import { useAxios } from "../hooks/useAxios";
 import { COURIER_PRODUCT_ITEMS } from "../hooks/useGetCourierAssignedProductItems";
@@ -38,17 +38,22 @@ export const CourierProductItemInTransit: React.FC<
       <Box flexBasis="50%">
         <Text color="white">{productItem.rfid}</Text>
 
-        <Text color="gray.400">
-          Customer address: {productItem.customer?.address}
-        </Text>
+        {productItem.customer && (
+          <Text color="gray.400">
+            Customer address: {productItem.customer?.address}
+          </Text>
+        )}
+
+        {productItem.buyer && (
+          <Text color="gray.400">
+            Buyer address: {productItem.buyer.address}
+          </Text>
+        )}
 
         {isReturning && productItem.product?.company && (
-          <>
-            <Divider my="2" />
-            <Text color="gray.400">
-              Company address: {productItem.product?.company?.address}
-            </Text>
-          </>
+          <Text color="gray.400">
+            Company address: {productItem.product?.company?.address}
+          </Text>
         )}
       </Box>
 

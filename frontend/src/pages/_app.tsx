@@ -11,6 +11,7 @@ import { ReactElement, ReactNode, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { Layout } from '../shared/components/ui/Layout';
 import { theme } from '../shared/theme';
+import { SocketProvider } from '../shared/providers/SocketProvider';
 
 export type AppPropsWithAuth = AppProps & {
   isAuth: boolean;
@@ -48,15 +49,17 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   }, [getUser, pageProps, router]);
 
   return (
-    <ChakraProvider theme={theme}>
-      <ApiProvider>
-        <QueryClientProvider client={queryClient}>
-          {showPage &&
-            getLayout(<Component isAuth={!!getUser()} {...pageProps} />)}
-          <ReactQueryDevtools initialIsOpen={false} position='bottom-right' />
-        </QueryClientProvider>
-      </ApiProvider>
-    </ChakraProvider>
+    <SocketProvider>
+      <ChakraProvider theme={theme}>
+        <ApiProvider>
+          <QueryClientProvider client={queryClient}>
+            {showPage &&
+              getLayout(<Component isAuth={!!getUser()} {...pageProps} />)}
+            <ReactQueryDevtools initialIsOpen={false} position='bottom-right' />
+          </QueryClientProvider>
+        </ApiProvider>
+      </ChakraProvider>
+    </SocketProvider>
   );
 }
 
