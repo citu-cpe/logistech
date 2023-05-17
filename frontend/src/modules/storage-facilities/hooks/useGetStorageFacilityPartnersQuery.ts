@@ -7,12 +7,12 @@ export const STORAGE_FACILITY_PARTNERS_QUERY_KEY = [
   'partners',
 ];
 
-export const useGetStorageFacilityPartners = (companyId: string) => {
+export const useGetStorageFacilityPartners = (companyId?: string) => {
   const api = useContext(ApiContext);
 
   return useQuery({
     queryKey: STORAGE_FACILITY_PARTNERS_QUERY_KEY,
-    queryFn: () => api.getStorageFacilityPartners(companyId),
+    queryFn: () => api.getStorageFacilityPartners(companyId!),
     enabled: !!companyId,
   });
 };

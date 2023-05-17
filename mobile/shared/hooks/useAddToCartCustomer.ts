@@ -3,7 +3,7 @@ import { CreateOrderItemDTO } from "generated-api";
 import { useToast } from "native-base";
 import { useContext } from "react";
 import { ApiContext } from "../providers/ApiProvider";
-import { CART_QUERY_KEY } from "./useGetCart";
+import { CUSTOMER_CART_QUERY_KEY } from "./useGetCartCustomer";
 import { COMMERCE_PRODUCTS_QUERY_KEY } from "./useGetCommerceProducts";
 
 export const useAddToCartCustomer = () => {
@@ -15,7 +15,7 @@ export const useAddToCartCustomer = () => {
     (dto: CreateOrderItemDTO) => api.addItemToCartCustomer(dto),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(CART_QUERY_KEY);
+        queryClient.invalidateQueries(CUSTOMER_CART_QUERY_KEY);
         queryClient.invalidateQueries(COMMERCE_PRODUCTS_QUERY_KEY);
         toast.show({
           title: "Added to cart",

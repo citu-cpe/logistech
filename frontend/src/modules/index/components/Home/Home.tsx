@@ -1,16 +1,18 @@
 import { Box } from '@chakra-ui/react';
-import { CompanyDTOTypeEnum } from 'generated-api';
+import { CompanyDTOTypeEnum, UserDTORoleEnum } from 'generated-api';
 import React, { ReactNode } from 'react';
+import { Customer } from './Customer/Customer';
 import { Manufacturer } from './Manufacturer/Manufacturer';
 import { Retailer } from './Retailer/Retailer';
 import { StorageFacility } from './StorageFacility/StorageFacility';
 import { Supplier } from './Supplier/Supplier';
 
 interface HomeProps {
-  companyType: CompanyDTOTypeEnum;
+  companyType?: CompanyDTOTypeEnum;
+  userRole?: UserDTORoleEnum;
 }
 
-export const Home = ({ companyType }: HomeProps) => {
+export const Home = ({ companyType, userRole }: HomeProps) => {
   let dashboard: ReactNode;
 
   if (companyType === CompanyDTOTypeEnum.Manufacturer) {
@@ -24,6 +26,9 @@ export const Home = ({ companyType }: HomeProps) => {
   }
   if (companyType === CompanyDTOTypeEnum.StorageFacility) {
     dashboard = <StorageFacility />;
+  }
+  if (userRole === UserDTORoleEnum.Customer) {
+    dashboard = <Customer />;
   }
 
   return <Box>{dashboard}</Box>;

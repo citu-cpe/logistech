@@ -10,27 +10,50 @@ import {
   Text,
   Flex,
 } from '@chakra-ui/react';
-import { CreateOrderFromOrderItemsDTO, ProductDTO } from 'generated-api';
+import {
+  CreateOrderFromOrderItemsDTO,
+  ProductDTO,
+  UserDTORoleEnum,
+} from 'generated-api';
 import { CompanyTypeBadge } from '../../../shared/components/CompanyTypeBadge';
 import { Peso } from '../../../shared/components/Peso';
 import { OrderItemQuantityInput } from '../../cart/components/OrderItemQuantityInput';
 import { useAddToCart } from '../../cart/hooks/useAddToCart';
+import { useAddToCartCustomer } from '../../cart/hooks/userAddToCartCustomer';
 import { useCreateOrdersFromOrderItems } from '../hooks/useCreateOrderFromOrderItems';
+import { useCreateOrdersFromOrderItemsCustomer } from '../hooks/useCreateOrdersFromOrderItemsCustomer';
 
 interface ItemCardProps {
   product: ProductDTO;
-  companyId: string;
+  companyId?: string;
+  userRole?: UserDTORoleEnum;
 }
 
-export const ItemCard: React.FC<ItemCardProps> = ({ product, companyId }) => {
+export const ItemCard: React.FC<ItemCardProps> = ({
+  product,
+  companyId,
+  userRole,
+}) => {
   const addItemToCart = useAddToCart(companyId);
+  const addItemToCartCustomer = useAddToCartCustomer();
   const createOrdersFromOrderItems = useCreateOrdersFromOrderItems(companyId);
+  const createOrdersFromOrderItemsCustomer =
+    useCreateOrdersFromOrderItemsCustomer();
+  const isCustomer = userRole === UserDTORoleEnum.Customer;
 
   const addToCart = (dto: ProductDTO) => {
+    if (isCustomer) {
+      return addItemToCartCustomer.mutate({ productId: dto.id, quantity: 1 });
+    }
+
     addItemToCart.mutate({ productId: dto.id, quantity: 1 });
   };
 
   const orderNow = (dto: CreateOrderFromOrderItemsDTO) => {
+    if (isCustomer) {
+      return createOrdersFromOrderItemsCustomer.mutate(dto);
+    }
+
     createOrdersFromOrderItems.mutate(dto);
   };
 
@@ -84,7 +107,9 @@ export const ItemCard: React.FC<ItemCardProps> = ({ product, companyId }) => {
               w='full'
               colorScheme='blue'
               disabled={product.numInStock === 0 || product.numInCart > 0}
-              isLoading={addItemToCart.isLoading}
+              isLoading={
+                addItemToCart.isLoading || addItemToCartCustomer.isLoading
+              }
               onClick={() => addToCart(product)}
             >
               {(product.numInStock === 0 || product.numInCart === 0) && (
@@ -107,7 +132,10 @@ export const ItemCard: React.FC<ItemCardProps> = ({ product, companyId }) => {
                 <Button
                   colorScheme='blue'
                   w='full'
-                  isLoading={createOrdersFromOrderItems.isLoading}
+                  isLoading={
+                    createOrdersFromOrderItems.isLoading ||
+                    createOrdersFromOrderItemsCustomer.isLoading
+                  }
                   onClick={() =>
                     orderNow({
                       orderItems: product.orderItems!,

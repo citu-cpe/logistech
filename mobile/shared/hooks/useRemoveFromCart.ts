@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "native-base";
 import { useContext } from "react";
 import { ApiContext } from "../providers/ApiProvider";
-import { CART_QUERY_KEY } from "./useGetCart";
+import { CUSTOMER_CART_QUERY_KEY } from "./useGetCartCustomer";
 
 export const useRemoveFromCart = () => {
   const api = useContext(ApiContext);
@@ -13,7 +13,7 @@ export const useRemoveFromCart = () => {
     (orderItemId: string) => api.deleteOrderItem(orderItemId),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(CART_QUERY_KEY);
+        queryClient.invalidateQueries(CUSTOMER_CART_QUERY_KEY);
         toast.show({
           title: "Removed from cart",
           backgroundColor: "green.700",

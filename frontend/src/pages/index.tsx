@@ -8,10 +8,12 @@ import { useGlobalStore } from '../shared/stores';
 
 const Index: NextPageWithLayout = ({ isAuth }: AppPropsWithLayout) => {
   const getUser = useGlobalStore((state) => state.getUser);
-  const companyType = getUser()?.company?.type;
+  const user = getUser();
+  const companyType = user?.company?.type;
+  const userRole = user?.role;
 
-  return isAuth && !!companyType ? (
-    <Home companyType={companyType} />
+  return isAuth && (!!companyType || userRole) ? (
+    <Home companyType={companyType} userRole={userRole} />
   ) : (
     <Landing />
   );

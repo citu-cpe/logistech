@@ -143,17 +143,27 @@ export class ProductItemService {
     const company = await this.prismaService.company.findUnique({
       where: { id: companyId },
     });
+    const user = await this.prismaService.user.findUnique({
+      where: { id: companyId },
+    });
+
+    const isCustomer = !company && !!user;
+
     const nonStorageFacilityWhere = { product: { companyId } };
     const storageFacilityWhere = {
       orderItem: { order: { storageFacilityId: companyId } },
     };
+    const customerWhere = {
+      customerId: companyId,
+    };
 
     const counts = await this.prismaService.productItem.groupBy({
       by: ['status'],
-      where:
-        company.type === CompanyType.STORAGE_FACILITY
-          ? storageFacilityWhere
-          : nonStorageFacilityWhere,
+      where: isCustomer
+        ? customerWhere
+        : company.type === CompanyType.STORAGE_FACILITY
+        ? storageFacilityWhere
+        : nonStorageFacilityWhere,
       _count: { id: true },
     });
 
@@ -172,6 +182,8 @@ export class ProductItemService {
     productItemStatusQuantity.complete = 0;
     productItemStatusQuantity.canceled = 0;
     productItemStatusQuantity.redFlag = 0;
+    productItemStatusQuantity.returning = 0;
+    productItemStatusQuantity.returned = 0;
     productItemStatusQuantity.orders = orders.length;
 
     for (const count of counts) {
@@ -196,6 +208,12 @@ export class ProductItemService {
           break;
         case ProductItemStatus.RED_FLAG:
           productItemStatusQuantity.redFlag = count._count.id;
+          break;
+        case ProductItemStatus.RETURNING:
+          productItemStatusQuantity.returning = count._count.id;
+          break;
+        case ProductItemStatus.RETURNED:
+          productItemStatusQuantity.returned = count._count.id;
           break;
       }
     }

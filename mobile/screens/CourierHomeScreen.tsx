@@ -37,6 +37,16 @@ import { CompanyDTO } from "generated-api";
 import { edgePadding } from "../shared/variables";
 import { GOOGLE_MAPS_API_KEY } from "@env";
 
+interface Directions {
+  origin: CourierDirections;
+  destination: CourierDirections;
+}
+
+interface CourierDirections {
+  latitude: number;
+  longitude: number;
+}
+
 interface CourierHomeScreenProps {
   navigation: NativeStackNavigationProp<HomeStackParamList, "Home", undefined>;
 }
@@ -66,6 +76,7 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
   };
 
   const inTransitProductItems = data?.data.inTransitProductItems;
+  const returningProductItems = data?.data.returningProductItems;
 
   const [location, setLocation] = useState<Location.LocationObject | undefined>(
     undefined
@@ -151,6 +162,33 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
       }
 
       return Array.from(buyersMap, ([_id, buyer]) => buyer);
+    }
+  };
+
+  const getUniqueReturns = () => {
+    if (returningProductItems) {
+      const returnsMap = new Map<string, Directions>();
+
+      for (const p of returningProductItems) {
+        if (
+          !!p.customer &&
+          p.product?.company &&
+          !returnsMap.has(p.product.company.id + p.customer.id)
+        ) {
+          returnsMap.set(p.product.company.id + p.customer.id, {
+            origin: {
+              latitude: p.customer.addressLatitude!,
+              longitude: p.customer.addressLongitude!,
+            },
+            destination: {
+              latitude: p.product.company.addressLatitude,
+              longitude: p.product.company.addressLongitude,
+            },
+          });
+        }
+      }
+
+      return Array.from(returnsMap, ([_id, direction]) => direction);
     }
   };
 
@@ -293,7 +331,7 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
               ))}
 
               {getUniqueCustomers()?.map((c) => (
-                <>
+                <React.Fragment key={c.id}>
                   <MapViewDirections
                     origin={{ latitude, longitude }}
                     destination={{
@@ -317,7 +355,51 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
                       style={{ height: IMAGE_SIZE, width: IMAGE_SIZE }}
                     />
                   </Marker>
-                </>
+                </React.Fragment>
+              ))}
+
+              {getUniqueReturns()?.map((r) => (
+                <React.Fragment
+                  key={r.origin.latitude + r.destination.longitude}
+                >
+                  <MapViewDirections
+                    origin={{
+                      latitude: r.origin.latitude,
+                      longitude: r.origin.longitude,
+                    }}
+                    destination={{
+                      latitude: r.destination.latitude,
+                      longitude: r.destination.longitude,
+                    }}
+                    apikey={GOOGLE_MAPS_API_KEY ?? ""}
+                    strokeWidth={5}
+                    strokeColor="red"
+                  />
+                  <Marker
+                    coordinate={{
+                      latitude: r.destination.latitude,
+                      longitude: r.destination.longitude,
+                    }}
+                    identifier="warehouse"
+                  >
+                    <Image
+                      source={require("./images/warehouse.png")}
+                      style={{ height: IMAGE_SIZE, width: IMAGE_SIZE }}
+                    />
+                  </Marker>
+                  <Marker
+                    coordinate={{
+                      latitude: r.origin.latitude,
+                      longitude: r.origin.longitude,
+                    }}
+                    identifier="house"
+                  >
+                    <Image
+                      source={require("./images/house.png")}
+                      style={{ height: IMAGE_SIZE, width: IMAGE_SIZE }}
+                    />
+                  </Marker>
+                </React.Fragment>
               ))}
 
               <Marker

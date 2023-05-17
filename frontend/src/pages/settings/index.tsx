@@ -22,6 +22,7 @@ import { faImage } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRemoveProfilePicture } from '../../modules/settings/hooks/useRemoveProfilePicture';
 import { useState } from 'react';
+import { UserDTORoleEnum } from 'generated-api';
 
 const Settings = () => {
   const { data } = useGetUser();
@@ -82,7 +83,10 @@ const Settings = () => {
         </Button>
       </Flex>
       <Text>
-        {user.role} @ {data?.data.company?.name}
+        {user.role}{' '}
+        {user.role !== UserDTORoleEnum.Customer && (
+          <Text>@ {data?.data.company?.name}</Text>
+        )}
       </Text>
       <Text>{data?.data.email}</Text>
 

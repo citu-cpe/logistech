@@ -21,7 +21,8 @@ const MAP_ICON_SIZE = 50;
 const GoogleMapPage = () => {
   const socket = useContext(SocketContext);
   const getUser = useGlobalStore().getUser;
-  const company = getUser()?.company;
+  const user = getUser();
+  const company = user?.company;
   const { data } = useGetProductItemsByStatus(
     company?.id,
     ProductItemByStatusDTOStatusEnum.InTransit
@@ -37,6 +38,9 @@ const GoogleMapPage = () => {
     google.maps.LatLngLiteral | undefined
   >(undefined);
   const [companyAddressLatLng, setCompanyAddressLatLng] = useState<
+    google.maps.LatLngLiteral | undefined
+  >(undefined);
+  const [userAddressLatLng, setUserAddressLatLng] = useState<
     google.maps.LatLngLiteral | undefined
   >(undefined);
   const [directions, setDirections] = useState<google.maps.DirectionsResult[]>(
@@ -142,18 +146,31 @@ const GoogleMapPage = () => {
     }
   }, [courierLatLng, getUniqueBuyers, getUniqueCustomers]);
 
+  useEffect(() => {
+    if (user && !userAddressLatLng) {
+      setUserAddressLatLng({
+        lat: user.addressLatitude!,
+        lng: user.addressLongitude!,
+      });
+    }
+  }, [user, userAddressLatLng]);
+
   return (
     <Flex h='full' flexDir='column'>
       <Heading mb='6'>Map</Heading>
 
       <Box flex={1}>
-        {isLoaded && companyAddressLatLng && (
+        {isLoaded && (companyAddressLatLng || userAddressLatLng) && (
           <GoogleMap
             mapContainerStyle={{ height: '100%', width: '100%' }}
-            center={companyAddressLatLng}
+            center={companyAddressLatLng ?? userAddressLatLng}
             zoom={11}
           >
-            <MarkerF position={companyAddressLatLng}></MarkerF>
+            {companyAddressLatLng ? (
+              <MarkerF position={companyAddressLatLng}></MarkerF>
+            ) : userAddressLatLng ? (
+              <MarkerF position={userAddressLatLng}></MarkerF>
+            ) : undefined}
 
             {courierLatLng && (
               <MarkerF

@@ -16,20 +16,26 @@ import { ReportForm } from '../../reports/components/ReportForm';
 
 interface RedFlagRowProps {
   productItem: ProductItemDTO;
+  isCustomer: boolean;
 }
 
-export const RedFlagRow: React.FC<RedFlagRowProps> = ({ productItem }) => {
+export const RedFlagRow: React.FC<RedFlagRowProps> = ({
+  productItem,
+  isCustomer,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Tr>
       <Td>{productItem.product?.name}</Td>
       <Td>{productItem.rfid}</Td>
-      <Td>
-        <Button onClick={onOpen}>
-          <EditIcon />
-        </Button>
-      </Td>
+      {!isCustomer && (
+        <Td>
+          <Button onClick={onOpen}>
+            <EditIcon />
+          </Button>
+        </Td>
+      )}
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

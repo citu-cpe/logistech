@@ -46,7 +46,8 @@ export const Navbar = (props: ChakraProps) => {
           )}
 
           {(companyType === CompanyDTOTypeEnum.Manufacturer ||
-            companyType === CompanyDTOTypeEnum.Retailer) && (
+            companyType === CompanyDTOTypeEnum.Retailer ||
+            user?.role === UserDTORoleEnum.Customer) && (
             <NavLink href='/commerce'>Commerce</NavLink>
           )}
 
@@ -55,7 +56,9 @@ export const Navbar = (props: ChakraProps) => {
             <NavLink href='/inventory'>Inventory</NavLink>
           )}
 
-          <NavLink href='/red-flags'>Red Flags</NavLink>
+          {user?.role !== UserDTORoleEnum.Customer && (
+            <NavLink href='/red-flags'>Red Flags</NavLink>
+          )}
 
           {user?.role !== UserDTORoleEnum.Customer &&
             user?.role !== UserDTORoleEnum.Courier && (
