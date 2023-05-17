@@ -14,21 +14,31 @@ import {
   ModalFooter,
   Tooltip,
 } from '@chakra-ui/react';
-import { ProductItemDTO, ProductItemDTOStatusEnum } from 'generated-api';
+import {
+  ProductItemByStatusDTOStatusEnum,
+  ProductItemDTO,
+  ProductItemDTOStatusEnum,
+  UpdateProductItemStatusDTOStatusEnum,
+} from 'generated-api';
 import { ProductItemStatusBadge } from '../../../shared/components/ProductItemStatusBadge';
 import { useDeleteProductItem } from '../hooks/useDeleteProductItem';
+import { useUpdateProductItemStatus } from '../hooks/useUpdateProductItemStatus';
 import { EditProductItemForm } from './EditProductItemForm';
 
 interface ProductItemRowProps {
   productItem: ProductItemDTO;
   productId?: string;
   allowActions?: boolean;
+  isCustomer?: boolean;
+  status?: ProductItemByStatusDTOStatusEnum;
 }
 
 export const ProductItemRow: React.FC<ProductItemRowProps> = ({
   productItem,
   productId,
   allowActions,
+  isCustomer,
+  status,
 }) => {
   const {
     isOpen: isEditProductItemOpen,
@@ -49,6 +59,7 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
       },
     });
   };
+  const updateProductItemStatus = useUpdateProductItemStatus(productItem.id);
 
   return (
     <Tr key={productItem.id}>
@@ -57,7 +68,21 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
         <ProductItemStatusBadge status={productItem.status} />
       </Td>
 
-      {allowActions && (
+      {isCustomer && status === ProductItemByStatusDTOStatusEnum.Complete && (
+        <Td>
+          <Button
+            onClick={() => {
+              updateProductItemStatus.mutate({
+                status: UpdateProductItemStatusDTOStatusEnum.Returning,
+              });
+            }}
+          >
+            Return
+          </Button>
+        </Td>
+      )}
+
+      {allowActions && !isCustomer && (
         <Td>
           <HStack spacing='4'>
             <Button onClick={onEditProductItemOpen}>

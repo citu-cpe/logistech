@@ -4,18 +4,18 @@ import { CreateOrderItemDTO } from 'generated-api';
 import { useContext } from 'react';
 import { ApiContext } from '../../../shared/providers/ApiProvider';
 import { COMMERCE_PRODUCTS_QUERY_KEY } from '../../commerce/hooks/useGetCommerceProducts';
-import { CART_QUERY_KEY } from './useGetCart';
+import { CUSTOMER_CART_QUERY_KEY } from './useGetCartCustomer';
 
-export const useAddToCart = (companyId?: string) => {
+export const useAddToCartCustomer = () => {
   const api = useContext(ApiContext);
   const queryClient = useQueryClient();
   const toast = useToast();
 
   return useMutation(
-    (dto: CreateOrderItemDTO) => api.addItemToCart(companyId!, dto),
+    (dto: CreateOrderItemDTO) => api.addItemToCartCustomer(dto),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(CART_QUERY_KEY);
+        queryClient.invalidateQueries(CUSTOMER_CART_QUERY_KEY);
         queryClient.invalidateQueries(COMMERCE_PRODUCTS_QUERY_KEY);
         toast({
           status: 'success',

@@ -66,4 +66,16 @@ export interface ProductItemStatusQuantityDTO {
    * @memberof ProductItemStatusQuantityDTO
    */
   orders: number;
+  /**
+   *
+   * @type {number}
+   * @memberof ProductItemStatusQuantityDTO
+   */
+  returning: number;
+  /**
+   *
+   * @type {number}
+   * @memberof ProductItemStatusQuantityDTO
+   */
+  returned: number;
 }

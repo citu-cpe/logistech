@@ -8,23 +8,42 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import { ProductItemByStatusDTOStatusEnum } from 'generated-api';
+import {
+  ProductItemByStatusDTOStatusEnum,
+  UserDTORoleEnum,
+} from 'generated-api';
 import { useGlobalStore } from '../../../shared/stores';
 import { useGetProductItemsByStatus } from '../../products/hooks/useGetProductItemsByStatus';
+import { useGetProductItemsByStatusAndUser } from '../../products/hooks/useGetProductItemsByStatusAndUser';
 import { RedFlagRow } from './RedFlagRow';
 
 interface RedFlagTableProps {}
 
 export const RedFlagTable: React.FC<RedFlagTableProps> = () => {
   const getUser = useGlobalStore().getUser;
-  const companyId = getUser()?.company?.id;
+  const user = getUser();
+  const companyId = user?.company?.id;
 
   const { data, isLoading } = useGetProductItemsByStatus(
-    companyId!,
+    companyId,
     ProductItemByStatusDTOStatusEnum.RedFlag
   );
 
-  return isLoading ? (
+  const {
+    data: customerProductItemsData,
+    isLoading: customerProductItemsIsLoading,
+  } = useGetProductItemsByStatusAndUser(
+    ProductItemByStatusDTOStatusEnum.RedFlag
+  );
+
+  const isCustomer = user?.role === UserDTORoleEnum.Customer;
+
+  const actualIsLoading = isCustomer
+    ? customerProductItemsIsLoading
+    : isLoading;
+  const actualData = isCustomer ? customerProductItemsData : data;
+
+  return actualIsLoading ? (
     <Center>
       <Spinner />
     </Center>
@@ -35,12 +54,12 @@ export const RedFlagTable: React.FC<RedFlagTableProps> = () => {
           <Tr>
             <Th>Product</Th>
             <Th>RFID</Th>
-            <Th>Actions</Th>
+            {!isCustomer && <Th>Actions</Th>}
           </Tr>
         </Thead>
         <Tbody>
-          {data?.data.map((p) => (
-            <RedFlagRow key={p.id} productItem={p} />
+          {actualData?.data.map((p) => (
+            <RedFlagRow key={p.id} productItem={p} isCustomer={isCustomer} />
           ))}
         </Tbody>
       </Table>

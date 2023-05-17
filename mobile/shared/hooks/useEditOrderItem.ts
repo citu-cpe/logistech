@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CreateOrderItemDTO } from "generated-api";
 import { useContext } from "react";
 import { ApiContext } from "../providers/ApiProvider";
-import { CART_QUERY_KEY } from "./useGetCart";
+import { CUSTOMER_CART_QUERY_KEY } from "./useGetCartCustomer";
 import { COMMERCE_PRODUCTS_QUERY_KEY } from "./useGetCommerceProducts";
 
 export const useEditOrderItem = (id: string) => {
@@ -11,7 +11,7 @@ export const useEditOrderItem = (id: string) => {
 
   return useMutation((dto: CreateOrderItemDTO) => api.editOrderItem(id, dto), {
     onSuccess: () => {
-      queryClient.invalidateQueries(CART_QUERY_KEY);
+      queryClient.invalidateQueries(CUSTOMER_CART_QUERY_KEY);
       queryClient.invalidateQueries(COMMERCE_PRODUCTS_QUERY_KEY);
     },
   });

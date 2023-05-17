@@ -24,4 +24,10 @@ export class ProductItemStatusQuantityDTO {
 
   @IsNumber()
   public orders: number;
+
+  @IsNumber()
+  public returning: number;
+
+  @IsNumber()
+  public returned: number;
 }

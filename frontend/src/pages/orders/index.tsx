@@ -11,24 +11,33 @@ import {
   Tabs,
   useToast,
 } from '@chakra-ui/react';
-import { CompanyDTOTypeEnum, OrderDTOStatusEnum } from 'generated-api';
+import {
+  CompanyDTOTypeEnum,
+  OrderDTOStatusEnum,
+  UserDTORoleEnum,
+} from 'generated-api';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { OrdersTable } from '../../modules/orders/components/OrdersTable';
 import { useGetIncomingOrders } from '../../modules/orders/hooks/useGetIncomingOrders';
 import { useGetOrdersForStorageFacility } from '../../modules/orders/hooks/useGetOrdersForStorageFacility';
 import { useGetOutgoingOrders } from '../../modules/orders/hooks/useGetOutgoingOrders';
+import { useGetOutgoingOrdersForCustomer } from '../../modules/orders/hooks/useGetOutgoingOrdersForCustomer';
 import { useGlobalStore } from '../../shared/stores';
 
 const Orders = () => {
   const getUser = useGlobalStore().getUser;
-  const companyId = getUser()?.company?.id;
+  const user = getUser();
+  const companyId = user?.company?.id;
   const companyType = getUser()?.company?.type;
-  const incomingOrdersQuery = useGetIncomingOrders(companyId!);
-  const outgoingOrdersQuery = useGetOutgoingOrders(companyId!);
-  const storageFacilityOrdersQuery = useGetOrdersForStorageFacility(companyId!);
+  const incomingOrdersQuery = useGetIncomingOrders(companyId);
+  const outgoingOrdersQuery = useGetOutgoingOrders(companyId);
+  const storageFacilityOrdersQuery = useGetOrdersForStorageFacility(companyId);
+  const customerOrdersQuery = useGetOutgoingOrdersForCustomer();
   const toast = useToast();
   const router = useRouter();
+
+  const isCustomer = user?.role === UserDTORoleEnum.Customer;
 
   useEffect(() => {
     if (router.query.success) {
@@ -48,13 +57,17 @@ const Orders = () => {
     }
   }, [router.query, toast]);
 
+  const actualIsLoading = isCustomer
+    ? customerOrdersQuery.isLoading
+    : incomingOrdersQuery.isLoading || outgoingOrdersQuery.isLoading;
+
   return (
     <Box>
       <Heading mb='6'>Orders</Heading>
 
       {companyType !== CompanyDTOTypeEnum.StorageFacility && (
         <>
-          {incomingOrdersQuery.isLoading || outgoingOrdersQuery.isLoading ? (
+          {actualIsLoading ? (
             <Center>
               <Spinner />
             </Center>
@@ -64,13 +77,17 @@ const Orders = () => {
                 {companyType !== CompanyDTOTypeEnum.Supplier && (
                   <Tab>Outgoing</Tab>
                 )}
-                <Tab>Incoming</Tab>
+                {!isCustomer && <Tab>Incoming</Tab>}
               </TabList>
               <TabPanels>
                 {companyType !== CompanyDTOTypeEnum.Supplier && (
                   <TabPanel>
                     <OrdersTable
-                      orders={outgoingOrdersQuery?.data?.data ?? []}
+                      orders={
+                        outgoingOrdersQuery?.data?.data ??
+                        customerOrdersQuery.data?.data ??
+                        []
+                      }
                       allowEdit={false}
                       incoming={false}
                       allowPayment={true}

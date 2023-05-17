@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import io, { Socket } from "socket.io-client";
-import { baseURL } from "./ApiProvider";
+import { platformUrl } from "../variables";
 
 export const SocketContext = createContext<Socket | undefined>(undefined);
 
@@ -10,11 +10,9 @@ export const SocketProvider = ({
   const [socket, setSocket] = useState<Socket | undefined>();
 
   useEffect(() => {
-    const newSocket = io(baseURL);
+    const newSocket = io(platformUrl);
 
     setSocket(newSocket);
-
-    newSocket.on("test", () => {});
 
     return () => {
       newSocket.close();

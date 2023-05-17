@@ -30,7 +30,7 @@ interface OrderRowProps {
   order: OrderDTO;
   allowEdit: boolean;
   incoming: boolean;
-  company: CompanyDTO;
+  company?: CompanyDTO;
   allowPayment: boolean;
   showTotal: boolean;
   billed?: boolean;
@@ -56,13 +56,13 @@ export const OrderRow: React.FC<OrderRowProps> = ({
     onClose: onPaymentClose,
   } = useDisclosure();
   const storageFacilityPartnersQuery = useGetStorageFacilityPartners(
-    company.id
+    company?.id
   );
-  const couriersQuery = useGetCouriers(company.id);
+  const couriersQuery = useGetCouriers(company?.id);
 
   return (
     <Tr key={order.id}>
-      {company.type !== CompanyDTOTypeEnum.StorageFacility && (
+      {company?.type !== CompanyDTOTypeEnum.StorageFacility && (
         <Td>
           <Link href={`/orders/${order.id}`}>
             {incoming ? order.fromCompany?.name : order.toCompany?.name}
@@ -71,7 +71,7 @@ export const OrderRow: React.FC<OrderRowProps> = ({
         </Td>
       )}
 
-      {company.type === CompanyDTOTypeEnum.StorageFacility && (
+      {company?.type === CompanyDTOTypeEnum.StorageFacility && (
         <Td>{addLeadingZeros(order.invoiceNumber, 4)}</Td>
       )}
 
@@ -135,12 +135,12 @@ export const OrderRow: React.FC<OrderRowProps> = ({
               order={order}
               onClose={onEditClose}
               partnerStorageFacilities={
-                company.type !== CompanyDTOTypeEnum.StorageFacility
+                company?.type !== CompanyDTOTypeEnum.StorageFacility
                   ? storageFacilityPartnersQuery.data?.data
                   : undefined
               }
               couriers={
-                company.type === CompanyDTOTypeEnum.StorageFacility
+                company?.type === CompanyDTOTypeEnum.StorageFacility
                   ? couriersQuery.data?.data
                   : undefined
               }

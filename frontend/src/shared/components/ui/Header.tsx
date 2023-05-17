@@ -14,7 +14,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Navbar } from './Navbar';
 import Link from 'next/link';
 import { useGetUser } from '../../../modules/settings/hooks/useGetUser';
-import { CompanyDTOTypeEnum } from 'generated-api';
+import { CompanyDTOTypeEnum, UserDTORoleEnum } from 'generated-api';
 
 export const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -38,7 +38,8 @@ export const Header = () => {
         </Button>
 
         {(companyType === CompanyDTOTypeEnum.Manufacturer ||
-          companyType === CompanyDTOTypeEnum.Retailer) && (
+          companyType === CompanyDTOTypeEnum.Retailer ||
+          user?.role === UserDTORoleEnum.Customer) && (
           <Box mr='8'>
             <Link href='/cart'>
               <FontAwesomeIcon icon={faCartShopping} size='2xl' />

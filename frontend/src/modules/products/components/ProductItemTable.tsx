@@ -1,15 +1,22 @@
 import { TableContainer, Table, Thead, Tr, Th, Tbody } from '@chakra-ui/react';
-import { ProductItemDTO } from 'generated-api';
+import {
+  ProductItemByStatusDTOStatusEnum,
+  ProductItemDTO,
+} from 'generated-api';
 import { ProductItemRow } from './ProductItemRow';
 
 interface ProductItemTableProps {
   productItems: ProductItemDTO[];
   allowActions?: boolean;
+  isCustomer?: boolean;
+  status?: ProductItemByStatusDTOStatusEnum;
 }
 
 export const ProductItemTable: React.FC<ProductItemTableProps> = ({
   productItems,
   allowActions,
+  isCustomer,
+  status,
 }) => {
   return (
     <TableContainer>
@@ -18,7 +25,11 @@ export const ProductItemTable: React.FC<ProductItemTableProps> = ({
           <Tr>
             <Th>RFID</Th>
             <Th>Status</Th>
-            {allowActions && <Th>Actions</Th>}
+            {allowActions ||
+              (isCustomer &&
+                status === ProductItemByStatusDTOStatusEnum.Complete && (
+                  <Th>Actions</Th>
+                ))}
           </Tr>
         </Thead>
         <Tbody>
@@ -27,6 +38,8 @@ export const ProductItemTable: React.FC<ProductItemTableProps> = ({
               key={productItem.id}
               productItem={productItem}
               allowActions={allowActions}
+              isCustomer={isCustomer}
+              status={status}
             />
           ))}
         </Tbody>

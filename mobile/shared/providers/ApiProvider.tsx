@@ -3,21 +3,12 @@ import { useAxios } from "../hooks/useAxios";
 import { DefaultApi } from "generated-api";
 import { platformUrl } from "../variables";
 
-let reviewAppUrl;
-
-if (process.env.NEXT_PUBLIC_VERCEL_GIT_IS_PULL_REQUEST === "1") {
-  const prNumber = process.env.NEXT_PUBLIC_VERCEL_GIT_PULL_REQUEST_NUMBER;
-  reviewAppUrl = `${process.env.NEXT_PUBLIC_PREVIEW_URL_PREFIX}${prNumber}.up.railway.app`;
-}
-
-export const baseURL = reviewAppUrl || platformUrl;
-
 export const ApiContext = createContext<DefaultApi>(new DefaultApi());
 
 export const ApiProvider = ({ children }: React.PropsWithChildren<unknown>) => {
   const axios = useAxios();
 
-  const api = new DefaultApi(undefined, baseURL, axios);
+  const api = new DefaultApi(undefined, platformUrl, axios);
 
   return <ApiContext.Provider value={api}>{children}</ApiContext.Provider>;
 };
