@@ -14,6 +14,7 @@ models/assign-courier-to-product-item-dto.ts
 models/cart-dto.ts
 models/commerce-product-dto.ts
 models/company-dto.ts
+models/courier-id-dto.ts
 models/courier-product-items-dto.ts
 models/create-many-product-items-dto.ts
 models/create-order-from-order-items-dto.ts

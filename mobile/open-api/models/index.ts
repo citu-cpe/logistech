@@ -3,6 +3,7 @@ export * from "./assign-courier-to-product-item-dto";
 export * from "./cart-dto";
 export * from "./commerce-product-dto";
 export * from "./company-dto";
+export * from "./courier-id-dto";
 export * from "./courier-product-items-dto";
 export * from "./create-many-product-items-dto";
 export * from "./create-order-from-order-items-dto";

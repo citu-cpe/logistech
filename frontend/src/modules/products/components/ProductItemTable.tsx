@@ -10,6 +10,7 @@ interface ProductItemTableProps {
   allowActions?: boolean;
   isCustomer?: boolean;
   status?: ProductItemByStatusDTOStatusEnum;
+  isCourier?: boolean;
 }
 
 export const ProductItemTable: React.FC<ProductItemTableProps> = ({
@@ -17,6 +18,7 @@ export const ProductItemTable: React.FC<ProductItemTableProps> = ({
   allowActions,
   isCustomer,
   status,
+  isCourier,
 }) => {
   return (
     <TableContainer>
@@ -25,11 +27,10 @@ export const ProductItemTable: React.FC<ProductItemTableProps> = ({
           <Tr>
             <Th>RFID</Th>
             <Th>Status</Th>
-            {allowActions ||
+            {(allowActions ||
               (isCustomer &&
-                status === ProductItemByStatusDTOStatusEnum.Complete && (
-                  <Th>Actions</Th>
-                ))}
+                status === ProductItemByStatusDTOStatusEnum.Complete) ||
+              isCourier) && <Th>Actions</Th>}
           </Tr>
         </Thead>
         <Tbody>
@@ -39,6 +40,7 @@ export const ProductItemTable: React.FC<ProductItemTableProps> = ({
               productItem={productItem}
               allowActions={allowActions}
               isCustomer={isCustomer}
+              isCourier={isCourier}
               status={status}
             />
           ))}

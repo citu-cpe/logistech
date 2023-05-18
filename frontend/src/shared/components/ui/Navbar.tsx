@@ -56,9 +56,10 @@ export const Navbar = (props: ChakraProps) => {
             <NavLink href='/inventory'>Inventory</NavLink>
           )}
 
-          {user?.role !== UserDTORoleEnum.Customer && (
-            <NavLink href='/red-flags'>Red Flags</NavLink>
-          )}
+          {user?.role !== UserDTORoleEnum.Customer &&
+            user?.role !== UserDTORoleEnum.Courier && (
+              <NavLink href='/red-flags'>Red Flags</NavLink>
+            )}
 
           {user?.role !== UserDTORoleEnum.Customer &&
             user?.role !== UserDTORoleEnum.Courier && (
@@ -76,9 +77,10 @@ export const Navbar = (props: ChakraProps) => {
             <NavLink href='/storage-facilities'>Storage Facilities</NavLink>
           )}
 
-          {companyType === CompanyDTOTypeEnum.StorageFacility && (
-            <NavLink href='/sellers'>Sellers</NavLink>
-          )}
+          {companyType === CompanyDTOTypeEnum.StorageFacility &&
+            user?.role !== UserDTORoleEnum.Courier && (
+              <NavLink href='/sellers'>Sellers</NavLink>
+            )}
 
           {companyType !== CompanyDTOTypeEnum.StorageFacility && (
             <NavLink href='/orders'>Orders</NavLink>
@@ -88,12 +90,13 @@ export const Navbar = (props: ChakraProps) => {
             <NavLink href='/ledger'>Ledger</NavLink>
           )}
 
-          {companyType === CompanyDTOTypeEnum.StorageFacility && (
-            <>
-              <NavLink href='/returns'>Returns</NavLink>
-              <NavLink href='/invoice'>Invoice</NavLink>
-            </>
-          )}
+          {companyType === CompanyDTOTypeEnum.StorageFacility &&
+            user?.role !== UserDTORoleEnum.Courier && (
+              <>
+                <NavLink href='/returns'>Returns</NavLink>
+                <NavLink href='/invoice'>Invoice</NavLink>
+              </>
+            )}
 
           <NavLink href='/map'>Map</NavLink>
 

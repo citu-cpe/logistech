@@ -18,6 +18,7 @@ import { ProductItemStatusQuantityDTO } from './dto/product-item-status-quantity
 import { UpdateProductItemStatusDTO } from './dto/update-product-item-status.dto';
 import { UserService } from '../user/user.service';
 import { CompanyService } from '../company/company.service';
+import { CourierIdDTO } from './dto/courier-id.dto';
 
 @Injectable()
 export class ProductItemService {
@@ -139,7 +140,12 @@ export class ProductItemService {
     return productItems.map((p) => ProductItemService.convertToDTO(p));
   }
 
-  public async getProductItemStatusQuantity(companyId: string) {
+  public async getProductItemStatusQuantity(
+    companyId: string,
+    dto: CourierIdDTO
+  ) {
+    const courierId = dto.courierId;
+
     const company = await this.prismaService.company.findUnique({
       where: { id: companyId },
     });
@@ -153,6 +159,10 @@ export class ProductItemService {
     const storageFacilityWhere = {
       orderItem: { order: { storageFacilityId: companyId } },
     };
+    const courierWhere = {
+      orderItem: { order: { storageFacilityId: companyId } },
+      courierId,
+    };
     const customerWhere = {
       customerId: companyId,
     };
@@ -161,8 +171,10 @@ export class ProductItemService {
       by: ['status'],
       where: isCustomer
         ? customerWhere
-        : company.type === CompanyType.STORAGE_FACILITY
+        : company.type === CompanyType.STORAGE_FACILITY && !courierId
         ? storageFacilityWhere
+        : company.type === CompanyType.STORAGE_FACILITY && !!courierId
+        ? courierWhere
         : nonStorageFacilityWhere,
       _count: { id: true },
     });

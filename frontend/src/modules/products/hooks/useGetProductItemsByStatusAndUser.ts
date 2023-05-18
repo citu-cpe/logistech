@@ -8,12 +8,14 @@ export const PRODUCT_ITEMS_BY_STATUS_AND_USER_QUERY_KEY = (
 ) => ['product-items', 'user', status];
 
 export const useGetProductItemsByStatusAndUser = (
-  status: ProductItemByStatusDTOStatusEnum
+  status: ProductItemByStatusDTOStatusEnum,
+  enabled?: boolean
 ) => {
   const api = useContext(ApiContext);
 
   return useQuery({
     queryFn: () => api.getProductItemsByStatusAndUser({ status }),
     queryKey: PRODUCT_ITEMS_BY_STATUS_AND_USER_QUERY_KEY(status),
+    enabled,
   });
 };

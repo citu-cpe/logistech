@@ -15,6 +15,7 @@ __exportStar(require("./assign-courier-to-product-item-dto"), exports);
 __exportStar(require("./cart-dto"), exports);
 __exportStar(require("./commerce-product-dto"), exports);
 __exportStar(require("./company-dto"), exports);
+__exportStar(require("./courier-id-dto"), exports);
 __exportStar(require("./courier-product-items-dto"), exports);
 __exportStar(require("./create-many-product-items-dto"), exports);
 __exportStar(require("./create-order-from-order-items-dto"), exports);

@@ -47,6 +47,8 @@ import { CommerceProductDTO } from '../models';
 // @ts-ignore
 import { CompanyDTO } from '../models';
 // @ts-ignore
+import { CourierIdDTO } from '../models';
+// @ts-ignore
 import { CourierProductItemsDTO } from '../models';
 // @ts-ignore
 import { CreateManyProductItemsDTO } from '../models';
@@ -1922,15 +1924,23 @@ export const DefaultApiAxiosParamCreator = function (
     /**
      *
      * @param {string} companyId
+     * @param {CourierIdDTO} courierIdDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getProductItemStatusQuantity: async (
       companyId: string,
+      courierIdDTO: CourierIdDTO,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'companyId' is not null or undefined
       assertParamExists('getProductItemStatusQuantity', 'companyId', companyId);
+      // verify required parameter 'courierIdDTO' is not null or undefined
+      assertParamExists(
+        'getProductItemStatusQuantity',
+        'courierIdDTO',
+        courierIdDTO
+      );
       const localVarPath =
         `/api/v1/product/company/{companyId}/product-item/status/quantity`.replace(
           `{${'companyId'}}`,
@@ -1951,6 +1961,8 @@ export const DefaultApiAxiosParamCreator = function (
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
 
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
       setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
       let headersFromBaseOptions =
         baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -1959,6 +1971,11 @@ export const DefaultApiAxiosParamCreator = function (
         ...headersFromBaseOptions,
         ...options.headers,
       };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        courierIdDTO,
+        localVarRequestOptions,
+        configuration
+      );
 
       return {
         url: toPathString(localVarUrlObj),
@@ -4257,11 +4274,13 @@ export const DefaultApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} companyId
+     * @param {CourierIdDTO} courierIdDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async getProductItemStatusQuantity(
       companyId: string,
+      courierIdDTO: CourierIdDTO,
       options?: any
     ): Promise<
       (
@@ -4272,6 +4291,7 @@ export const DefaultApiFp = function (configuration?: Configuration) {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getProductItemStatusQuantity(
           companyId,
+          courierIdDTO,
           options
         );
       return createRequestFunction(
@@ -5519,15 +5539,17 @@ export const DefaultApiFactory = function (
     /**
      *
      * @param {string} companyId
+     * @param {CourierIdDTO} courierIdDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getProductItemStatusQuantity(
       companyId: string,
+      courierIdDTO: CourierIdDTO,
       options?: any
     ): AxiosPromise<ProductItemStatusQuantityDTO> {
       return localVarFp
-        .getProductItemStatusQuantity(companyId, options)
+        .getProductItemStatusQuantity(companyId, courierIdDTO, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -6472,13 +6494,18 @@ export class DefaultApi extends BaseAPI {
   /**
    *
    * @param {string} companyId
+   * @param {CourierIdDTO} courierIdDTO
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof DefaultApi
    */
-  public getProductItemStatusQuantity(companyId: string, options?: any) {
+  public getProductItemStatusQuantity(
+    companyId: string,
+    courierIdDTO: CourierIdDTO,
+    options?: any
+  ) {
     return DefaultApiFp(this.configuration)
-      .getProductItemStatusQuantity(companyId, options)
+      .getProductItemStatusQuantity(companyId, courierIdDTO, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

@@ -31,6 +31,7 @@ interface ProductItemRowProps {
   allowActions?: boolean;
   isCustomer?: boolean;
   status?: ProductItemByStatusDTOStatusEnum;
+  isCourier?: boolean;
 }
 
 export const ProductItemRow: React.FC<ProductItemRowProps> = ({
@@ -39,6 +40,7 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
   allowActions,
   isCustomer,
   status,
+  isCourier,
 }) => {
   const {
     isOpen: isEditProductItemOpen,
@@ -60,6 +62,8 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
     });
   };
   const updateProductItemStatus = useUpdateProductItemStatus(productItem.id);
+  const isReturning = productItem.status === ProductItemDTOStatusEnum.Returning;
+  const isInTransit = productItem.status === ProductItemDTOStatusEnum.InTransit;
 
   return (
     <Tr key={productItem.id}>
@@ -71,6 +75,7 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
       {isCustomer && status === ProductItemByStatusDTOStatusEnum.Complete && (
         <Td>
           <Button
+            isLoading={updateProductItemStatus.isLoading}
             onClick={() => {
               updateProductItemStatus.mutate({
                 status: UpdateProductItemStatusDTOStatusEnum.Returning,
@@ -82,7 +87,26 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
         </Td>
       )}
 
-      {allowActions && !isCustomer && (
+      {isCourier && (
+        <Td>
+          <Button
+            isLoading={updateProductItemStatus.isLoading}
+            onClick={() => {
+              updateProductItemStatus.mutate({
+                status: isReturning
+                  ? UpdateProductItemStatusDTOStatusEnum.Returned
+                  : isInTransit
+                  ? UpdateProductItemStatusDTOStatusEnum.Complete
+                  : UpdateProductItemStatusDTOStatusEnum.InTransit,
+              });
+            }}
+          >
+            {isReturning ? 'Return' : isInTransit ? 'Complete' : 'Accept'}
+          </Button>
+        </Td>
+      )}
+
+      {allowActions && !isCustomer && !isCourier && (
         <Td>
           <HStack spacing='4'>
             <Button onClick={onEditProductItemOpen}>

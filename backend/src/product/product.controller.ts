@@ -14,6 +14,7 @@ import {
 import { RequestWithUser } from '../authentication/types/request-with-user.interface';
 import { AssignCourierToProductItemDTO } from './dto/assign-courier-to-product-item.dto';
 import { CommerceProductDTO } from './dto/commerce-product.dto';
+import { CourierIdDTO } from './dto/courier-id.dto';
 import { CourierProductItemsDTO } from './dto/courier-product-items.dto';
 import { CreateManyProductItemsDTO } from './dto/create-many-product-items.dto';
 import { CreateProductItemDTO } from './dto/create-product-item.dto';
@@ -145,9 +146,10 @@ export class ProductController {
 
   @Post('/company/:companyId/product-item/status/quantity')
   public getProductItemStatusQuantity(
-    @Param('companyId') companyId: string
+    @Param('companyId') companyId: string,
+    @Body() dto: CourierIdDTO
   ): Promise<ProductItemStatusQuantityDTO> {
-    return this.productItemService.getProductItemStatusQuantity(companyId);
+    return this.productItemService.getProductItemStatusQuantity(companyId, dto);
   }
 
   @Post('/product-item/:productItemId')
