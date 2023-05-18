@@ -39,7 +39,7 @@ const Commerce = () => {
   const companyType = getUser()?.company?.type;
   const { data, isLoading } = useGetCommerceProducts(
     getCompanyTypes(companyType!, user?.role),
-    user?.id ?? companyId!
+    companyId! ?? user?.id
   );
 
   return isLoading ? (

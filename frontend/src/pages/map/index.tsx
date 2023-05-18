@@ -18,6 +18,11 @@ import { useGetProductItemsByStatus } from '../../modules/products/hooks/useGetP
 
 const MAP_ICON_SIZE = 50;
 
+interface Directions {
+  origin: google.maps.LatLngLiteral;
+  destination: google.maps.LatLngLiteral;
+}
+
 const GoogleMapPage = () => {
   const socket = useContext(SocketContext);
   const getUser = useGlobalStore().getUser;
@@ -27,7 +32,12 @@ const GoogleMapPage = () => {
     company?.id,
     ProductItemByStatusDTOStatusEnum.InTransit
   );
+  const { data: returningData } = useGetProductItemsByStatus(
+    company?.id,
+    ProductItemByStatusDTOStatusEnum.Returning
+  );
   const inTransitProductItems = data?.data;
+  const returningProductItems = returningData?.data;
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -75,6 +85,33 @@ const GoogleMapPage = () => {
     }
   }, [inTransitProductItems]);
 
+  const getUniqueReturns = useCallback(() => {
+    if (returningProductItems) {
+      const returnsMap = new Map<string, Directions>();
+
+      for (const p of returningProductItems) {
+        if (
+          !!p.customer &&
+          p.product?.company &&
+          !returnsMap.has(p.product.company.id + p.customer.id)
+        ) {
+          returnsMap.set(p.product.company.id + p.customer.id, {
+            origin: {
+              lat: p.customer.addressLatitude!,
+              lng: p.customer.addressLongitude!,
+            },
+            destination: {
+              lat: p.product.company.addressLatitude,
+              lng: p.product.company.addressLongitude,
+            },
+          });
+        }
+      }
+
+      return Array.from(returnsMap, ([_id, direction]) => direction);
+    }
+  }, [returningProductItems]);
+
   useEffect(() => {
     if (socket) {
       if (!socket.connected) {
@@ -103,9 +140,10 @@ const GoogleMapPage = () => {
   useEffect(() => {
     const uniqueCustomers = getUniqueCustomers();
     const uniqueBuyers = getUniqueBuyers();
+    const uniqueReturns = getUniqueReturns();
     const newDirections: google.maps.DirectionsResult[] = [];
 
-    if (courierLatLng && uniqueCustomers && uniqueBuyers) {
+    if (courierLatLng && uniqueCustomers && uniqueBuyers && uniqueReturns) {
       const directionsService = new google.maps.DirectionsService();
 
       for (const c of uniqueCustomers) {
@@ -138,13 +176,28 @@ const GoogleMapPage = () => {
         );
       }
 
+      for (const r of uniqueReturns) {
+        directionsService.route(
+          {
+            origin: r.origin,
+            destination: r.destination,
+            travelMode: google.maps.TravelMode.DRIVING,
+          },
+          (result, status) => {
+            if (status === google.maps.DirectionsStatus.OK && result) {
+              newDirections.push(result);
+            }
+          }
+        );
+      }
+
       setTimeout(() => {
         if (newDirections.length > 0) {
           setDirections(newDirections);
         }
       }, 2000);
     }
-  }, [courierLatLng, getUniqueBuyers, getUniqueCustomers]);
+  }, [courierLatLng, getUniqueBuyers, getUniqueCustomers, getUniqueReturns]);
 
   useEffect(() => {
     if (user && !userAddressLatLng) {
@@ -200,14 +253,13 @@ const GoogleMapPage = () => {
                       MAP_ICON_SIZE
                     ),
                   }}
-                ></MarkerF>
+                />
               </React.Fragment>
             ))}
 
             {getUniqueCustomers()?.map((c) => (
               <React.Fragment key={c.id}>
                 <MarkerF
-                  key={c.id}
                   position={{
                     lat: c.addressLatitude!,
                     lng: c.addressLongitude!,
@@ -219,7 +271,38 @@ const GoogleMapPage = () => {
                       MAP_ICON_SIZE
                     ),
                   }}
-                ></MarkerF>
+                />
+              </React.Fragment>
+            ))}
+
+            {getUniqueReturns()?.map((r) => (
+              <React.Fragment key={r.origin.lat + r.destination.lng}>
+                <MarkerF
+                  position={{
+                    lat: r.destination.lat,
+                    lng: r.destination.lng,
+                  }}
+                  icon={{
+                    url: '/images/warehouse.png',
+                    scaledSize: new google.maps.Size(
+                      MAP_ICON_SIZE,
+                      MAP_ICON_SIZE
+                    ),
+                  }}
+                />
+                <MarkerF
+                  position={{
+                    lat: r.origin.lat,
+                    lng: r.origin.lng,
+                  }}
+                  icon={{
+                    url: '/images/house.png',
+                    scaledSize: new google.maps.Size(
+                      MAP_ICON_SIZE,
+                      MAP_ICON_SIZE
+                    ),
+                  }}
+                />
               </React.Fragment>
             ))}
 

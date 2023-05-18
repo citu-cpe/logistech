@@ -17,6 +17,7 @@ import { AssignCourierToProductItemDTO } from "../models";
 import { CartDTO } from "../models";
 import { CommerceProductDTO } from "../models";
 import { CompanyDTO } from "../models";
+import { CourierIdDTO } from "../models";
 import { CourierProductItemsDTO } from "../models";
 import { CreateManyProductItemsDTO } from "../models";
 import { CreateOrderFromOrderItemsDTO } from "../models";
@@ -316,10 +317,11 @@ export declare const DefaultApiAxiosParamCreator: (configuration?: Configuration
     /**
      *
      * @param {string} companyId
+     * @param {CourierIdDTO} courierIdDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getProductItemStatusQuantity: (companyId: string, options?: any) => Promise<RequestArgs>;
+    getProductItemStatusQuantity: (companyId: string, courierIdDTO: CourierIdDTO, options?: any) => Promise<RequestArgs>;
     /**
      *
      * @param {string} productId
@@ -791,10 +793,11 @@ export declare const DefaultApiFp: (configuration?: Configuration) => {
     /**
      *
      * @param {string} companyId
+     * @param {CourierIdDTO} courierIdDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getProductItemStatusQuantity(companyId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProductItemStatusQuantityDTO>>;
+    getProductItemStatusQuantity(companyId: string, courierIdDTO: CourierIdDTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProductItemStatusQuantityDTO>>;
     /**
      *
      * @param {string} productId
@@ -1266,10 +1269,11 @@ export declare const DefaultApiFactory: (configuration?: Configuration, basePath
     /**
      *
      * @param {string} companyId
+     * @param {CourierIdDTO} courierIdDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getProductItemStatusQuantity(companyId: string, options?: any): AxiosPromise<ProductItemStatusQuantityDTO>;
+    getProductItemStatusQuantity(companyId: string, courierIdDTO: CourierIdDTO, options?: any): AxiosPromise<ProductItemStatusQuantityDTO>;
     /**
      *
      * @param {string} productId
@@ -1779,11 +1783,12 @@ export declare class DefaultApi extends BaseAPI {
     /**
      *
      * @param {string} companyId
+     * @param {CourierIdDTO} courierIdDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    getProductItemStatusQuantity(companyId: string, options?: any): Promise<import("axios").AxiosResponse<ProductItemStatusQuantityDTO>>;
+    getProductItemStatusQuantity(companyId: string, courierIdDTO: CourierIdDTO, options?: any): Promise<import("axios").AxiosResponse<ProductItemStatusQuantityDTO>>;
     /**
      *
      * @param {string} productId

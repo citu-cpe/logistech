@@ -1,6 +1,7 @@
 import { Box } from '@chakra-ui/react';
 import { CompanyDTOTypeEnum, UserDTORoleEnum } from 'generated-api';
 import React, { ReactNode } from 'react';
+import { Courier } from './Courier/Courier';
 import { Customer } from './Customer/Customer';
 import { Manufacturer } from './Manufacturer/Manufacturer';
 import { Retailer } from './Retailer/Retailer';
@@ -24,11 +25,17 @@ export const Home = ({ companyType, userRole }: HomeProps) => {
   if (companyType === CompanyDTOTypeEnum.Retailer) {
     dashboard = <Retailer />;
   }
-  if (companyType === CompanyDTOTypeEnum.StorageFacility) {
+  if (
+    companyType === CompanyDTOTypeEnum.StorageFacility &&
+    userRole !== UserDTORoleEnum.Courier
+  ) {
     dashboard = <StorageFacility />;
   }
   if (userRole === UserDTORoleEnum.Customer) {
     dashboard = <Customer />;
+  }
+  if (userRole === UserDTORoleEnum.Courier) {
+    dashboard = <Courier />;
   }
 
   return <Box>{dashboard}</Box>;

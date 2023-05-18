@@ -15,12 +15,13 @@ const ProductItems = () => {
   const getUser = useGlobalStore((state) => state.getUser);
   const user = getUser();
   const isCustomer = user?.role === UserDTORoleEnum.Customer;
+  const isCourier = user?.role === UserDTORoleEnum.Courier;
   const companyId = user?.company?.id;
   const { data, isLoading } = useGetProductItemsByStatus(companyId, status);
   const {
     data: customerProductItemsData,
     isLoading: customerProductItemsIsLoading,
-  } = useGetProductItemsByStatusAndUser(status);
+  } = useGetProductItemsByStatusAndUser(status, isCustomer);
 
   const actualLoading = isCustomer ? customerProductItemsIsLoading : isLoading;
   const actualData = isCustomer ? customerProductItemsData : data;
@@ -38,6 +39,7 @@ const ProductItems = () => {
           productItems={actualData?.data ?? []}
           allowActions={!isCustomer}
           isCustomer={isCustomer}
+          isCourier={isCourier}
           status={status}
         />
       )}
