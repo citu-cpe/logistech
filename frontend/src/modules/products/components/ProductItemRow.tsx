@@ -72,6 +72,13 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
         <ProductItemStatusBadge status={productItem.status} />
       </Td>
 
+      {isCourier && (
+        <>
+          <Td>{productItem.customer?.address ?? productItem.buyer?.address}</Td>
+          <Td>{productItem.product?.company?.address}</Td>
+        </>
+      )}
+
       {isCustomer && status === ProductItemByStatusDTOStatusEnum.Complete && (
         <Td>
           <Button
