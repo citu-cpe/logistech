@@ -3,10 +3,13 @@ import { Formik, Form, Field, FieldProps } from 'formik';
 import {
   CreateProductItemDTO,
   CreateProductItemDTOStatusEnum,
+  ScanRfidDTO,
 } from 'generated-api';
+import { useContext, useEffect, useRef } from 'react';
 import * as Yup from 'yup';
 import { Input } from '../../../shared/components/form/Input/Input';
 import { Select } from '../../../shared/components/form/Select/Select';
+import { SocketContext } from '../../../shared/providers/SocketProvider';
 import { useCreateProductItem } from '../hooks/useCreateProductItem';
 
 interface ProductItemFormProps {
@@ -29,6 +32,26 @@ export const ProductItemForm: React.FC<ProductItemFormProps> = ({
   isRfidOptional,
 }) => {
   const createProductItem = useCreateProductItem(productId);
+  const socket = useContext(SocketContext);
+  const formikRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (socket) {
+      if (!socket.connected) {
+        socket.connect();
+      }
+
+      socket.on('scan', (dto: ScanRfidDTO) => {
+        if (formikRef.current) {
+          formikRef.current.setFieldValue('rfid', dto.rfid);
+        }
+      });
+    }
+
+    return () => {
+      socket?.close();
+    };
+  }, [socket]);
 
   const initialValues: CreateProductItemDTO = {
     rfid: '',
@@ -47,6 +70,7 @@ export const ProductItemForm: React.FC<ProductItemFormProps> = ({
 
   return (
     <Formik
+      innerRef={formikRef}
       initialValues={initialValues}
       validationSchema={() => productItemFormValidationSchema(isRfidOptional)}
       onSubmit={onSubmit}
@@ -66,6 +90,7 @@ export const ProductItemForm: React.FC<ProductItemFormProps> = ({
                     borderColor='gray.300'
                     bgColor='gray.50'
                     color='gray.800'
+                    disabled
                   />
                 )}
               </Field>
@@ -126,6 +151,20 @@ export const ProductItemForm: React.FC<ProductItemFormProps> = ({
             >
               Save
             </Button>
+            {/* <Button */}
+            {/*   mt='2' */}
+            {/*   w='full' */}
+            {/*   bgColor='gray.800' */}
+            {/*   color='gray.50' */}
+            {/*   _hover={{ bgColor: 'gray.800', color: 'gray.50' }} */}
+            {/*   onClick={() => { */}
+            {/*     if (formikRef.current) { */}
+            {/*       formikRef.current.setFieldValue('rfid', 'test'); */}
+            {/*     } */}
+            {/*   }} */}
+            {/* > */}
+            {/*   Test */}
+            {/* </Button> */}
           </Box>
         </Form>
       )}

@@ -97,6 +97,8 @@ import { RetailerChartDataDTO } from '../models';
 // @ts-ignore
 import { SalesDTO } from '../models';
 // @ts-ignore
+import { ScanRfidDTO } from '../models';
+// @ts-ignore
 import { StorageFacilityChartDataDTO } from '../models';
 // @ts-ignore
 import { SupplierChartDataDTO } from '../models';
@@ -3072,6 +3074,55 @@ export const DefaultApiAxiosParamCreator = function (
     },
     /**
      *
+     * @param {ScanRfidDTO} scanRfidDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    scanRfid: async (
+      scanRfidDTO: ScanRfidDTO,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'scanRfidDTO' is not null or undefined
+      assertParamExists('scanRfid', 'scanRfidDTO', scanRfidDTO);
+      const localVarPath = `/api/v1/gps/scan`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: 'POST',
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter['Content-Type'] = 'application/json';
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        scanRfidDTO,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -4946,6 +4997,29 @@ export const DefaultApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @param {ScanRfidDTO} scanRfidDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async scanRfid(
+      scanRfidDTO: ScanRfidDTO,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.scanRfid(
+        scanRfidDTO,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -5961,6 +6035,17 @@ export const DefaultApiFactory = function (
     },
     /**
      *
+     * @param {ScanRfidDTO} scanRfidDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    scanRfid(scanRfidDTO: ScanRfidDTO, options?: any): AxiosPromise<void> {
+      return localVarFp
+        .scanRfid(scanRfidDTO, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -6938,6 +7023,19 @@ export class DefaultApi extends BaseAPI {
   public returnProductItem(productItemId: string, options?: any) {
     return DefaultApiFp(this.configuration)
       .returnProductItem(productItemId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {ScanRfidDTO} scanRfidDTO
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof DefaultApi
+   */
+  public scanRfid(scanRfidDTO: ScanRfidDTO, options?: any) {
+    return DefaultApiFp(this.configuration)
+      .scanRfid(scanRfidDTO, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

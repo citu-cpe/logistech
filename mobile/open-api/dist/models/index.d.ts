@@ -32,6 +32,7 @@ export * from "./report-dto";
 export * from "./retailer-chart-data-dto";
 export * from "./sales-dto";
 export * from "./sales-item-dto";
+export * from "./scan-rfid-dto";
 export * from "./storage-facility-chart-data-dto";
 export * from "./supplier-chart-data-dto";
 export * from "./tokens-dto";

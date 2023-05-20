@@ -44,6 +44,7 @@ __exportStar(require("./report-dto"), exports);
 __exportStar(require("./retailer-chart-data-dto"), exports);
 __exportStar(require("./sales-dto"), exports);
 __exportStar(require("./sales-item-dto"), exports);
+__exportStar(require("./scan-rfid-dto"), exports);
 __exportStar(require("./storage-facility-chart-data-dto"), exports);
 __exportStar(require("./supplier-chart-data-dto"), exports);
 __exportStar(require("./tokens-dto"), exports);

@@ -5,9 +5,12 @@ import {
   CreateProductItemDTOStatusEnum,
   ProductItemDTO,
   ProductItemDTOStatusEnum,
+  ScanRfidDTO,
 } from 'generated-api';
+import { useContext, useRef, useEffect } from 'react';
 import { Input } from '../../../shared/components/form/Input/Input';
 import { Select } from '../../../shared/components/form/Select/Select';
+import { SocketContext } from '../../../shared/providers/SocketProvider';
 import { useEditProductItem } from '../hooks/useEditProductItem';
 import { productItemFormValidationSchema } from './ProductItemForm';
 
@@ -47,8 +50,30 @@ export const EditProductItemForm: React.FC<ProductItemFormProps> = ({
     });
   };
 
+  const socket = useContext(SocketContext);
+  const formikRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (socket) {
+      if (!socket.connected) {
+        socket.connect();
+      }
+
+      socket.on('scan', (dto: ScanRfidDTO) => {
+        if (formikRef.current) {
+          formikRef.current.setFieldValue('rfid', dto.rfid);
+        }
+      });
+    }
+
+    return () => {
+      socket?.close();
+    };
+  }, [socket]);
+
   return (
     <Formik
+      innerRef={formikRef}
       initialValues={{
         rfid: productItem.rfid,
         status: productItem.status as unknown as CreateProductItemDTOStatusEnum,
@@ -71,6 +96,7 @@ export const EditProductItemForm: React.FC<ProductItemFormProps> = ({
                     borderColor='gray.300'
                     bgColor='gray.50'
                     color='gray.800'
+                    disabled
                   />
                 )}
               </Field>

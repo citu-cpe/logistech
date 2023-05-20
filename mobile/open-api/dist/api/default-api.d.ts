@@ -42,6 +42,7 @@ import { RegisterUserDTO } from "../models";
 import { ReportDTO } from "../models";
 import { RetailerChartDataDTO } from "../models";
 import { SalesDTO } from "../models";
+import { ScanRfidDTO } from "../models";
 import { StorageFacilityChartDataDTO } from "../models";
 import { SupplierChartDataDTO } from "../models";
 import { TokensDTO } from "../models";
@@ -484,6 +485,13 @@ export declare const DefaultApiAxiosParamCreator: (configuration?: Configuration
      * @throws {RequiredError}
      */
     returnProductItem: (productItemId: string, options?: any) => Promise<RequestArgs>;
+    /**
+     *
+     * @param {ScanRfidDTO} scanRfidDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    scanRfid: (scanRfidDTO: ScanRfidDTO, options?: any) => Promise<RequestArgs>;
     /**
      *
      * @param {*} [options] Override http request option.
@@ -970,6 +978,13 @@ export declare const DefaultApiFp: (configuration?: Configuration) => {
     returnProductItem(productItemId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
      *
+     * @param {ScanRfidDTO} scanRfidDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    scanRfid(scanRfidDTO: ScanRfidDTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
+     *
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -1452,6 +1467,13 @@ export declare const DefaultApiFactory: (configuration?: Configuration, basePath
      * @throws {RequiredError}
      */
     returnProductItem(productItemId: string, options?: any): AxiosPromise<void>;
+    /**
+     *
+     * @param {ScanRfidDTO} scanRfidDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    scanRfid(scanRfidDTO: ScanRfidDTO, options?: any): AxiosPromise<void>;
     /**
      *
      * @param {*} [options] Override http request option.
@@ -1998,6 +2020,14 @@ export declare class DefaultApi extends BaseAPI {
      * @memberof DefaultApi
      */
     returnProductItem(productItemId: string, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
+     *
+     * @param {ScanRfidDTO} scanRfidDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    scanRfid(scanRfidDTO: ScanRfidDTO, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      *
      * @param {*} [options] Override http request option.
