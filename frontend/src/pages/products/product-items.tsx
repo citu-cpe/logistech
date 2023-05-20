@@ -41,6 +41,7 @@ const ProductItems = () => {
           isCustomer={isCustomer}
           isCourier={isCourier}
           status={status}
+          isRfidOptional={false}
         />
       )}
     </Box>

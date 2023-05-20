@@ -13,17 +13,21 @@ import {
   Center,
   Spinner,
 } from '@chakra-ui/react';
+import { CompanyDTOTypeEnum } from 'generated-api';
 import { useRouter } from 'next/router';
 import { ProductItemForm } from '../../modules/products/components/ProductItemForm';
 import { ProductItemTable } from '../../modules/products/components/ProductItemTable';
 import { useGetProductItems } from '../../modules/products/hooks/useGetProductItems';
+import { useGlobalStore } from '../../shared/stores';
 
-// TODO: create many
 const ProductItem = () => {
   const router = useRouter();
   const { id: productId } = router.query;
   const { data, isLoading } = useGetProductItems(productId as string);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const getUser = useGlobalStore().getUser;
+  const companyType = getUser()?.company?.type;
+  const isRetailer = companyType === CompanyDTOTypeEnum.Retailer;
 
   return (
     <Box>
@@ -42,6 +46,7 @@ const ProductItem = () => {
             <ProductItemForm
               productId={productId as string}
               onClose={onClose}
+              isRfidOptional={isRetailer}
             />
           </ModalBody>
         </ModalContent>
@@ -54,7 +59,11 @@ const ProductItem = () => {
       ) : (
         <Box>
           {data?.data && (
-            <ProductItemTable productItems={data?.data} allowActions />
+            <ProductItemTable
+              productItems={data?.data}
+              allowActions
+              isRfidOptional={isRetailer}
+            />
           )}
         </Box>
       )}

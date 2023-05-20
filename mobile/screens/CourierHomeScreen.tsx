@@ -251,7 +251,11 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
           <Box w="full">
             <Heading color="white">In Transit</Heading>
             {data?.data.inTransitProductItems.map((p) => (
-              <CourierProductItemInTransit key={p.id} productItem={p} />
+              <CourierProductItemInTransit
+                key={p.id}
+                productItem={p}
+                onChangeStatus={toggleAnimation}
+              />
             ))}
 
             {data?.data.inTransitProductItems.length === 0 && (
@@ -272,7 +276,11 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
           <Box w="full">
             <Heading color="white">Returning</Heading>
             {data?.data.returningProductItems.map((p) => (
-              <CourierProductItemInTransit key={p.id} productItem={p} />
+              <CourierProductItemInTransit
+                key={p.id}
+                productItem={p}
+                onChangeStatus={toggleAnimation}
+              />
             ))}
 
             {data?.data.returningProductItems.length === 0 && (

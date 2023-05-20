@@ -1,5 +1,6 @@
 export * from "./add-storage-facility-partner-dto";
 export * from "./assign-courier-to-product-item-dto";
+export * from "./assign-rfid-to-product-item-dto";
 export * from "./cart-dto";
 export * from "./commerce-product-dto";
 export * from "./company-dto";

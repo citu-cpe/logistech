@@ -13,6 +13,7 @@ import {
   ModalBody,
   ModalFooter,
   Tooltip,
+  Text,
 } from '@chakra-ui/react';
 import {
   ProductItemByStatusDTOStatusEnum,
@@ -20,6 +21,7 @@ import {
   ProductItemDTOStatusEnum,
   UpdateProductItemStatusDTOStatusEnum,
 } from 'generated-api';
+import { CompanyTypeBadge } from '../../../shared/components/CompanyTypeBadge';
 import { ProductItemStatusBadge } from '../../../shared/components/ProductItemStatusBadge';
 import { useDeleteProductItem } from '../hooks/useDeleteProductItem';
 import { useUpdateProductItemStatus } from '../hooks/useUpdateProductItemStatus';
@@ -32,6 +34,7 @@ interface ProductItemRowProps {
   isCustomer?: boolean;
   status?: ProductItemByStatusDTOStatusEnum;
   isCourier?: boolean;
+  isRfidOptional: boolean;
 }
 
 export const ProductItemRow: React.FC<ProductItemRowProps> = ({
@@ -41,6 +44,7 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
   isCustomer,
   status,
   isCourier,
+  isRfidOptional,
 }) => {
   const {
     isOpen: isEditProductItemOpen,
@@ -64,10 +68,12 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
   const updateProductItemStatus = useUpdateProductItemStatus(productItem.id);
   const isReturning = productItem.status === ProductItemDTOStatusEnum.Returning;
   const isInTransit = productItem.status === ProductItemDTOStatusEnum.InTransit;
+  const isToBePickedUp =
+    productItem.status === ProductItemDTOStatusEnum.ToBePickedUp;
 
   return (
     <Tr key={productItem.id}>
-      <Td>{productItem.rfid}</Td>
+      <Td>{productItem.rfid ?? 'n/a'}</Td>
       <Td>
         <ProductItemStatusBadge status={productItem.status} />
       </Td>
@@ -76,6 +82,13 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
         <>
           <Td>{productItem.customer?.address ?? productItem.buyer?.address}</Td>
           <Td>{productItem.product?.company?.address}</Td>
+          {productItem.product?.company?.type && (
+            <Td>
+              <CompanyTypeBadge
+                companyType={productItem.product.company.type}
+              />
+            </Td>
+          )}
         </>
       )}
 
@@ -99,16 +112,32 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
           <Button
             isLoading={updateProductItemStatus.isLoading}
             onClick={() => {
-              updateProductItemStatus.mutate({
-                status: isReturning
-                  ? UpdateProductItemStatusDTOStatusEnum.Returned
-                  : isInTransit
-                  ? UpdateProductItemStatusDTOStatusEnum.Complete
-                  : UpdateProductItemStatusDTOStatusEnum.InTransit,
-              });
+              let productItemStatus =
+                UpdateProductItemStatusDTOStatusEnum.InTransit;
+
+              if (isToBePickedUp || isReturning) {
+                onEditProductItemOpen();
+              } else {
+                if (isReturning) {
+                  productItemStatus =
+                    UpdateProductItemStatusDTOStatusEnum.Returned;
+                } else if (isInTransit) {
+                  productItemStatus =
+                    UpdateProductItemStatusDTOStatusEnum.Complete;
+                } else if (isToBePickedUp) {
+                  productItemStatus =
+                    UpdateProductItemStatusDTOStatusEnum.InTransit;
+                }
+
+                updateProductItemStatus.mutate({
+                  status: productItemStatus,
+                });
+              }
             }}
           >
-            {isReturning ? 'Return' : isInTransit ? 'Complete' : 'Accept'}
+            {isReturning && <Text>Return</Text>}
+            {isInTransit && <Text>Complete</Text>}
+            {isToBePickedUp && <Text>Accept</Text>}
           </Button>
         </Td>
       )}
@@ -148,6 +177,8 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
             <EditProductItemForm
               productItem={productItem}
               onClose={onEditProductItemClose}
+              isRfidOptional={isRfidOptional}
+              isCourier={isCourier}
             />
           </ModalBody>
         </ModalContent>

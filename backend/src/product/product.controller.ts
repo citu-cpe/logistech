@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { RequestWithUser } from '../authentication/types/request-with-user.interface';
 import { AssignCourierToProductItemDTO } from './dto/assign-courier-to-product-item.dto';
+import { AssignRfidToProductItemDTO } from './dto/assign-rfid-to-product-item.dto';
 import { CommerceProductDTO } from './dto/commerce-product.dto';
 import { CourierIdDTO } from './dto/courier-id.dto';
 import { CourierProductItemsDTO } from './dto/courier-product-items.dto';
@@ -191,5 +192,16 @@ export class ProductController {
     @Req() { user }: RequestWithUser
   ): Promise<ProductItemDTO[]> {
     return this.productItemService.getReturnedProductItems(user.id);
+  }
+
+  @Patch('/product-item/:productItemId/rfid')
+  public assignRfidToProductItem(
+    @Param('productItemId') productItemId: string,
+    @Body() dto: AssignRfidToProductItemDTO
+  ) {
+    return this.productItemService.assignRfidToProductItem(
+      productItemId,
+      dto.rfid
+    );
   }
 }

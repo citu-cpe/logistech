@@ -42,7 +42,7 @@ export const testRetailerProductItem: ProductItem = {
   id: '5dcfd6de-eccc-4449-9ef2-571d0c4d3056',
   createdAt: new Date(),
   updatedAt: new Date(),
-  rfid: '!qd!RMDC39hJkf#r',
+  rfid: null,
   status: ProductItemStatus.IN_STORAGE,
   productId: testRetailerProduct.id,
   transactionId: null,

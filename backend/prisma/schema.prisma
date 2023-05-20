@@ -78,7 +78,7 @@ model Company {
   storageFacilityPartners Company[] @relation("storageFacilitySellerPartners")
   sellerPartners          Company[] @relation("storageFacilitySellerPartners")
 
-  orders      Order[]       @relation("storageFacilityOrder")
+  orders       Order[]       @relation("storageFacilityOrder")
   productItems ProductItem[]
 }
 
@@ -111,7 +111,7 @@ model ProductItem {
   id         String            @id @default(uuid())
   createdAt  DateTime          @default(now())
   updatedAt  DateTime          @updatedAt
-  rfid       String            @unique
+  rfid       String?           @unique
   status     ProductItemStatus
   returnedAt DateTime?
 
