@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CustomLogger } from '../shared/custom-logger';
 import { ProductItemLocationDTO } from './dto/product-item-location.dto';
+import { ScanRfidDTO } from './dto/scan-rfid.dto';
 import { GpsGateway } from './gps.gateway';
 
 @Injectable()
@@ -23,6 +24,12 @@ export class GpsService {
     }
 
     this.gpsGateway.server.emit('test', dto);
+  }
+
+  public scanRfid(dto: ScanRfidDTO) {
+    this.logger.log(`RFID: ${dto.rfid}`);
+
+    this.gpsGateway.server.emit('scan', { rfid: this.convertToHex(dto.rfid) });
   }
 
   private convertToHex(text: string) {

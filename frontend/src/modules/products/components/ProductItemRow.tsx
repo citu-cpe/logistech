@@ -39,7 +39,6 @@ interface ProductItemRowProps {
 
 export const ProductItemRow: React.FC<ProductItemRowProps> = ({
   productItem,
-  productId,
   allowActions,
   isCustomer,
   status,
@@ -56,7 +55,7 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
     onOpen: onDeleteProductItemOpen,
     onClose: onDeleteProductItemClose,
   } = useDisclosure();
-  const deleteProductItemMutation = useDeleteProductItem(productId!);
+  const deleteProductItemMutation = useDeleteProductItem();
 
   const deleteProductItem = () => {
     deleteProductItemMutation.mutate(productItem.id, {

@@ -44,6 +44,7 @@ models/report-dto.ts
 models/retailer-chart-data-dto.ts
 models/sales-dto.ts
 models/sales-item-dto.ts
+models/scan-rfid-dto.ts
 models/storage-facility-chart-data-dto.ts
 models/supplier-chart-data-dto.ts
 models/tokens-dto.ts

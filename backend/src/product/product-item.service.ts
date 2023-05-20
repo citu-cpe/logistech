@@ -28,6 +28,7 @@ export class ProductItemService {
     const productItems = await this.prismaService.productItem.findMany({
       where: { productId },
       orderBy: { createdAt: 'desc' },
+      include: { product: true },
     });
 
     return productItems.map((p) => ProductItemService.convertToDTO(p));
@@ -113,7 +114,7 @@ export class ProductItemService {
       where: { id: productItemId },
     });
 
-    if (productItem.status !== ProductItemStatusEnum.IN_STORAGE) {
+    if (productItem.status !== ProductItemStatus.IN_STORAGE) {
       throw new BadRequestException(
         'Product items not "IN STORAGE" cannot be deleted'
       );
