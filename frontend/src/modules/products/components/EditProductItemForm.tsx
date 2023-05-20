@@ -4,6 +4,7 @@ import {
   CreateProductItemDTO,
   CreateProductItemDTOStatusEnum,
   ProductItemDTO,
+  ProductItemDTOStatusEnum,
 } from 'generated-api';
 import { Input } from '../../../shared/components/form/Input/Input';
 import { Select } from '../../../shared/components/form/Select/Select';
@@ -13,6 +14,8 @@ import { productItemFormValidationSchema } from './ProductItemForm';
 interface ProductItemFormProps {
   onClose?: () => void;
   productItem: ProductItemDTO;
+  isRfidOptional: boolean;
+  isCourier?: boolean;
 }
 
 export const generateMockRfId = () => Math.random().toString(36).slice(-8);
@@ -20,10 +23,21 @@ export const generateMockRfId = () => Math.random().toString(36).slice(-8);
 export const EditProductItemForm: React.FC<ProductItemFormProps> = ({
   onClose,
   productItem,
+  isRfidOptional,
+  isCourier,
 }) => {
   const ediProductItem = useEditProductItem(productItem.id);
+  const isReturning = productItem.status === ProductItemDTOStatusEnum.Returning;
 
   const onSubmit = (dto: CreateProductItemDTO) => {
+    if (isCourier) {
+      if (isReturning) {
+        dto.status = CreateProductItemDTOStatusEnum.Returned;
+      } else {
+        dto.status = CreateProductItemDTOStatusEnum.InTransit;
+      }
+    }
+
     ediProductItem.mutate(dto, {
       onSettled: () => {
         if (onClose) {
@@ -36,78 +50,82 @@ export const EditProductItemForm: React.FC<ProductItemFormProps> = ({
   return (
     <Formik
       initialValues={{
-        ...productItem,
+        rfid: productItem.rfid,
         status: productItem.status as unknown as CreateProductItemDTOStatusEnum,
       }}
-      validationSchema={productItemFormValidationSchema}
+      validationSchema={() => productItemFormValidationSchema(isRfidOptional)}
       onSubmit={onSubmit}
     >
       {() => (
         <Form noValidate>
           <Box mb='4'>
-            <Field name='rfid' type='text'>
-              {(fieldProps: FieldProps<string, CreateProductItemDTO>) => (
-                <Input
-                  fieldProps={fieldProps}
-                  name='rfid'
-                  label='EPC (Electronic Product Code)'
-                  type='text'
-                  id='rfid'
-                  borderColor='gray.300'
-                  bgColor='gray.50'
-                  color='gray.800'
-                />
-              )}
-            </Field>
-            <Field name='status'>
-              {(
-                fieldProps: FieldProps<
-                  CreateProductItemDTOStatusEnum,
-                  CreateProductItemDTO
-                >
-              ) => (
-                <Select
-                  fieldProps={fieldProps}
-                  name='status'
-                  label='Status'
-                  id='status'
-                  borderColor='gray.300'
-                  bgColor='gray.50'
-                  color='gray.800'
-                >
-                  <option selected hidden disabled value=''>
-                    Choose a company type
-                  </option>
-                  <option value={CreateProductItemDTOStatusEnum.InStorage}>
-                    IN STORAGE
-                  </option>
-                  <option value={CreateProductItemDTOStatusEnum.OnHold}>
-                    ON HOLD
-                  </option>
-                  <option value={CreateProductItemDTOStatusEnum.ToBePickedUp}>
-                    TO BE PICKED UP
-                  </option>
-                  <option value={CreateProductItemDTOStatusEnum.InTransit}>
-                    IN TRANSIT
-                  </option>
-                  <option value={CreateProductItemDTOStatusEnum.RedFlag}>
-                    RED FLAG
-                  </option>
-                  <option value={CreateProductItemDTOStatusEnum.Canceled}>
-                    CANCELED
-                  </option>
-                  <option value={CreateProductItemDTOStatusEnum.Complete}>
-                    COMPLETE
-                  </option>
-                  <option value={CreateProductItemDTOStatusEnum.Returned}>
-                    RETURNED
-                  </option>
-                  <option value={CreateProductItemDTOStatusEnum.Returning}>
-                    RETURNING
-                  </option>
-                </Select>
-              )}
-            </Field>
+            {(!isRfidOptional || isCourier) && (
+              <Field name='rfid' type='text'>
+                {(fieldProps: FieldProps<string, CreateProductItemDTO>) => (
+                  <Input
+                    fieldProps={fieldProps}
+                    name='rfid'
+                    label='EPC (Electronic Product Code)'
+                    type='text'
+                    id='rfid'
+                    borderColor='gray.300'
+                    bgColor='gray.50'
+                    color='gray.800'
+                  />
+                )}
+              </Field>
+            )}
+            {!isCourier && (
+              <Field name='status'>
+                {(
+                  fieldProps: FieldProps<
+                    CreateProductItemDTOStatusEnum,
+                    CreateProductItemDTO
+                  >
+                ) => (
+                  <Select
+                    fieldProps={fieldProps}
+                    name='status'
+                    label='Status'
+                    id='status'
+                    borderColor='gray.300'
+                    bgColor='gray.50'
+                    color='gray.800'
+                  >
+                    <option selected hidden disabled value=''>
+                      Choose a company type
+                    </option>
+                    <option value={CreateProductItemDTOStatusEnum.InStorage}>
+                      IN STORAGE
+                    </option>
+                    <option value={CreateProductItemDTOStatusEnum.OnHold}>
+                      ON HOLD
+                    </option>
+                    <option value={CreateProductItemDTOStatusEnum.ToBePickedUp}>
+                      TO BE PICKED UP
+                    </option>
+                    <option value={CreateProductItemDTOStatusEnum.InTransit}>
+                      IN TRANSIT
+                    </option>
+                    <option value={CreateProductItemDTOStatusEnum.RedFlag}>
+                      RED FLAG
+                    </option>
+                    <option value={CreateProductItemDTOStatusEnum.Canceled}>
+                      CANCELED
+                    </option>
+                    <option value={CreateProductItemDTOStatusEnum.Complete}>
+                      COMPLETE
+                    </option>
+                    <option value={CreateProductItemDTOStatusEnum.Returned}>
+                      RETURNED
+                    </option>
+                    <option value={CreateProductItemDTOStatusEnum.Returning}>
+                      RETURNING
+                    </option>
+                  </Select>
+                )}
+              </Field>
+            )}
           </Box>
           <Box mb='4'>
             <Button

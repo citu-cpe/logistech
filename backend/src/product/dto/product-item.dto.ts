@@ -2,7 +2,6 @@ import {
   IsUUID,
   IsDateString,
   IsString,
-  IsNotEmpty,
   IsEnum,
   ValidateNested,
   IsOptional,
@@ -34,8 +33,8 @@ export class ProductItemDTO {
   public updatedAt: Date;
 
   @IsString()
-  @IsNotEmpty()
-  public rfid: string;
+  @IsOptional()
+  public rfid?: string;
 
   @IsEnum(ProductItemStatusEnum)
   public status: ProductItemStatusEnum;

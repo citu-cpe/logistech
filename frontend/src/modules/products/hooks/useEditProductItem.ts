@@ -52,6 +52,11 @@ export const useEditProductItem = (id: string) => {
             ProductItemByStatusDTOStatusEnum.ToBePickedUp
           )
         );
+        queryClient.invalidateQueries(
+          PRODUCT_ITEMS_BY_STATUS_QUERY_KEY(
+            ProductItemByStatusDTOStatusEnum.Returning
+          )
+        );
       },
     }
   );

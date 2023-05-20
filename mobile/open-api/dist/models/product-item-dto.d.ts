@@ -41,7 +41,7 @@ export interface ProductItemDTO {
      * @type {string}
      * @memberof ProductItemDTO
      */
-    rfid: string;
+    rfid?: string;
     /**
      *
      * @type {string}

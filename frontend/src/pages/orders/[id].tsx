@@ -52,7 +52,10 @@ const Order = () => {
                   <Heading size='md' textAlign='center' mb='4'>
                     Product Items
                   </Heading>
-                  <ProductItemTable productItems={o.productItems!} />
+                  <ProductItemTable
+                    productItems={o.productItems!}
+                    isRfidOptional={false}
+                  />
                 </Box>
               ))}
             </Box>

@@ -12,18 +12,21 @@ import { useCreateProductItem } from '../hooks/useCreateProductItem';
 interface ProductItemFormProps {
   onClose?: () => void;
   productId: string;
+  isRfidOptional: boolean;
 }
 
-export const productItemFormValidationSchema = Yup.object({
-  rfid: Yup.string().min(1).required('Required'),
-  status: Yup.string().min(1).required('Required'),
-});
-
+export const productItemFormValidationSchema = (isRfidOptional?: boolean) => {
+  return Yup.object({
+    rfid: isRfidOptional ? Yup.string().min(1) : Yup.string().min(1).required(),
+    status: Yup.string().min(1).required('Required'),
+  });
+};
 export const generateMockRfId = () => Math.random().toString(36).slice(-8);
 
 export const ProductItemForm: React.FC<ProductItemFormProps> = ({
   onClose,
   productId,
+  isRfidOptional,
 }) => {
   const createProductItem = useCreateProductItem(productId);
 
@@ -45,26 +48,28 @@ export const ProductItemForm: React.FC<ProductItemFormProps> = ({
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={productItemFormValidationSchema}
+      validationSchema={() => productItemFormValidationSchema(isRfidOptional)}
       onSubmit={onSubmit}
     >
       {() => (
         <Form noValidate>
           <Box mb='4'>
-            <Field name='rfid' type='text'>
-              {(fieldProps: FieldProps<string, CreateProductItemDTO>) => (
-                <Input
-                  fieldProps={fieldProps}
-                  name='rfid'
-                  label='EPC (Electronic Product Code)'
-                  type='text'
-                  id='rfid'
-                  borderColor='gray.300'
-                  bgColor='gray.50'
-                  color='gray.800'
-                />
-              )}
-            </Field>
+            {!isRfidOptional && (
+              <Field name='rfid' type='text'>
+                {(fieldProps: FieldProps<string, CreateProductItemDTO>) => (
+                  <Input
+                    fieldProps={fieldProps}
+                    name='rfid'
+                    label='EPC (Electronic Product Code)'
+                    type='text'
+                    id='rfid'
+                    borderColor='gray.300'
+                    bgColor='gray.50'
+                    color='gray.800'
+                  />
+                )}
+              </Field>
+            )}
             <Field name='status'>
               {(
                 fieldProps: FieldProps<

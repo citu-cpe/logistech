@@ -24,9 +24,9 @@ export const testCustomer: User = {
   role: UserRole.CUSTOMER,
   imageUrl: null,
   cloudinaryPublicId: null,
-  address: 'Punta Princesa, Cebu City',
-  addressLatitude: 10.2948,
-  addressLongitude: 123.8676,
+  address: 'Starmall Lawaan',
+  addressLatitude: 10.258792,
+  addressLongitude: 123.823593,
 };
 
 export const testNewCustomer: User = {
@@ -41,9 +41,9 @@ export const testNewCustomer: User = {
   role: UserRole.CUSTOMER,
   imageUrl: null,
   cloudinaryPublicId: null,
-  address: 'Minglanilla',
-  addressLatitude: 10.2433,
-  addressLongitude: 123.789,
+  address: 'South Town Centre',
+  addressLatitude: 10.266911,
+  addressLongitude: 123.84333,
 };
 
 export const testSupplier: User = {
@@ -165,6 +165,23 @@ export const testNewRetailer: User = {
   addressLongitude: null,
 };
 
+export const testNewNewRetailer: User = {
+  id: '466ca212-cb70-4ae6-a72f-b2f03cc1f8c8',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  email: 'test_new_new_retailer@test.com',
+  username: 'test_new_new_retailer',
+  password: 'test',
+  currentHashedRefreshToken: undefined,
+  role: UserRole.RETAILER_SUPERVISOR,
+  companyId: testNewRetailerCompany.id,
+  imageUrl: null,
+  cloudinaryPublicId: null,
+  address: '',
+  addressLatitude: null,
+  addressLongitude: null,
+};
+
 @Injectable()
 export class UserTestDataService {
   private readonly logger = new CustomLogger(UserTestDataService.name);
@@ -200,6 +217,9 @@ export class UserTestDataService {
     });
     const foundNewRetailer = await this.prismaService.user.findUnique({
       where: { id: testNewRetailer.id },
+    });
+    const foundNewNewRetailer = await this.prismaService.user.findUnique({
+      where: { id: testNewNewRetailer.id },
     });
 
     if (!foundCustomer) {
@@ -237,6 +257,10 @@ export class UserTestDataService {
     if (!foundNewRetailer) {
       this.logger.log('GENERATING TEST NEW RETAILER');
       await this.createUser(testNewRetailer);
+    }
+    if (!foundNewNewRetailer) {
+      this.logger.log('GENERATING TEST NEW NEW RETAILER');
+      await this.createUser(testNewNewRetailer);
     }
 
     this.logger.log('DONE GENERATING USER TEST DATA');

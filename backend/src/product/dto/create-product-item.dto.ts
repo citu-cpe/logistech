@@ -1,10 +1,10 @@
-import { IsString, IsNotEmpty, IsEnum } from 'class-validator';
+import { IsString, IsEnum, IsOptional } from 'class-validator';
 import { ProductItemStatusEnum } from './product-item.dto';
 
 export class CreateProductItemDTO {
   @IsString()
-  @IsNotEmpty()
-  public rfid: string;
+  @IsOptional()
+  public rfid?: string;
 
   @IsEnum(ProductItemStatusEnum)
   public status: ProductItemStatusEnum;

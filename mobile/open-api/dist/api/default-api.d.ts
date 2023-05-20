@@ -14,6 +14,7 @@ import { Configuration } from "../configuration";
 import { RequestArgs, BaseAPI } from "../base";
 import { AddStorageFacilityPartnerDTO } from "../models";
 import { AssignCourierToProductItemDTO } from "../models";
+import { AssignRfidToProductItemDTO } from "../models";
 import { CartDTO } from "../models";
 import { CommerceProductDTO } from "../models";
 import { CompanyDTO } from "../models";
@@ -86,6 +87,14 @@ export declare const DefaultApiAxiosParamCreator: (configuration?: Configuration
      * @throws {RequiredError}
      */
     assignCourierToProductItem: (productItemId: string, assignCourierToProductItemDTO: AssignCourierToProductItemDTO, options?: any) => Promise<RequestArgs>;
+    /**
+     *
+     * @param {string} productItemId
+     * @param {AssignRfidToProductItemDTO} assignRfidToProductItemDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    assignRfidToProductItem: (productItemId: string, assignRfidToProductItemDTO: AssignRfidToProductItemDTO, options?: any) => Promise<RequestArgs>;
     /**
      *
      * @param {*} [options] Override http request option.
@@ -564,6 +573,14 @@ export declare const DefaultApiFp: (configuration?: Configuration) => {
     assignCourierToProductItem(productItemId: string, assignCourierToProductItemDTO: AssignCourierToProductItemDTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
      *
+     * @param {string} productItemId
+     * @param {AssignRfidToProductItemDTO} assignRfidToProductItemDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    assignRfidToProductItem(productItemId: string, assignRfidToProductItemDTO: AssignRfidToProductItemDTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    /**
+     *
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -1038,6 +1055,14 @@ export declare const DefaultApiFactory: (configuration?: Configuration, basePath
      * @throws {RequiredError}
      */
     assignCourierToProductItem(productItemId: string, assignCourierToProductItemDTO: AssignCourierToProductItemDTO, options?: any): AxiosPromise<void>;
+    /**
+     *
+     * @param {string} productItemId
+     * @param {AssignRfidToProductItemDTO} assignRfidToProductItemDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    assignRfidToProductItem(productItemId: string, assignRfidToProductItemDTO: AssignRfidToProductItemDTO, options?: any): AxiosPromise<void>;
     /**
      *
      * @param {*} [options] Override http request option.
@@ -1520,6 +1545,15 @@ export declare class DefaultApi extends BaseAPI {
      * @memberof DefaultApi
      */
     assignCourierToProductItem(productItemId: string, assignCourierToProductItemDTO: AssignCourierToProductItemDTO, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    /**
+     *
+     * @param {string} productItemId
+     * @param {AssignRfidToProductItemDTO} assignRfidToProductItemDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    assignRfidToProductItem(productItemId: string, assignRfidToProductItemDTO: AssignRfidToProductItemDTO, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      *
      * @param {*} [options] Override http request option.

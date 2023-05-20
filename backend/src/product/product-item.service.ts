@@ -37,10 +37,19 @@ export class ProductItemService {
     productItem: CreateProductItemDTO,
     productId: string
   ) {
+    let rfid: string;
+
+    if (productItem.rfid?.length === 0) {
+      rfid = null;
+    } else {
+      rfid = productItem.rfid;
+    }
+
     try {
       const newProductItem = await this.prismaService.productItem.create({
         data: {
           ...productItem,
+          rfid,
           productId,
         },
       });
@@ -83,9 +92,19 @@ export class ProductItemService {
     productItemId: string,
     dto: UpdateProductItemStatusDTO
   ) {
+    const productItem = await this.prismaService.productItem.findUnique({
+      where: { id: productItemId },
+    });
+
     return this.prismaService.productItem.update({
       where: { id: productItemId },
-      data: { status: dto.status },
+      data: {
+        status: dto.status,
+        rfid:
+          dto.status === ProductItemStatusEnum.COMPLETE
+            ? null
+            : productItem.rfid,
+      },
     });
   }
 
@@ -255,7 +274,12 @@ export class ProductItemService {
         orderItems: {
           include: {
             productItems: {
-              include: { product: true, customer: true, buyer: true },
+              include: {
+                product: { include: { company: true } },
+                customer: true,
+                buyer: true,
+                courier: true,
+              },
             },
           },
         },
@@ -319,6 +343,13 @@ export class ProductItemService {
     await this.prismaService.productItem.update({
       where: { id: productItemId },
       data: { courier: { connect: { id: courierId } } },
+    });
+  }
+
+  public async assignRfidToProductItem(productItemId: string, rfid: string) {
+    await this.prismaService.productItem.update({
+      where: { id: productItemId },
+      data: { rfid },
     });
   }
 

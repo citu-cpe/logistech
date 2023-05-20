@@ -9,9 +9,9 @@ export const testSupplierCompany: Company = {
   updatedAt: new Date(),
   type: CompanyType.SUPPLIER,
   name: 'SUPPLIER CO.',
-  address: 'Danao City, Cebu',
-  addressLatitude: 10.5417,
-  addressLongitude: 123.9527,
+  address: 'Gaisano Express Tres',
+  addressLatitude: 10.29587,
+  addressLongitude: 123.872569,
   contactNumber: '+63 999 999 9999',
   email: 'accounting@supplier.com',
 };
@@ -22,9 +22,9 @@ export const testStorageFacilityCompany: Company = {
   updatedAt: new Date(),
   type: CompanyType.STORAGE_FACILITY,
   name: 'STORAGE FACILITY CO.',
-  address: 'Toledo City, Cebu',
-  addressLatitude: 10.387,
-  addressLongitude: 123.6503,
+  address: "McDonald's Basak",
+  addressLatitude: 10.290401,
+  addressLongitude: 123.870964,
   contactNumber: '+63 888 888 8888',
   email: 'accounting@storage_facility.com',
 };
@@ -35,9 +35,9 @@ export const testNewStorageFacilityCompany: Company = {
   updatedAt: new Date(),
   type: CompanyType.STORAGE_FACILITY,
   name: 'NEW STORAGE FACILITY CO.',
-  address: 'Balamban',
-  addressLatitude: 10.4858,
-  addressLongitude: 123.7741,
+  address: 'Gaisano Tabunok',
+  addressLatitude: 10.266015,
+  addressLongitude: 123.8427,
   contactNumber: '+63 777 777 7777',
   email: 'accounting@new_storage_facility.com',
 };
@@ -48,9 +48,9 @@ export const testManufacturerCompany: Company = {
   updatedAt: new Date(),
   type: CompanyType.MANUFACTURER,
   name: 'MANUFACTURER CO.',
-  address: 'City of Naga, Cebu',
-  addressLatitude: 10.2085,
-  addressLongitude: 123.7573,
+  address: "Jad's Bakeshop",
+  addressLatitude: 10.293436,
+  addressLongitude: 123.865441,
   contactNumber: '+63 666 666 6666',
   email: 'accounting@manufacturer.com',
 };
@@ -61,9 +61,9 @@ export const testRetailerCompany: Company = {
   updatedAt: new Date(),
   type: CompanyType.RETAILER,
   name: 'RETAILER CO.',
-  address: 'Mandaue City, Cebu',
-  addressLatitude: 10.3321,
-  addressLongitude: 123.9357,
+  address: 'Gaisano Express Tres',
+  addressLatitude: 10.29587,
+  addressLongitude: 123.872569,
   contactNumber: '+63 555 555 5555',
   email: 'accounting@retailer.com',
 };
@@ -74,11 +74,24 @@ export const testNewRetailerCompany: Company = {
   updatedAt: new Date(),
   type: CompanyType.RETAILER,
   name: 'NEW RETAILER CO.',
-  address: 'Carcar City, Cebu',
-  addressLatitude: 10.1151,
-  addressLongitude: 123.64,
+  address: "Jad's Bakeshop",
+  addressLatitude: 10.293436,
+  addressLongitude: 123.865441,
   contactNumber: '+63 444 444 4444',
   email: 'accounting@new_retailer.com',
+};
+
+export const testNewNewRetailerCompany: Company = {
+  id: 'e75366fb-a8df-4a08-8d5f-9043a770177e',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  type: CompanyType.RETAILER,
+  name: 'NEW NEW RETAILER CO.',
+  address: 'Robinsons Lawaan',
+  addressLatitude: 10.259714,
+  addressLongitude: 123.829819,
+  contactNumber: '+63 444 444 4444',
+  email: 'accounting@new_new_retailer.com',
 };
 
 @Injectable()
@@ -107,6 +120,9 @@ export class CompanyTestDataService {
     });
     const foundNewRetailer = await this.prismaService.company.findUnique({
       where: { id: testNewRetailerCompany.id },
+    });
+    const foundNewNewRetailer = await this.prismaService.company.findUnique({
+      where: { id: testNewNewRetailerCompany.id },
     });
 
     if (!foundStorageFacility) {
@@ -145,6 +161,14 @@ export class CompanyTestDataService {
       this.logger.log('GENERATING TEST NEW RETAILER COMPANY');
       await this.createCompany(
         testNewRetailerCompany,
+        [],
+        [testStorageFacilityCompany.id]
+      );
+    }
+    if (!foundNewNewRetailer) {
+      this.logger.log('GENERATING TEST NEW NEW RETAILER COMPANY');
+      await this.createCompany(
+        testNewNewRetailerCompany,
         [],
         [testStorageFacilityCompany.id]
       );
