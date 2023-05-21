@@ -49,9 +49,19 @@ export const CustomerHomeScreen: React.FC<CustomerHomeScreenProps> = ({
 
   useEffect(() => {
     if (socket) {
-      socket.on("test", (data: ProductItemLocationDTO) => {
-        setLatitude(data.latitude);
-        setLongitude(data.longitude);
+      if (!socket.connected) {
+        socket.connect();
+      }
+
+      socket.on("test", async (_data: ProductItemLocationDTO) => {
+        // setLatitude(data.latitude);
+        // setLongitude(data.longitude);
+        console.log("getting location...");
+        let location = await Location.getCurrentPositionAsync({});
+        console.log("location:", location);
+        setLocation(location);
+        setLatitude(location.coords.latitude);
+        setLongitude(location.coords.longitude);
       });
     }
 

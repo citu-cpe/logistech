@@ -118,8 +118,17 @@ const GoogleMapPage = () => {
         socket.connect();
       }
 
-      socket.on('test', (location: ProductItemLocationDTO) => {
-        setCourierLatLng({ lat: location.latitude, lng: location.longitude });
+      socket.on('test', (_location: ProductItemLocationDTO) => {
+        // setCourierLatLng({ lat: location.latitude, lng: location.longitude });
+
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition((position) => {
+            setCourierLatLng({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            });
+          });
+        }
       });
     }
 
