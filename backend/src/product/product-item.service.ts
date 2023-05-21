@@ -34,6 +34,16 @@ export class ProductItemService {
     return productItems.map((p) => ProductItemService.convertToDTO(p));
   }
 
+  public async getProductItemsByCompanyId(companyId: string) {
+    const productItems = await this.prismaService.productItem.findMany({
+      where: { OR: [{ product: { companyId } }, { buyerId: companyId }] },
+      orderBy: { createdAt: 'desc' },
+      include: { product: true },
+    });
+
+    return productItems.map((p) => ProductItemService.convertToDTO(p));
+  }
+
   public async createProductItem(
     productItem: CreateProductItemDTO,
     productId: string

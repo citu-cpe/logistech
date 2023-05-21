@@ -342,6 +342,13 @@ export declare const DefaultApiAxiosParamCreator: (configuration?: Configuration
     /**
      *
      * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getProductItemsByCompany: (companyId: string, options?: any) => Promise<RequestArgs>;
+    /**
+     *
+     * @param {string} companyId
      * @param {ProductItemByStatusDTO} productItemByStatusDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -833,6 +840,13 @@ export declare const DefaultApiFp: (configuration?: Configuration) => {
     /**
      *
      * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getProductItemsByCompany(companyId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ProductItemDTO>>>;
+    /**
+     *
+     * @param {string} companyId
      * @param {ProductItemByStatusDTO} productItemByStatusDTO
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1321,6 +1335,13 @@ export declare const DefaultApiFactory: (configuration?: Configuration, basePath
      * @throws {RequiredError}
      */
     getProductItems(productId: string, options?: any): AxiosPromise<Array<ProductItemDTO>>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getProductItemsByCompany(companyId: string, options?: any): AxiosPromise<Array<ProductItemDTO>>;
     /**
      *
      * @param {string} companyId
@@ -1853,6 +1874,14 @@ export declare class DefaultApi extends BaseAPI {
      * @memberof DefaultApi
      */
     getProductItems(productId: string, options?: any): Promise<import("axios").AxiosResponse<ProductItemDTO[]>>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    getProductItemsByCompany(companyId: string, options?: any): Promise<import("axios").AxiosResponse<ProductItemDTO[]>>;
     /**
      *
      * @param {string} companyId

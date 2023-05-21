@@ -91,6 +91,13 @@ export class ProductController {
     return this.productItemService.getProductItemsByProductId(productId);
   }
 
+  @Get('/product-items/company/:companyId')
+  public getProductItemsByCompany(
+    @Param('companyId') companyId: string
+  ): Promise<ProductItemDTO[]> {
+    return this.productItemService.getProductItemsByCompanyId(companyId);
+  }
+
   @Post(ProductController.PRODUCT_ITEM_API_ROUTE)
   public createProductItem(
     @Body() dto: CreateProductItemDTO,

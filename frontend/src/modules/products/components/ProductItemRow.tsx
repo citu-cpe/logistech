@@ -16,6 +16,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import {
+  CompanyDTOTypeEnum,
   ProductItemByStatusDTOStatusEnum,
   ProductItemDTO,
   ProductItemDTOStatusEnum,
@@ -114,7 +115,11 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
               let productItemStatus =
                 UpdateProductItemStatusDTOStatusEnum.InTransit;
 
-              if (isToBePickedUp || isReturning) {
+              if (
+                (isToBePickedUp || isReturning) &&
+                productItem.product?.company?.type ===
+                  CompanyDTOTypeEnum.Retailer
+              ) {
                 onEditProductItemOpen();
               } else {
                 if (isReturning) {

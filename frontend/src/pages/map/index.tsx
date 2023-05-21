@@ -57,6 +57,28 @@ const GoogleMapPage = () => {
     []
   );
 
+  const successCallback = useCallback((position: any) => {
+    setCourierLatLng({
+      lat: position.coords.latitude,
+      lng: position.coords.longitude,
+    });
+  }, []);
+
+  const errorCallback = useCallback(
+    (error: any) => {
+      switch (error.code) {
+        case error.TIMEOUT:
+          // Acquire a new position object.
+          navigator.geolocation.getCurrentPosition(
+            successCallback,
+            errorCallback
+          );
+          break;
+      }
+    },
+    [successCallback]
+  );
+
   const getUniqueCustomers = useCallback(() => {
     if (inTransitProductItems) {
       const customersMap = new Map<string, UserDTO>();
@@ -122,12 +144,21 @@ const GoogleMapPage = () => {
         // setCourierLatLng({ lat: location.latitude, lng: location.longitude });
 
         if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition((position) => {
-            setCourierLatLng({
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            });
-          });
+          navigator.geolocation.getCurrentPosition(
+            successCallback,
+            errorCallback,
+            { maximumAge: 0, timeout: 0 }
+          );
+        }
+      });
+
+      socket.on('scan', () => {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            successCallback,
+            errorCallback,
+            { maximumAge: 0, timeout: 0 }
+          );
         }
       });
     }
@@ -135,7 +166,7 @@ const GoogleMapPage = () => {
     return () => {
       socket?.close();
     };
-  }, [socket]);
+  }, [socket, errorCallback, successCallback]);
 
   useEffect(() => {
     if (company && !companyAddressLatLng) {
@@ -225,7 +256,7 @@ const GoogleMapPage = () => {
         {isLoaded && (companyAddressLatLng || userAddressLatLng) && (
           <GoogleMap
             mapContainerStyle={{ height: '100%', width: '100%' }}
-            center={companyAddressLatLng ?? userAddressLatLng}
+            center={courierLatLng ?? companyAddressLatLng ?? userAddressLatLng}
             zoom={11}
           >
             {companyAddressLatLng ? (

@@ -3,6 +3,7 @@ import {
   ProductItemByStatusDTOStatusEnum,
   ProductItemDTO,
 } from 'generated-api';
+import { useEffect, useState } from 'react';
 import { ProductItemRow } from './ProductItemRow';
 
 interface ProductItemTableProps {
@@ -22,6 +23,26 @@ export const ProductItemTable: React.FC<ProductItemTableProps> = ({
   isCourier,
   isRfidOptional,
 }) => {
+  const [filteredProductItems, setFilteredProductItems] = useState<
+    ProductItemDTO[]
+  >([]);
+
+  useEffect(() => {
+    const actualProductItemRfids: string[] = [];
+    const actualProductItems: ProductItemDTO[] = [];
+
+    for (const p of productItems) {
+      if (!!p.rfid && !actualProductItemRfids.includes(p.rfid)) {
+        actualProductItems.push(p);
+        actualProductItemRfids.push(p.rfid);
+      } else if (!p.rfid) {
+        actualProductItems.push(p);
+      }
+    }
+
+    setFilteredProductItems(actualProductItems);
+  }, [productItems]);
+
   return (
     <TableContainer>
       <Table variant='simple'>
@@ -43,7 +64,7 @@ export const ProductItemTable: React.FC<ProductItemTableProps> = ({
           </Tr>
         </Thead>
         <Tbody>
-          {productItems.map((productItem) => (
+          {filteredProductItems.map((productItem) => (
             <ProductItemRow
               key={productItem.id}
               productItem={productItem}

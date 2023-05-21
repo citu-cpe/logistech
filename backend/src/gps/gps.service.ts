@@ -29,6 +29,14 @@ export class GpsService {
   public scanRfid(dto: ScanRfidDTO) {
     this.logger.log(`RFID: ${dto.rfid}`);
 
+    // if (isNaN(Number.parseInt(dto.rfid, 10))) {
+    //   return this.gpsGateway.server.emit('scan', { rfid: dto.rfid });
+    // }
+
+    if (Number.parseInt(dto.rfid, 10) === 0) {
+      return;
+    }
+
     this.gpsGateway.server.emit('scan', { rfid: this.convertToHex(dto.rfid) });
   }
 
