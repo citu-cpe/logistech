@@ -31,7 +31,17 @@ export const useUpdateProductItemStatus = (productItemId: string) => {
         );
         queryClient.invalidateQueries(
           PRODUCT_ITEMS_BY_STATUS_AND_USER_QUERY_KEY(
-            ProductItemByStatusDTOStatusEnum.InTransit
+            ProductItemByStatusDTOStatusEnum.InTransitToStorageFacility
+          )
+        );
+        queryClient.invalidateQueries(
+          PRODUCT_ITEMS_BY_STATUS_AND_USER_QUERY_KEY(
+            ProductItemByStatusDTOStatusEnum.InStorageFacility
+          )
+        );
+        queryClient.invalidateQueries(
+          PRODUCT_ITEMS_BY_STATUS_AND_USER_QUERY_KEY(
+            ProductItemByStatusDTOStatusEnum.InTransitToBuyer
           )
         );
         queryClient.invalidateQueries(
@@ -76,7 +86,17 @@ export const useUpdateProductItemStatus = (productItemId: string) => {
         );
         queryClient.invalidateQueries(
           PRODUCT_ITEMS_BY_STATUS_QUERY_KEY(
-            ProductItemByStatusDTOStatusEnum.InTransit
+            ProductItemByStatusDTOStatusEnum.InTransitToStorageFacility
+          )
+        );
+        queryClient.invalidateQueries(
+          PRODUCT_ITEMS_BY_STATUS_QUERY_KEY(
+            ProductItemByStatusDTOStatusEnum.InStorageFacility
+          )
+        );
+        queryClient.invalidateQueries(
+          PRODUCT_ITEMS_BY_STATUS_QUERY_KEY(
+            ProductItemByStatusDTOStatusEnum.InTransitToBuyer
           )
         );
         queryClient.invalidateQueries(

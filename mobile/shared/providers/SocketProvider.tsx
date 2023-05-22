@@ -11,7 +11,6 @@ export const SocketProvider = ({
 
   useEffect(() => {
     const newSocket = io(platformUrl);
-    console.log("connecting 1");
 
     setSocket(newSocket);
 

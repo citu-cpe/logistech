@@ -5,10 +5,16 @@ export class ProductItemStatusQuantityDTO {
   public onHold: number;
 
   @IsNumber()
-  public inTransit: number;
+  public inTransitToStorageFacility: number;
+
+  @IsNumber()
+  public inTransitToBuyer: number;
 
   @IsNumber()
   public inStorage: number;
+
+  @IsNumber()
+  public inStorageFacility: number;
 
   @IsNumber()
   public toBePickedUp: number;

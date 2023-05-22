@@ -20,7 +20,9 @@ interface ProductItemFormProps {
 
 export const productItemFormValidationSchema = (isRfidOptional?: boolean) => {
   return Yup.object({
-    rfid: isRfidOptional ? Yup.string().min(1) : Yup.string().min(1).required(),
+    rfid: isRfidOptional
+      ? Yup.string().min(1)
+      : Yup.string().min(1).required('Required'),
     status: Yup.string().min(1).required('Required'),
   });
 };
@@ -123,8 +125,22 @@ export const ProductItemForm: React.FC<ProductItemFormProps> = ({
                   <option value={CreateProductItemDTOStatusEnum.ToBePickedUp}>
                     TO BE PICKED UP
                   </option>
-                  <option value={CreateProductItemDTOStatusEnum.InTransit}>
-                    IN TRANSIT
+                  <option
+                    value={
+                      CreateProductItemDTOStatusEnum.InTransitToStorageFacility
+                    }
+                  >
+                    IN TRANSIT TO STORAGE FACILITY
+                  </option>
+                  <option
+                    value={CreateProductItemDTOStatusEnum.InStorageFacility}
+                  >
+                    IN STORAGE FACILITY
+                  </option>
+                  <option
+                    value={CreateProductItemDTOStatusEnum.InTransitToBuyer}
+                  >
+                    IN TRANSIT TO BUYER
                   </option>
                   <option value={CreateProductItemDTOStatusEnum.RedFlag}>
                     RED FLAG

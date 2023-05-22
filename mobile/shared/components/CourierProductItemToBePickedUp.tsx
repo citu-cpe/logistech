@@ -28,11 +28,12 @@ import { useUpdateProductItemStatus } from "../hooks/useUpdateProductItemStatus"
 interface CourierProductItemProps {
   productItem: ProductItemDTO;
   onChangeStatus?: () => void;
+  userId?: string;
 }
 
 export const CourierProductItemToBePickedUp: React.FC<
   CourierProductItemProps
-> = ({ productItem, onChangeStatus }) => {
+> = ({ productItem, onChangeStatus, userId }) => {
   const updateProductItemStatus = useUpdateProductItemStatus(productItem.id);
   const axios = useAxios();
   const [isLoading, setIsLoading] = useState(false);
@@ -45,6 +46,9 @@ export const CourierProductItemToBePickedUp: React.FC<
     productItem.status === ProductItemDTOStatusEnum.ToBePickedUp;
   const isRetailerProduct =
     productItem.product?.company?.type === CompanyDTOTypeEnum.Retailer;
+  const isInStorageFacility =
+    productItem.status === ProductItemDTOStatusEnum.InStorageFacility;
+
   const {
     control,
     handleSubmit,
@@ -53,7 +57,7 @@ export const CourierProductItemToBePickedUp: React.FC<
   const onSubmit: SubmitHandler<CreateProductItemDTO> = async (data) => {
     setIsLoading(true);
     await axios.put(`/product/product-item/${productItem.id}`, {
-      status: UpdateProductItemStatusDTOStatusEnum.InTransit,
+      status: UpdateProductItemStatusDTOStatusEnum.InTransitToStorageFacility,
       rfid: data.rfid,
     });
     setIsLoading(false);
@@ -112,11 +116,21 @@ export const CourierProductItemToBePickedUp: React.FC<
           if ((isToBePickedUp || isReturning) && isRetailerProduct) {
             setShowModal(true);
           } else {
+            let status =
+              UpdateProductItemStatusDTOStatusEnum.InTransitToStorageFacility;
+
+            if (isInStorageFacility) {
+              status = UpdateProductItemStatusDTOStatusEnum.InTransitToBuyer;
+            } else if (isToBePickedUp) {
+              status =
+                UpdateProductItemStatusDTOStatusEnum.InTransitToStorageFacility;
+            }
+
             setIsLoading(true);
             await axios.patch(
               `/product/product-item/${productItem.id}/status`,
               {
-                status: UpdateProductItemStatusDTOStatusEnum.InTransit,
+                status,
               }
             );
             setIsLoading(false);
@@ -137,6 +151,12 @@ export const CourierProductItemToBePickedUp: React.FC<
             }
           }
         }}
+        isDisabled={
+          (productItem.status === ProductItemDTOStatusEnum.ToBePickedUp ||
+            productItem.status === ProductItemDTOStatusEnum.InStorageFacility ||
+            productItem.status === ProductItemDTOStatusEnum.Returning) &&
+          productItem.courier?.id !== userId
+        }
       >
         Accept
       </Button>

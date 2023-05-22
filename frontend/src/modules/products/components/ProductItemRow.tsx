@@ -24,6 +24,7 @@ import {
 } from 'generated-api';
 import { CompanyTypeBadge } from '../../../shared/components/CompanyTypeBadge';
 import { ProductItemStatusBadge } from '../../../shared/components/ProductItemStatusBadge';
+import { useGlobalStore } from '../../../shared/stores';
 import { useDeleteProductItem } from '../hooks/useDeleteProductItem';
 import { useUpdateProductItemStatus } from '../hooks/useUpdateProductItemStatus';
 import { EditProductItemForm } from './EditProductItemForm';
@@ -46,6 +47,8 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
   isCourier,
   isRfidOptional,
 }) => {
+  const getUser = useGlobalStore().getUser;
+  const user = getUser();
   const {
     isOpen: isEditProductItemOpen,
     onOpen: onEditProductItemOpen,
@@ -67,7 +70,12 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
   };
   const updateProductItemStatus = useUpdateProductItemStatus(productItem.id);
   const isReturning = productItem.status === ProductItemDTOStatusEnum.Returning;
-  const isInTransit = productItem.status === ProductItemDTOStatusEnum.InTransit;
+  const isInTransitToStorageFacility =
+    productItem.status === ProductItemDTOStatusEnum.InTransitToStorageFacility;
+  const isInStorageFacility =
+    productItem.status === ProductItemDTOStatusEnum.InStorageFacility;
+  const isInTransitToBuyer =
+    productItem.status === ProductItemDTOStatusEnum.InTransitToBuyer;
   const isToBePickedUp =
     productItem.status === ProductItemDTOStatusEnum.ToBePickedUp;
 
@@ -77,6 +85,7 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
       <Td>
         <ProductItemStatusBadge status={productItem.status} />
       </Td>
+      <Td>{productItem.courier?.username}</Td>
 
       {isCourier && (
         <>
@@ -113,7 +122,7 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
             isLoading={updateProductItemStatus.isLoading}
             onClick={() => {
               let productItemStatus =
-                UpdateProductItemStatusDTOStatusEnum.InTransit;
+                UpdateProductItemStatusDTOStatusEnum.InTransitToStorageFacility;
 
               if (
                 (isToBePickedUp || isReturning) &&
@@ -125,12 +134,18 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
                 if (isReturning) {
                   productItemStatus =
                     UpdateProductItemStatusDTOStatusEnum.Returned;
-                } else if (isInTransit) {
+                } else if (isInTransitToStorageFacility) {
                   productItemStatus =
-                    UpdateProductItemStatusDTOStatusEnum.Complete;
+                    UpdateProductItemStatusDTOStatusEnum.InStorageFacility;
                 } else if (isToBePickedUp) {
                   productItemStatus =
-                    UpdateProductItemStatusDTOStatusEnum.InTransit;
+                    UpdateProductItemStatusDTOStatusEnum.InTransitToStorageFacility;
+                } else if (isInTransitToBuyer) {
+                  productItemStatus =
+                    UpdateProductItemStatusDTOStatusEnum.Complete;
+                } else if (isInStorageFacility) {
+                  productItemStatus =
+                    UpdateProductItemStatusDTOStatusEnum.InTransitToBuyer;
                 }
 
                 updateProductItemStatus.mutate({
@@ -138,9 +153,21 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
                 });
               }
             }}
+            disabled={
+              isCourier &&
+              (productItem.status === ProductItemDTOStatusEnum.ToBePickedUp ||
+                productItem.status ===
+                  ProductItemDTOStatusEnum.InStorageFacility ||
+                productItem.status === ProductItemDTOStatusEnum.Returning) &&
+              productItem.courier?.id !== user?.id
+            }
           >
             {isReturning && <Text>Return</Text>}
-            {isInTransit && <Text>Complete</Text>}
+            {isInTransitToStorageFacility && (
+              <Text>Set In Storage Facility</Text>
+            )}
+            {isInStorageFacility && <Text>Accept</Text>}
+            {isInTransitToBuyer && <Text>Complete</Text>}
             {isToBePickedUp && <Text>Accept</Text>}
           </Button>
         </Td>

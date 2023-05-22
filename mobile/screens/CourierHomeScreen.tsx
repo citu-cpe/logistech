@@ -1,8 +1,10 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useQueryClient } from "@tanstack/react-query";
 import {
+  ProductItemDTO,
   ProductItemDTOStatusEnum,
   ProductItemLocationDTO,
+  ScanRfidDTO,
   UserDTO,
 } from "generated-api";
 import {
@@ -36,6 +38,7 @@ import MapViewDirections from "react-native-maps-directions";
 import { CompanyDTO } from "generated-api";
 import { edgePadding } from "../shared/variables";
 import { GOOGLE_MAPS_API_KEY } from "@env";
+import { useAuthStore } from "../shared/stores/auth";
 
 interface Directions {
   origin: CourierDirections;
@@ -52,7 +55,31 @@ interface CourierHomeScreenProps {
 }
 
 export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
-  const { data } = useGetCourierAssignedProductItems();
+  const { data } = useGetCourierAssignedProductItems((data) => {
+    const inTransitProductItems = [
+      ...(data?.data.inTransitToStorageFacilityProductItems ?? []),
+      ...(data?.data.inTransitToBuyerProductItems ?? []),
+    ];
+
+    const actualDataRfids = inTransitProductItems.map((p) => p.rfid);
+    const actualProductItemRfids: string[] = [];
+    const actualProductItems: ProductItemDTO[] = [];
+
+    const filteredProductItems = productItems.filter((p) =>
+      actualDataRfids?.includes(p.rfid)
+    );
+
+    for (const p of filteredProductItems) {
+      if (!!p.rfid && !actualProductItemRfids.includes(p.rfid)) {
+        actualProductItems.push(p);
+        actualProductItemRfids.push(p.rfid);
+      } else if (!p.rfid) {
+        actualProductItems.push(p);
+      }
+    }
+
+    setProductItems(actualProductItems);
+  });
   const {
     isOpen: inTransitIsOpen,
     onOpen: inTransitOnOpen,
@@ -75,7 +102,10 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
     onOpen();
   };
 
-  const inTransitProductItems = data?.data.inTransitProductItems;
+  const inTransitProductItems = [
+    ...(data?.data.inTransitToStorageFacilityProductItems ?? []),
+    ...(data?.data.inTransitToBuyerProductItems ?? []),
+  ];
   const returningProductItems = data?.data.returningProductItems;
 
   const [location, setLocation] = useState<Location.LocationObject | undefined>(
@@ -86,6 +116,9 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
   const [longitude, setLongitude] = useState<number | undefined>();
   const [animateToggle, setAnimateToggle] = useState(false);
   const socket = useContext(SocketContext);
+  const { user } = useAuthStore();
+  const company = user?.company;
+  const [productItems, setProductItems] = useState<ProductItemDTO[]>([]);
 
   const mapViewRef = useRef<MapView>(null);
 
@@ -99,12 +132,29 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
         // setLatitude(data.latitude);
         // setLongitude(data.longitude);
 
-        console.log("getting location...");
         let location = await Location.getCurrentPositionAsync({});
-        console.log("location:", location);
         setLocation(location);
         setLatitude(location.coords.latitude);
         setLongitude(location.coords.longitude);
+      });
+
+      socket.on("scan", (dto: ScanRfidDTO) => {
+        const dataRfIds = inTransitProductItems.map((p) => p.rfid);
+        const productItemsRfids = productItems.map((p) => p.rfid);
+
+        if (
+          dataRfIds?.includes(dto.rfid) &&
+          !productItemsRfids.includes(dto.rfid)
+        ) {
+          const productItem = inTransitProductItems.find(
+            (p) => p.rfid === dto.rfid
+          );
+          if (productItem) {
+            setProductItems((prevProductItems) => {
+              return [...prevProductItems, productItem];
+            });
+          }
+        }
       });
     }
 
@@ -207,6 +257,22 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
     setAnimateToggle((prev) => !prev);
   };
 
+  const getFilteredProductItems = () => {
+    const actualProductItemRfids: string[] = [];
+    const actualProductItems: ProductItemDTO[] = [];
+
+    for (const p of productItems) {
+      if (!!p.rfid && !actualProductItemRfids.includes(p.rfid)) {
+        actualProductItems.push(p);
+        actualProductItemRfids.push(p.rfid);
+      } else if (!p.rfid) {
+        actualProductItems.push(p);
+      }
+    }
+
+    return actualProductItems;
+  };
+
   return (
     <>
       <Text>{errorMsg}</Text>
@@ -218,16 +284,27 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
         bottom="0"
         zIndex={1000000}
         flexDir="row"
-        justifyContent="space-between"
         w="full"
+        flexWrap="wrap"
       >
-        <Button onPress={() => open(toBePickedUpOnOpen)} bg="blueGray.700">
+        <Button
+          m="2"
+          onPress={() => open(toBePickedUpOnOpen)}
+          bg="blueGray.700"
+        >
           To Be Picked Up
         </Button>
-        <Button onPress={() => open(inTransitOnOpen)} bg="blueGray.700">
+        <Button
+          m="2"
+          onPress={() => open(toBePickedUpOnOpen)}
+          bg="blueGray.700"
+        >
+          In Storage Facility
+        </Button>
+        <Button m="2" onPress={() => open(inTransitOnOpen)} bg="blueGray.700">
           Current Delivery
         </Button>
-        <Button onPress={() => open(returningOnOpen)} bg="blueGray.700">
+        <Button m="2" onPress={() => open(returningOnOpen)} bg="blueGray.700">
           Returning
         </Button>
       </Flex>
@@ -241,6 +318,7 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
                 key={p.id}
                 productItem={p}
                 onChangeStatus={toggleAnimation}
+                userId={user?.id}
               />
             ))}
 
@@ -257,11 +335,37 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
         </Actionsheet.Content>
       </Actionsheet>
 
+      <Actionsheet isOpen={toBePickedUpIsOpen} onClose={toBePickedUpOnClose}>
+        <Actionsheet.Content bg="blueGray.700">
+          <Box w="full">
+            <Heading color="white">In Storage Facility</Heading>
+            {data?.data.inStorageFacilityProductItems.map((p) => (
+              <CourierProductItemToBePickedUp
+                key={p.id}
+                productItem={p}
+                onChangeStatus={toggleAnimation}
+                userId={user?.id}
+              />
+            ))}
+
+            {data?.data.inStorageFacilityProductItems.length === 0 && (
+              <Text color="white" textAlign="center" mt="2">
+                No{" "}
+                <ProductItemStatusBadge
+                  status={ProductItemDTOStatusEnum.InStorageFacility}
+                />{" "}
+                product items
+              </Text>
+            )}
+          </Box>
+        </Actionsheet.Content>
+      </Actionsheet>
+
       <Actionsheet isOpen={inTransitIsOpen} onClose={inTransitOnClose}>
         <Actionsheet.Content bg="blueGray.700">
           <Box w="full">
             <Heading color="white">In Transit</Heading>
-            {data?.data.inTransitProductItems.map((p) => (
+            {getFilteredProductItems().map((p) => (
               <CourierProductItemInTransit
                 key={p.id}
                 productItem={p}
@@ -269,11 +373,15 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
               />
             ))}
 
-            {data?.data.inTransitProductItems.length === 0 && (
+            {inTransitProductItems.length === 0 && (
               <Text color="white" textAlign="center" mt="2">
                 No{" "}
                 <ProductItemStatusBadge
-                  status={ProductItemDTOStatusEnum.InTransit}
+                  status={ProductItemDTOStatusEnum.InTransitToStorageFacility}
+                />{" "}
+                or{" "}
+                <ProductItemStatusBadge
+                  status={ProductItemDTOStatusEnum.InTransitToBuyer}
                 />{" "}
                 product items
               </Text>
@@ -433,6 +541,31 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
                   style={{ height: IMAGE_SIZE, width: IMAGE_SIZE }}
                 />
               </Marker>
+
+              {company && (
+                <>
+                  <MapViewDirections
+                    origin={{
+                      latitude,
+                      longitude,
+                    }}
+                    destination={{
+                      latitude: company.addressLatitude,
+                      longitude: company.addressLongitude,
+                    }}
+                    apikey={GOOGLE_MAPS_API_KEY ?? ""}
+                    strokeWidth={5}
+                    strokeColor="green"
+                  />
+                  <Marker
+                    coordinate={{
+                      latitude: company.addressLatitude,
+                      longitude: company.addressLongitude,
+                    }}
+                    identifier="warehouse"
+                  ></Marker>
+                </>
+              )}
             </>
           )}
         </MapView>

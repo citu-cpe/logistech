@@ -32,9 +32,15 @@ export const Manufacturer = () => {
             flexBasis={flexBasis}
           />
           <LinkCard
-            title='In Transit'
-            n={data.data.inTransit}
-            href={`/products/product-items?status=${ProductItemDTOStatusEnum.InTransit}`}
+            title='In Transit To Storage Facility'
+            n={data.data.inTransitToStorageFacility}
+            href={`/products/product-items?status=${ProductItemDTOStatusEnum.InTransitToStorageFacility}`}
+            flexBasis={flexBasis}
+          />
+          <LinkCard
+            title='In Transit To Buyer'
+            n={data.data.inTransitToBuyer}
+            href={`/products/product-items?status=${ProductItemDTOStatusEnum.InTransitToBuyer}`}
             flexBasis={flexBasis}
           />
         </Flex>

@@ -293,6 +293,14 @@ export declare const DefaultApiAxiosParamCreator: (configuration?: Configuration
     /**
      *
      * @param {string} companyId
+     * @param {ProductItemByStatusDTO} productItemByStatusDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getOrderedProductItemsByStatus: (companyId: string, productItemByStatusDTO: ProductItemByStatusDTO, options?: any) => Promise<RequestArgs>;
+    /**
+     *
+     * @param {string} companyId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -712,7 +720,7 @@ export declare const DefaultApiFp: (configuration?: Configuration) => {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    editProductItem(productItemId: string, createProductItemDTO: CreateProductItemDTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>>;
+    editProductItem(productItemId: string, createProductItemDTO: CreateProductItemDTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
      *
      * @param {string} id
@@ -788,6 +796,14 @@ export declare const DefaultApiFp: (configuration?: Configuration) => {
      * @throws {RequiredError}
      */
     getOrderById(orderId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OrderDTO>>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {ProductItemByStatusDTO} productItemByStatusDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getOrderedProductItemsByStatus(companyId: string, productItemByStatusDTO: ProductItemByStatusDTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ProductItemDTO>>>;
     /**
      *
      * @param {string} companyId
@@ -1033,7 +1049,7 @@ export declare const DefaultApiFp: (configuration?: Configuration) => {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateProductItemStatus(productItemId: string, updateProductItemStatusDTO: UpdateProductItemStatusDTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>>;
+    updateProductItemStatus(productItemId: string, updateProductItemStatusDTO: UpdateProductItemStatusDTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
     /**
      *
      * @param {UpdateUserDTO} updateUserDTO
@@ -1210,7 +1226,7 @@ export declare const DefaultApiFactory: (configuration?: Configuration, basePath
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    editProductItem(productItemId: string, createProductItemDTO: CreateProductItemDTO, options?: any): AxiosPromise<object>;
+    editProductItem(productItemId: string, createProductItemDTO: CreateProductItemDTO, options?: any): AxiosPromise<void>;
     /**
      *
      * @param {string} id
@@ -1286,6 +1302,14 @@ export declare const DefaultApiFactory: (configuration?: Configuration, basePath
      * @throws {RequiredError}
      */
     getOrderById(orderId: string, options?: any): AxiosPromise<OrderDTO>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {ProductItemByStatusDTO} productItemByStatusDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getOrderedProductItemsByStatus(companyId: string, productItemByStatusDTO: ProductItemByStatusDTO, options?: any): AxiosPromise<Array<ProductItemDTO>>;
     /**
      *
      * @param {string} companyId
@@ -1531,7 +1555,7 @@ export declare const DefaultApiFactory: (configuration?: Configuration, basePath
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateProductItemStatus(productItemId: string, updateProductItemStatusDTO: UpdateProductItemStatusDTO, options?: any): AxiosPromise<object>;
+    updateProductItemStatus(productItemId: string, updateProductItemStatusDTO: UpdateProductItemStatusDTO, options?: any): AxiosPromise<void>;
     /**
      *
      * @param {UpdateUserDTO} updateUserDTO
@@ -1731,7 +1755,7 @@ export declare class DefaultApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    editProductItem(productItemId: string, createProductItemDTO: CreateProductItemDTO, options?: any): Promise<import("axios").AxiosResponse<object>>;
+    editProductItem(productItemId: string, createProductItemDTO: CreateProductItemDTO, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      *
      * @param {string} id
@@ -1818,6 +1842,15 @@ export declare class DefaultApi extends BaseAPI {
      * @memberof DefaultApi
      */
     getOrderById(orderId: string, options?: any): Promise<import("axios").AxiosResponse<OrderDTO>>;
+    /**
+     *
+     * @param {string} companyId
+     * @param {ProductItemByStatusDTO} productItemByStatusDTO
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    getOrderedProductItemsByStatus(companyId: string, productItemByStatusDTO: ProductItemByStatusDTO, options?: any): Promise<import("axios").AxiosResponse<ProductItemDTO[]>>;
     /**
      *
      * @param {string} companyId
@@ -2098,7 +2131,7 @@ export declare class DefaultApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    updateProductItemStatus(productItemId: string, updateProductItemStatusDTO: UpdateProductItemStatusDTO, options?: any): Promise<import("axios").AxiosResponse<object>>;
+    updateProductItemStatus(productItemId: string, updateProductItemStatusDTO: UpdateProductItemStatusDTO, options?: any): Promise<import("axios").AxiosResponse<void>>;
     /**
      *
      * @param {UpdateUserDTO} updateUserDTO

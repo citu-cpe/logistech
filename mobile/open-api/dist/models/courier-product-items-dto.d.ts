@@ -21,7 +21,19 @@ export interface CourierProductItemsDTO {
      * @type {Array<ProductItemDTO>}
      * @memberof CourierProductItemsDTO
      */
-    inTransitProductItems: Array<ProductItemDTO>;
+    inTransitToStorageFacilityProductItems: Array<ProductItemDTO>;
+    /**
+     *
+     * @type {Array<ProductItemDTO>}
+     * @memberof CourierProductItemsDTO
+     */
+    inStorageFacilityProductItems: Array<ProductItemDTO>;
+    /**
+     *
+     * @type {Array<ProductItemDTO>}
+     * @memberof CourierProductItemsDTO
+     */
+    inTransitToBuyerProductItems: Array<ProductItemDTO>;
     /**
      *
      * @type {Array<ProductItemDTO>}

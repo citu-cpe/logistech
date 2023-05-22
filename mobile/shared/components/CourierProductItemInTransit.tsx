@@ -39,6 +39,11 @@ export const CourierProductItemInTransit: React.FC<
   const [showModal, setShowModal] = useState(false);
 
   const isReturning = productItem.status === ProductItemDTOStatusEnum.Returning;
+  const isInTransitToStorageFacility =
+    productItem.status === ProductItemDTOStatusEnum.InTransitToStorageFacility;
+  const isInTransitToBuyer =
+    productItem.status === ProductItemDTOStatusEnum.InTransitToBuyer;
+
   const {
     control,
     handleSubmit,
@@ -105,12 +110,20 @@ export const CourierProductItemInTransit: React.FC<
             setShowModal(true);
           } else {
             setIsLoading(true);
+            let status = UpdateProductItemStatusDTOStatusEnum.Complete;
+
+            if (isReturning) {
+              status = UpdateProductItemStatusDTOStatusEnum.Returned;
+            } else if (isInTransitToStorageFacility) {
+              status = UpdateProductItemStatusDTOStatusEnum.InStorageFacility;
+            } else if (isInTransitToBuyer) {
+              status = UpdateProductItemStatusDTOStatusEnum.Complete;
+            }
+
             await axios.patch(
               `/product/product-item/${productItem.id}/status`,
               {
-                status: isReturning
-                  ? UpdateProductItemStatusDTOStatusEnum.Returned
-                  : UpdateProductItemStatusDTOStatusEnum.Complete,
+                status,
               }
             );
             setIsLoading(false);
@@ -128,7 +141,11 @@ export const CourierProductItemInTransit: React.FC<
           }
         }}
       >
-        {isReturning ? "Return" : "Complete"}
+        {isReturning && <Text color="white">Return</Text>}
+        {isInTransitToStorageFacility && (
+          <Text color="white">Set In Storage Facility</Text>
+        )}
+        {isInTransitToBuyer && <Text color="white">Complete</Text>}
       </Button>
 
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>

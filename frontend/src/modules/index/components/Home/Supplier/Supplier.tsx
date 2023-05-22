@@ -56,10 +56,18 @@ export const Supplier = () => {
           </NextLink>
 
           <NextLink
-            href={`/products/product-items?status=${ProductItemByStatusDTOStatusEnum.InTransit}`}
+            href={`/products/product-items?status=${ProductItemByStatusDTOStatusEnum.InTransitToStorageFacility}`}
           >
             <Button colorScheme='gray' flexBasis={{ base: '40%', md: 'auto' }}>
-              In Transit
+              In Transit To Storage Facility
+            </Button>
+          </NextLink>
+
+          <NextLink
+            href={`/products/product-items?status=${ProductItemByStatusDTOStatusEnum.InTransitToBuyer}`}
+          >
+            <Button colorScheme='gray' flexBasis={{ base: '40%', md: 'auto' }}>
+              In Transit To Buyer
             </Button>
           </NextLink>
 

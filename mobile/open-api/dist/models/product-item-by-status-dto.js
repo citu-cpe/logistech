@@ -21,9 +21,11 @@ exports.ProductItemByStatusDTOStatusEnum = void 0;
 var ProductItemByStatusDTOStatusEnum;
 (function (ProductItemByStatusDTOStatusEnum) {
     ProductItemByStatusDTOStatusEnum["InStorage"] = "IN_STORAGE";
-    ProductItemByStatusDTOStatusEnum["ToBePickedUp"] = "TO_BE_PICKED_UP";
     ProductItemByStatusDTOStatusEnum["OnHold"] = "ON_HOLD";
-    ProductItemByStatusDTOStatusEnum["InTransit"] = "IN_TRANSIT";
+    ProductItemByStatusDTOStatusEnum["ToBePickedUp"] = "TO_BE_PICKED_UP";
+    ProductItemByStatusDTOStatusEnum["InTransitToStorageFacility"] = "IN_TRANSIT_TO_STORAGE_FACILITY";
+    ProductItemByStatusDTOStatusEnum["InStorageFacility"] = "IN_STORAGE_FACILITY";
+    ProductItemByStatusDTOStatusEnum["InTransitToBuyer"] = "IN_TRANSIT_TO_BUYER";
     ProductItemByStatusDTOStatusEnum["Complete"] = "COMPLETE";
     ProductItemByStatusDTOStatusEnum["Canceled"] = "CANCELED";
     ProductItemByStatusDTOStatusEnum["RedFlag"] = "RED_FLAG";

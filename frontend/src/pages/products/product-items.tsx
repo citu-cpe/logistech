@@ -23,7 +23,30 @@ const ProductItems = () => {
   const isCustomer = user?.role === UserDTORoleEnum.Customer;
   const isCourier = user?.role === UserDTORoleEnum.Courier;
   const companyId = user?.company?.id;
-  const { data, isLoading } = useGetProductItemsByStatus(companyId, status);
+  const { data, isLoading } = useGetProductItemsByStatus(
+    companyId,
+    status,
+    (responseData) => {
+      const actualDataRfids = responseData.data.map((p) => p.rfid);
+      const actualProductItemRfids: string[] = [];
+      const actualProductItems: ProductItemDTO[] = [];
+
+      const filteredProductItems = productItems.filter((p) =>
+        actualDataRfids?.includes(p.rfid)
+      );
+
+      for (const p of filteredProductItems) {
+        if (!!p.rfid && !actualProductItemRfids.includes(p.rfid)) {
+          actualProductItems.push(p);
+          actualProductItemRfids.push(p.rfid);
+        } else if (!p.rfid) {
+          actualProductItems.push(p);
+        }
+      }
+
+      setProductItems(actualProductItems);
+    }
+  );
   const {
     data: customerProductItemsData,
     isLoading: customerProductItemsIsLoading,
@@ -34,7 +57,11 @@ const ProductItems = () => {
   const socket = useContext(SocketContext);
   const [productItems, setProductItems] = useState<ProductItemDTO[]>([]);
 
-  if (isCourier && status === ProductItemByStatusDTOStatusEnum.InTransit) {
+  if (
+    isCourier &&
+    (status === ProductItemByStatusDTOStatusEnum.InTransitToStorageFacility ||
+      status === ProductItemByStatusDTOStatusEnum.InTransitToBuyer)
+  ) {
     actualData = productItems;
   }
 

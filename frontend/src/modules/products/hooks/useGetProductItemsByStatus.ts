@@ -1,5 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { ProductItemByStatusDTOStatusEnum } from 'generated-api';
+import { AxiosResponse } from 'axios';
+import {
+  ProductItemByStatusDTOStatusEnum,
+  ProductItemDTO,
+} from 'generated-api';
 import { useContext } from 'react';
 import { ApiContext } from '../../../shared/providers/ApiProvider';
 
@@ -9,7 +13,8 @@ export const PRODUCT_ITEMS_BY_STATUS_QUERY_KEY = (
 
 export const useGetProductItemsByStatus = (
   companyId?: string,
-  status?: ProductItemByStatusDTOStatusEnum
+  status?: ProductItemByStatusDTOStatusEnum,
+  onSuccess?: (data: AxiosResponse<ProductItemDTO[]>) => void
 ) => {
   const api = useContext(ApiContext);
 
@@ -17,5 +22,6 @@ export const useGetProductItemsByStatus = (
     queryKey: PRODUCT_ITEMS_BY_STATUS_QUERY_KEY(status!),
     queryFn: () => api.getProductItemsByStatus(companyId!, { status: status! }),
     enabled: !!companyId && !!status,
+    onSuccess,
   });
 };

@@ -9,7 +9,32 @@ import { useGlobalStore } from '../../shared/stores';
 const Inventory = () => {
   const getUser = useGlobalStore().getUser;
   const companyId = getUser()?.company?.id;
-  const { data, isLoading } = useGetProductItemsByCompany(companyId);
+  const { data, isLoading } = useGetProductItemsByCompany(
+    companyId,
+    (responseData) => {
+      const actualDataRfids = responseData.data.map((p) => p.rfid);
+      const actualProductItemRfids: string[] = [];
+      const actualProductItems: ProductItemDTO[] = [];
+
+      const filteredProductItems = productItems.filter((p) =>
+        actualDataRfids?.includes(p.rfid)
+      );
+
+      for (const p of filteredProductItems) {
+        if (!!p.rfid && !actualProductItemRfids.includes(p.rfid)) {
+          const foundPi = responseData.data.find((pi) => pi.rfid === p.rfid);
+          if (foundPi) {
+            actualProductItems.push(foundPi);
+            actualProductItemRfids.push(p.rfid);
+          }
+        } else if (!p.rfid) {
+          actualProductItems.push(p);
+        }
+      }
+
+      setProductItems(actualProductItems);
+    }
+  );
   const socket = useContext(SocketContext);
   const [productItems, setProductItems] = useState<ProductItemDTO[]>([]);
 

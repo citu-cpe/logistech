@@ -114,6 +114,23 @@ export const testCourier: User = {
   addressLongitude: null,
 };
 
+export const testNewCourier: User = {
+  id: '2b1c9143-f577-4c30-87aa-8f672a0c2097',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  email: 'test_new_courier@test.com',
+  username: 'test_new_courier',
+  password: 'test',
+  currentHashedRefreshToken: undefined,
+  role: UserRole.COURIER,
+  companyId: testNewStorageFacilityCompany.id,
+  imageUrl: null,
+  cloudinaryPublicId: null,
+  address: '',
+  addressLatitude: null,
+  addressLongitude: null,
+};
+
 export const testManufacturer: User = {
   id: '43e1f6d5-34b8-4870-85b1-8fc66d14f4c4',
   createdAt: new Date(),
@@ -209,6 +226,9 @@ export class UserTestDataService {
     const foundCourier = await this.prismaService.user.findUnique({
       where: { id: testCourier.id },
     });
+    const foundNewCourier = await this.prismaService.user.findUnique({
+      where: { id: testNewCourier.id },
+    });
     const foundManufacturer = await this.prismaService.user.findUnique({
       where: { id: testManufacturer.id },
     });
@@ -245,6 +265,10 @@ export class UserTestDataService {
     if (!foundCourier) {
       this.logger.log('GENERATING TEST COURIER');
       await this.createUser(testCourier);
+    }
+    if (!foundNewCourier) {
+      this.logger.log('GENERATING TEST NEW COURIER');
+      await this.createUser(testNewCourier);
     }
     if (!foundManufacturer) {
       this.logger.log('GENERATING TEST MANUFACTURER');

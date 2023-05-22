@@ -30,6 +30,12 @@ export interface CreateProductItemDTO {
    * @memberof CreateProductItemDTO
    */
   status: CreateProductItemDTOStatusEnum;
+  /**
+   *
+   * @type {string}
+   * @memberof CreateProductItemDTO
+   */
+  courierId?: string;
 }
 
 /**
@@ -38,9 +44,11 @@ export interface CreateProductItemDTO {
  */
 export enum CreateProductItemDTOStatusEnum {
   InStorage = 'IN_STORAGE',
-  ToBePickedUp = 'TO_BE_PICKED_UP',
   OnHold = 'ON_HOLD',
-  InTransit = 'IN_TRANSIT',
+  ToBePickedUp = 'TO_BE_PICKED_UP',
+  InTransitToStorageFacility = 'IN_TRANSIT_TO_STORAGE_FACILITY',
+  InStorageFacility = 'IN_STORAGE_FACILITY',
+  InTransitToBuyer = 'IN_TRANSIT_TO_BUYER',
   Complete = 'COMPLETE',
   Canceled = 'CANCELED',
   RedFlag = 'RED_FLAG',

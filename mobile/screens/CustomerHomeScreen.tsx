@@ -56,9 +56,7 @@ export const CustomerHomeScreen: React.FC<CustomerHomeScreenProps> = ({
       socket.on("test", async (_data: ProductItemLocationDTO) => {
         // setLatitude(data.latitude);
         // setLongitude(data.longitude);
-        console.log("getting location...");
         let location = await Location.getCurrentPositionAsync({});
-        console.log("location:", location);
         setLocation(location);
         setLatitude(location.coords.latitude);
         setLongitude(location.coords.longitude);
@@ -122,22 +120,60 @@ export const CustomerHomeScreen: React.FC<CustomerHomeScreenProps> = ({
 
       <Actionsheet isOpen={isOpen} onClose={onClose}>
         <Actionsheet.Content bg="blueGray.600">
-          <Flex flexDir="row" mb="2" justifyContent="space-between">
+          <Flex
+            flexDir="row"
+            mb="2"
+            justifyContent="space-between"
+            flexWrap="wrap"
+          >
             <Button
+              mb="2"
               bg="blueGray.700"
               onPress={() => {
                 onClose();
                 navigation.navigate("ProductItems", {
-                  status: ProductItemByStatusDTOStatusEnum.InTransit,
+                  status:
+                    ProductItemByStatusDTOStatusEnum.InTransitToStorageFacility,
                 });
               }}
             >
-              In Transit
+              In Transit To Storage Facility
             </Button>
 
             <Spacer />
 
             <Button
+              mb="2"
+              bg="blueGray.700"
+              onPress={() => {
+                onClose();
+                navigation.navigate("ProductItems", {
+                  status: ProductItemByStatusDTOStatusEnum.InStorageFacility,
+                });
+              }}
+            >
+              In Storage Facility
+            </Button>
+
+            <Spacer />
+
+            <Button
+              mb="2"
+              bg="blueGray.700"
+              onPress={() => {
+                onClose();
+                navigation.navigate("ProductItems", {
+                  status: ProductItemByStatusDTOStatusEnum.InTransitToBuyer,
+                });
+              }}
+            >
+              In Transit To Me
+            </Button>
+
+            <Spacer />
+
+            <Button
+              mb="2"
               bg="blueGray.700"
               onPress={() => {
                 onClose();
@@ -152,6 +188,7 @@ export const CustomerHomeScreen: React.FC<CustomerHomeScreenProps> = ({
             <Spacer />
 
             <Button
+              mb="2"
               bg="blueGray.700"
               onPress={() => {
                 onClose();
@@ -166,6 +203,7 @@ export const CustomerHomeScreen: React.FC<CustomerHomeScreenProps> = ({
             <Spacer />
 
             <Button
+              mb="2"
               bg="blueGray.700"
               onPress={() => {
                 onClose();
@@ -179,6 +217,7 @@ export const CustomerHomeScreen: React.FC<CustomerHomeScreenProps> = ({
           </Flex>
 
           <Button
+            mb="2"
             bg="blueGray.700"
             onPress={() => {
               onClose();
