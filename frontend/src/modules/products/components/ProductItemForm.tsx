@@ -68,6 +68,7 @@ export const ProductItemForm: React.FC<ProductItemFormProps> = ({
     });
   };
 
+  // TODO: revert
   return (
     <Formik
       innerRef={formikRef}
@@ -90,7 +91,6 @@ export const ProductItemForm: React.FC<ProductItemFormProps> = ({
                     borderColor='gray.300'
                     bgColor='gray.50'
                     color='gray.800'
-                    disabled
                   />
                 )}
               </Field>
@@ -123,8 +123,22 @@ export const ProductItemForm: React.FC<ProductItemFormProps> = ({
                   <option value={CreateProductItemDTOStatusEnum.ToBePickedUp}>
                     TO BE PICKED UP
                   </option>
-                  <option value={CreateProductItemDTOStatusEnum.InTransit}>
-                    IN TRANSIT
+                  <option
+                    value={
+                      CreateProductItemDTOStatusEnum.InTransitToStorageFacility
+                    }
+                  >
+                    IN TRANSIT TO STORAGE FACILITY
+                  </option>
+                  <option
+                    value={CreateProductItemDTOStatusEnum.InStorageFacility}
+                  >
+                    IN STORAGE FACILITY
+                  </option>
+                  <option
+                    value={CreateProductItemDTOStatusEnum.InTransitToBuyer}
+                  >
+                    IN TRANSIT TO BUYER
                   </option>
                   <option value={CreateProductItemDTOStatusEnum.RedFlag}>
                     RED FLAG

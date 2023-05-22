@@ -75,7 +75,10 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
     onOpen();
   };
 
-  const inTransitProductItems = data?.data.inTransitProductItems;
+  const inTransitProductItems = [
+    ...(data?.data.inTransitToStorageFacilityProductItems ?? []),
+    ...(data?.data.inTransitToBuyerProductItems ?? []),
+  ];
   const returningProductItems = data?.data.returningProductItems;
 
   const [location, setLocation] = useState<Location.LocationObject | undefined>(
@@ -261,7 +264,7 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
         <Actionsheet.Content bg="blueGray.700">
           <Box w="full">
             <Heading color="white">In Transit</Heading>
-            {data?.data.inTransitProductItems.map((p) => (
+            {inTransitProductItems.map((p) => (
               <CourierProductItemInTransit
                 key={p.id}
                 productItem={p}
@@ -269,11 +272,15 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
               />
             ))}
 
-            {data?.data.inTransitProductItems.length === 0 && (
+            {inTransitProductItems.length === 0 && (
               <Text color="white" textAlign="center" mt="2">
                 No{" "}
                 <ProductItemStatusBadge
-                  status={ProductItemDTOStatusEnum.InTransit}
+                  status={ProductItemDTOStatusEnum.InTransitToStorageFacility}
+                />{" "}
+                or{" "}
+                <ProductItemStatusBadge
+                  status={ProductItemDTOStatusEnum.InTransitToBuyer}
                 />{" "}
                 product items
               </Text>

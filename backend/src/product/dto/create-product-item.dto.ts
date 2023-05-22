@@ -1,4 +1,4 @@
-import { IsString, IsEnum, IsOptional } from 'class-validator';
+import { IsString, IsEnum, IsOptional, IsUUID } from 'class-validator';
 import { ProductItemStatusEnum } from './product-item.dto';
 
 export class CreateProductItemDTO {
@@ -8,4 +8,8 @@ export class CreateProductItemDTO {
 
   @IsEnum(ProductItemStatusEnum)
   public status: ProductItemStatusEnum;
+
+  @IsOptional()
+  @IsUUID()
+  public courierId?: string;
 }

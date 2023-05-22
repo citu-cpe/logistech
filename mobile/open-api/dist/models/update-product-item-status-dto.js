@@ -21,9 +21,11 @@ exports.UpdateProductItemStatusDTOStatusEnum = void 0;
 var UpdateProductItemStatusDTOStatusEnum;
 (function (UpdateProductItemStatusDTOStatusEnum) {
     UpdateProductItemStatusDTOStatusEnum["InStorage"] = "IN_STORAGE";
-    UpdateProductItemStatusDTOStatusEnum["ToBePickedUp"] = "TO_BE_PICKED_UP";
     UpdateProductItemStatusDTOStatusEnum["OnHold"] = "ON_HOLD";
-    UpdateProductItemStatusDTOStatusEnum["InTransit"] = "IN_TRANSIT";
+    UpdateProductItemStatusDTOStatusEnum["ToBePickedUp"] = "TO_BE_PICKED_UP";
+    UpdateProductItemStatusDTOStatusEnum["InTransitToStorageFacility"] = "IN_TRANSIT_TO_STORAGE_FACILITY";
+    UpdateProductItemStatusDTOStatusEnum["InStorageFacility"] = "IN_STORAGE_FACILITY";
+    UpdateProductItemStatusDTOStatusEnum["InTransitToBuyer"] = "IN_TRANSIT_TO_BUYER";
     UpdateProductItemStatusDTOStatusEnum["Complete"] = "COMPLETE";
     UpdateProductItemStatusDTOStatusEnum["Canceled"] = "CANCELED";
     UpdateProductItemStatusDTOStatusEnum["RedFlag"] = "RED_FLAG";

@@ -52,7 +52,7 @@ const Inventory = () => {
         </Center>
       ) : (
         <ProductItemTable
-          productItems={productItems ?? []}
+          productItems={data?.data ?? []}
           allowActions={true}
           isCustomer={false}
           isCourier={false}

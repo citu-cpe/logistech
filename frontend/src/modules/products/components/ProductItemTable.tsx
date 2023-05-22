@@ -50,6 +50,7 @@ export const ProductItemTable: React.FC<ProductItemTableProps> = ({
           <Tr>
             <Th>RFID</Th>
             <Th>Status</Th>
+            <Th>Courier</Th>
             {isCourier && (
               <>
                 <Th>Customer/Buyer Address</Th>

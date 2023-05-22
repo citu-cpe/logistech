@@ -28,7 +28,7 @@ export class ProductItemService {
     const productItems = await this.prismaService.productItem.findMany({
       where: { productId },
       orderBy: { createdAt: 'desc' },
-      include: { product: true },
+      include: { product: true, courier: true },
     });
 
     return productItems.map((p) => ProductItemService.convertToDTO(p));
@@ -36,9 +36,21 @@ export class ProductItemService {
 
   public async getProductItemsByCompanyId(companyId: string) {
     const productItems = await this.prismaService.productItem.findMany({
-      where: { OR: [{ product: { companyId } }, { buyerId: companyId }] },
+      where: {
+        OR: [
+          {
+            product: { companyId },
+            status: { not: ProductItemStatus.COMPLETE },
+          },
+          { buyerId: companyId, status: ProductItemStatus.COMPLETE },
+          {
+            orderItem: { order: { storageFacilityId: companyId } },
+            status: ProductItemStatus.IN_STORAGE_FACILITY,
+          },
+        ],
+      },
       orderBy: { createdAt: 'desc' },
-      include: { product: true },
+      include: { product: true, courier: true },
     });
 
     return productItems.map((p) => ProductItemService.convertToDTO(p));
@@ -90,13 +102,41 @@ export class ProductItemService {
   }
 
   public async editProductItem(
-    productItem: CreateProductItemDTO,
+    dto: CreateProductItemDTO,
     productItemId: string
   ) {
-    return this.prismaService.productItem.update({
-      where: { id: productItemId },
-      data: productItem,
-    });
+    try {
+      const productItem = await this.prismaService.productItem.findUnique({
+        where: { id: productItemId },
+        include: { orderItem: { include: { order: true } } },
+      });
+
+      const order = productItem.orderItem.order;
+
+      if (
+        order.status !== OrderStatus.PAID &&
+        dto.status === ProductItemStatusEnum.IN_TRANSIT_TO_STORAGE_FACILITY
+      ) {
+        throw new BadRequestException(
+          'Items that are not paid cannot be picked up'
+        );
+      }
+
+      await this.prismaService.productItem.update({
+        where: { id: productItemId },
+        data: dto,
+      });
+    } catch (e) {
+      if (e?.code === PostgresErrorCode.UniqueViolation) {
+        throw new BadRequestException(
+          'Product item with this RFID already exists'
+        );
+      }
+
+      throw new BadRequestException(
+        'Items that are not paid cannot be picked up'
+      );
+    }
   }
 
   public async updateProductItemStatus(
@@ -105,9 +145,25 @@ export class ProductItemService {
   ) {
     const productItem = await this.prismaService.productItem.findUnique({
       where: { id: productItemId },
+      include: { orderItem: { include: { order: true } } },
     });
 
-    return this.prismaService.productItem.update({
+    const order = productItem.orderItem.order;
+
+    if (
+      order.status !== OrderStatus.PAID &&
+      dto.status === ProductItemStatusEnum.IN_TRANSIT_TO_STORAGE_FACILITY
+    ) {
+      throw new BadRequestException(
+        'Items that are not paid cannot be picked up'
+      );
+    }
+
+    const setCourierToNull =
+      dto.status === ProductItemStatusEnum.IN_STORAGE_FACILITY ||
+      dto.status === ProductItemStatusEnum.COMPLETE;
+
+    await this.prismaService.productItem.update({
       where: { id: productItemId },
       data: {
         status: dto.status,
@@ -117,6 +173,15 @@ export class ProductItemService {
             : productItem.rfid,
       },
     });
+
+    if (setCourierToNull) {
+      await this.prismaService.productItem.update({
+        where: { id: productItemId },
+        data: {
+          courier: { disconnect: true },
+        },
+      });
+    }
   }
 
   public async deleteProductItem(productItemId: string) {
@@ -158,13 +223,36 @@ export class ProductItemService {
     return productItems.map((p) => ProductItemService.convertToDTO(p));
   }
 
+  public async getOrderedProductItemsByStatus(
+    status: ProductItemStatusEnum,
+    companyId: string
+  ) {
+    const productItems = await this.prismaService.productItem.findMany({
+      where: {
+        status,
+        OR: [
+          { buyerId: companyId },
+          { orderItem: { order: { storageFacilityId: companyId } } },
+        ],
+      },
+      include: {
+        product: { include: { company: true } },
+        courier: true,
+        customer: true,
+        buyer: true,
+      },
+    });
+
+    return productItems.map((p) => ProductItemService.convertToDTO(p));
+  }
+
   public async getProductItemsByStatusAndUser(
     status: ProductItemStatusEnum,
     userId: string
   ) {
     const productItems = await this.prismaService.productItem.findMany({
       where: { status, customerId: userId },
-      include: { product: true, buyer: true, customer: true },
+      include: { product: true, buyer: true, customer: true, courier: true },
     });
 
     return productItems.map((p) => ProductItemService.convertToDTO(p));
@@ -220,7 +308,9 @@ export class ProductItemService {
     productItemStatusQuantity.onHold = 0;
     productItemStatusQuantity.inStorage = 0;
     productItemStatusQuantity.toBePickedUp = 0;
-    productItemStatusQuantity.inTransit = 0;
+    productItemStatusQuantity.inTransitToStorageFacility = 0;
+    productItemStatusQuantity.inStorageFacility = 0;
+    productItemStatusQuantity.inTransitToBuyer = 0;
     productItemStatusQuantity.complete = 0;
     productItemStatusQuantity.canceled = 0;
     productItemStatusQuantity.redFlag = 0;
@@ -239,8 +329,15 @@ export class ProductItemService {
         case ProductItemStatus.TO_BE_PICKED_UP:
           productItemStatusQuantity.toBePickedUp = count._count.id;
           break;
-        case ProductItemStatus.IN_TRANSIT:
-          productItemStatusQuantity.inTransit = count._count.id;
+        case ProductItemStatus.IN_TRANSIT_TO_STORAGE_FACILITY:
+          productItemStatusQuantity.inTransitToStorageFacility =
+            count._count.id;
+          break;
+        case ProductItemStatus.IN_STORAGE_FACILITY:
+          productItemStatusQuantity.inStorageFacility = count._count.id;
+          break;
+        case ProductItemStatus.IN_TRANSIT_TO_BUYER:
+          productItemStatusQuantity.inTransitToBuyer = count._count.id;
           break;
         case ProductItemStatus.COMPLETE:
           productItemStatusQuantity.complete = count._count.id;
@@ -308,8 +405,13 @@ export class ProductItemService {
     const toBePickedUpProductItems = productItems
       .filter((p) => p.status === ProductItemStatusEnum.TO_BE_PICKED_UP)
       .map((p) => ProductItemService.convertToDTO(p));
-    const inTransitProductItems = productItems
-      .filter((p) => p.status === ProductItemStatusEnum.IN_TRANSIT)
+    const inTransitToStorageFacilityProductItems = productItems
+      .filter(
+        (p) => p.status === ProductItemStatusEnum.IN_TRANSIT_TO_STORAGE_FACILITY
+      )
+      .map((p) => ProductItemService.convertToDTO(p));
+    const inTransitToBuyerProductItems = productItems
+      .filter((p) => p.status === ProductItemStatusEnum.IN_TRANSIT_TO_BUYER)
       .map((p) => ProductItemService.convertToDTO(p));
 
     const returningItems = await this.prismaService.productItem.findMany({
@@ -328,7 +430,8 @@ export class ProductItemService {
 
     return {
       toBePickedUpProductItems,
-      inTransitProductItems,
+      inTransitToStorageFacilityProductItems,
+      inTransitToBuyerProductItems,
       returningProductItems,
     };
   }
@@ -341,7 +444,7 @@ export class ProductItemService {
           in: [ProductItemStatus.RETURNING, ProductItemStatus.RETURNED],
         },
       },
-      include: { product: true, buyer: true, customer: true },
+      include: { product: true, buyer: true, customer: true, courier: true },
     });
 
     return productItems.map((p) => ProductItemService.convertToDTO(p));

@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { Box, Center, Flex, Heading } from '@chakra-ui/react';
 import {
   DirectionsRenderer,
@@ -8,6 +14,7 @@ import {
 } from '@react-google-maps/api';
 import {
   CompanyDTO,
+  CompanyDTOTypeEnum,
   ProductItemByStatusDTOStatusEnum,
   ProductItemLocationDTO,
   UserDTO,
@@ -15,6 +22,8 @@ import {
 import { SocketContext } from '../../shared/providers/SocketProvider';
 import { useGlobalStore } from '../../shared/stores';
 import { useGetProductItemsByStatus } from '../../modules/products/hooks/useGetProductItemsByStatus';
+import { ProductItemTable } from '../../modules/products/components/ProductItemTable';
+import { useGetOrderedProductItemsByStatus } from '../../modules/products/hooks/useGetOrderedProductItemsByStatus';
 
 const MAP_ICON_SIZE = 50;
 
@@ -23,21 +32,62 @@ interface Directions {
   destination: google.maps.LatLngLiteral;
 }
 
+// TODO: add inventory for storage facility (done)
+// TODO: add bought items in inventory (done)
+// TODO: add status IN_STORAGE_FACILITY (done)
+// TODO: fix storage facility to be picked up (done)
+// TODO: fix completing of product items (done)
+// TODO: add courier to new storage facility (done)
+// TODO: add directions for courier to own company (done)
+// TODO: fix animation (not done)
+// TODO: pay before allowing courier to take product item (done)
 const GoogleMapPage = () => {
   const socket = useContext(SocketContext);
   const getUser = useGlobalStore().getUser;
   const user = getUser();
   const company = user?.company;
-  const { data } = useGetProductItemsByStatus(
+  const { data: inTransitToStorageFacilityData } = useGetProductItemsByStatus(
     company?.id,
-    ProductItemByStatusDTOStatusEnum.InTransit
+    ProductItemByStatusDTOStatusEnum.InTransitToStorageFacility
+  );
+  const { data: inTransitToBuyerData } = useGetProductItemsByStatus(
+    company?.id,
+    ProductItemByStatusDTOStatusEnum.InTransitToBuyer
   );
   const { data: returningData } = useGetProductItemsByStatus(
     company?.id,
     ProductItemByStatusDTOStatusEnum.Returning
   );
-  const inTransitProductItems = data?.data;
+  const { data: orderedInTransitToStorageFacilityData } =
+    useGetOrderedProductItemsByStatus(
+      company?.id,
+      ProductItemByStatusDTOStatusEnum.InTransitToStorageFacility
+    );
+  const { data: orderedInTransitToBuyerData } =
+    useGetOrderedProductItemsByStatus(
+      company?.id,
+      ProductItemByStatusDTOStatusEnum.InTransitToBuyer
+    );
+  const inTransitProductItems = useMemo(
+    () => [
+      ...(inTransitToStorageFacilityData?.data ?? []),
+      ...(inTransitToBuyerData?.data ?? []),
+    ],
+    [inTransitToBuyerData?.data, inTransitToStorageFacilityData?.data]
+  );
+  const orderedInTransitProductItems = useMemo(
+    () => [
+      ...(orderedInTransitToStorageFacilityData?.data ?? []),
+      ...(orderedInTransitToBuyerData?.data ?? []),
+    ],
+    [
+      orderedInTransitToBuyerData?.data,
+      orderedInTransitToStorageFacilityData?.data,
+    ]
+  );
   const returningProductItems = returningData?.data;
+  const isStorageFacility =
+    company?.type === CompanyDTOTypeEnum.StorageFacility;
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -106,6 +156,20 @@ const GoogleMapPage = () => {
       return Array.from(buyersMap, ([_id, buyer]) => buyer);
     }
   }, [inTransitProductItems]);
+
+  // const getUniqueOrdered = useCallback(() => {
+  //   if (orderedInTransitProductItems) {
+  //     const orderedMap = new Map<string, CompanyDTO>();
+  //
+  //     for (const p of orderedInTransitProductItems) {
+  //       if (!!p.buyer && !orderedMap.has(p.buyer.id)) {
+  //         orderedMap.set(p.buyer.id, p.buyer);
+  //       }
+  //     }
+  //
+  //     return Array.from(orderedMap, ([_id, buyer]) => buyer);
+  //   }
+  // }, [orderedInTransitProductItems]);
 
   const getUniqueReturns = useCallback(() => {
     if (returningProductItems) {
@@ -181,9 +245,16 @@ const GoogleMapPage = () => {
     const uniqueCustomers = getUniqueCustomers();
     const uniqueBuyers = getUniqueBuyers();
     const uniqueReturns = getUniqueReturns();
+    // const uniqueOrdered = getUniqueOrdered();
     const newDirections: google.maps.DirectionsResult[] = [];
 
-    if (courierLatLng && uniqueCustomers && uniqueBuyers && uniqueReturns) {
+    if (
+      courierLatLng &&
+      companyAddressLatLng &&
+      uniqueCustomers &&
+      uniqueBuyers &&
+      uniqueReturns
+    ) {
       const directionsService = new google.maps.DirectionsService();
 
       for (const c of uniqueCustomers) {
@@ -231,13 +302,35 @@ const GoogleMapPage = () => {
         );
       }
 
+      // for (const o of uniqueOrdered) {
+      directionsService.route(
+        {
+          origin: courierLatLng,
+          destination: companyAddressLatLng,
+          travelMode: google.maps.TravelMode.DRIVING,
+        },
+        (result, status) => {
+          if (status === google.maps.DirectionsStatus.OK && result) {
+            newDirections.push(result);
+          }
+        }
+      );
+      // }
+
       setTimeout(() => {
         if (newDirections.length > 0) {
           setDirections(newDirections);
         }
       }, 2000);
     }
-  }, [courierLatLng, getUniqueBuyers, getUniqueCustomers, getUniqueReturns]);
+  }, [
+    courierLatLng,
+    companyAddressLatLng,
+    getUniqueBuyers,
+    getUniqueCustomers,
+    getUniqueReturns,
+    // getUniqueOrdered,
+  ]);
 
   useEffect(() => {
     if (user && !userAddressLatLng) {
@@ -256,8 +349,8 @@ const GoogleMapPage = () => {
         {isLoaded && (companyAddressLatLng || userAddressLatLng) && (
           <GoogleMap
             mapContainerStyle={{ height: '100%', width: '100%' }}
-            center={courierLatLng ?? companyAddressLatLng ?? userAddressLatLng}
-            zoom={11}
+            center={companyAddressLatLng ?? userAddressLatLng}
+            zoom={20}
           >
             {companyAddressLatLng ? (
               <MarkerF position={companyAddressLatLng}></MarkerF>
@@ -358,6 +451,40 @@ const GoogleMapPage = () => {
           </Center>
         )}
       </Box>
+
+      {!isStorageFacility && (
+        <Flex gap='2' flexWrap='wrap' justify='space-between' mt='6'>
+          <Box bg='gray.900' rounded='md' width='49%' p='4'>
+            <Heading mb='2'>In Transit Ordered Items</Heading>
+            <ProductItemTable
+              productItems={orderedInTransitProductItems}
+              allowActions={false}
+              isRfidOptional={false}
+            />
+          </Box>
+          <Box bg='gray.900' rounded='md' width='49%' p='4'>
+            <Heading mb='2'>In Transit Sold Items</Heading>
+            <ProductItemTable
+              productItems={inTransitProductItems}
+              allowActions={false}
+              isRfidOptional={false}
+            />
+          </Box>
+        </Flex>
+      )}
+
+      {isStorageFacility && (
+        <Flex flexWrap='wrap' justify='space-between' mt='6'>
+          <Box bg='gray.900' rounded='md' p='4' w='full'>
+            <Heading mb='2'>In Transit Items</Heading>
+            <ProductItemTable
+              productItems={inTransitProductItems}
+              allowActions={false}
+              isRfidOptional={false}
+            />
+          </Box>
+        </Flex>
+      )}
     </Flex>
   );
 };

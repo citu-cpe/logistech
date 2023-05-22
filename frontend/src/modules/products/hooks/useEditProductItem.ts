@@ -6,6 +6,7 @@ import {
 import { useContext } from 'react';
 import { ApiContext } from '../../../shared/providers/ApiProvider';
 import { PRODUCT_ITEMS_QUERY_KEY } from './useGetProductItems';
+import { PRODUCT_ITEMS_BY_COMPANY_QUERY_KEY } from './useGetProductItemsByCompany';
 import { PRODUCT_ITEMS_BY_STATUS_QUERY_KEY } from './useGetProductItemsByStatus';
 
 export const useEditProductItem = (id: string) => {
@@ -44,7 +45,12 @@ export const useEditProductItem = (id: string) => {
         );
         queryClient.invalidateQueries(
           PRODUCT_ITEMS_BY_STATUS_QUERY_KEY(
-            ProductItemByStatusDTOStatusEnum.InTransit
+            ProductItemByStatusDTOStatusEnum.InTransitToStorageFacility
+          )
+        );
+        queryClient.invalidateQueries(
+          PRODUCT_ITEMS_BY_STATUS_QUERY_KEY(
+            ProductItemByStatusDTOStatusEnum.InTransitToBuyer
           )
         );
         queryClient.invalidateQueries(
@@ -57,6 +63,7 @@ export const useEditProductItem = (id: string) => {
             ProductItemByStatusDTOStatusEnum.Returning
           )
         );
+        queryClient.invalidateQueries(PRODUCT_ITEMS_BY_COMPANY_QUERY_KEY);
       },
     }
   );

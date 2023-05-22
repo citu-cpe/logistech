@@ -29,13 +29,25 @@ export interface ProductItemStatusQuantityDTO {
    * @type {number}
    * @memberof ProductItemStatusQuantityDTO
    */
-  inTransit: number;
+  inTransitToStorageFacility: number;
+  /**
+   *
+   * @type {number}
+   * @memberof ProductItemStatusQuantityDTO
+   */
+  inTransitToBuyer: number;
   /**
    *
    * @type {number}
    * @memberof ProductItemStatusQuantityDTO
    */
   inStorage: number;
+  /**
+   *
+   * @type {number}
+   * @memberof ProductItemStatusQuantityDTO
+   */
+  inStorageFacility: number;
   /**
    *
    * @type {number}

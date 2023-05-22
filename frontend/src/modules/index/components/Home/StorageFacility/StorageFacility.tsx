@@ -36,9 +36,15 @@ export const StorageFacility = () => {
             />
             <LinkCard
               flexBasis={flexBasis}
-              title='In Transit'
-              n={data?.data.inTransit}
-              href={`/products/product-items?status=${ProductItemDTOStatusEnum.InTransit}`}
+              title='In Transit To Storage Facility'
+              n={data?.data.inTransitToStorageFacility}
+              href={`/products/product-items?status=${ProductItemDTOStatusEnum.InTransitToStorageFacility}`}
+            />
+            <LinkCard
+              flexBasis={flexBasis}
+              title='In Transit To Buyer'
+              n={data?.data.inTransitToBuyer}
+              href={`/products/product-items?status=${ProductItemDTOStatusEnum.InTransitToBuyer}`}
             />
             <LinkCard
               flexBasis={flexBasis}

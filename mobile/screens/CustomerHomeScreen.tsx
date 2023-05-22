@@ -128,11 +128,26 @@ export const CustomerHomeScreen: React.FC<CustomerHomeScreenProps> = ({
               onPress={() => {
                 onClose();
                 navigation.navigate("ProductItems", {
-                  status: ProductItemByStatusDTOStatusEnum.InTransit,
+                  status:
+                    ProductItemByStatusDTOStatusEnum.InTransitToStorageFacility,
                 });
               }}
             >
-              In Transit
+              In Transit To Storage Facility
+            </Button>
+
+            <Spacer />
+
+            <Button
+              bg="blueGray.700"
+              onPress={() => {
+                onClose();
+                navigation.navigate("ProductItems", {
+                  status: ProductItemByStatusDTOStatusEnum.InTransitToBuyer,
+                });
+              }}
+            >
+              In Transit To Buyer
             </Button>
 
             <Spacer />

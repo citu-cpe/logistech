@@ -1,6 +1,7 @@
 import { Button, Box } from '@chakra-ui/react';
 import { Formik, Form, Field, FieldProps } from 'formik';
 import {
+  CompanyDTOTypeEnum,
   CreateProductItemDTO,
   CreateProductItemDTOStatusEnum,
   ProductItemDTO,
@@ -11,6 +12,8 @@ import { useContext, useRef, useEffect } from 'react';
 import { Input } from '../../../shared/components/form/Input/Input';
 import { Select } from '../../../shared/components/form/Select/Select';
 import { SocketContext } from '../../../shared/providers/SocketProvider';
+import { useGlobalStore } from '../../../shared/stores';
+import { useGetCouriers } from '../../storage-facilities/hooks/useGetCouriers';
 import { useEditProductItem } from '../hooks/useEditProductItem';
 import { productItemFormValidationSchema } from './ProductItemForm';
 
@@ -29,15 +32,30 @@ export const EditProductItemForm: React.FC<ProductItemFormProps> = ({
   isRfidOptional,
   isCourier,
 }) => {
+  const getUser = useGlobalStore().getUser;
+  const company = getUser()?.company;
+  const companyId = company?.id;
+  const companyType = company?.type;
+  const { data } = useGetCouriers(companyId);
+  const couriers = data?.data;
   const ediProductItem = useEditProductItem(productItem.id);
   const isReturning = productItem.status === ProductItemDTOStatusEnum.Returning;
+  const isInStorageFacility =
+    productItem.status === ProductItemDTOStatusEnum.InStorageFacility;
+  const isToBePickedUp =
+    productItem.status === ProductItemDTOStatusEnum.ToBePickedUp;
 
   const onSubmit = (dto: CreateProductItemDTO) => {
     if (isCourier) {
       if (isReturning) {
         dto.status = CreateProductItemDTOStatusEnum.Returned;
       } else {
-        dto.status = CreateProductItemDTOStatusEnum.InTransit;
+        if (isToBePickedUp) {
+          dto.status =
+            CreateProductItemDTOStatusEnum.InTransitToStorageFacility;
+        } else if (isInStorageFacility) {
+          dto.status = CreateProductItemDTOStatusEnum.InTransitToBuyer;
+        }
       }
     }
 
@@ -71,12 +89,14 @@ export const EditProductItemForm: React.FC<ProductItemFormProps> = ({
     };
   }, [socket]);
 
+  // TODO: revert
   return (
     <Formik
       innerRef={formikRef}
       initialValues={{
         rfid: productItem.rfid,
         status: productItem.status as unknown as CreateProductItemDTOStatusEnum,
+        courierId: productItem.courier?.id,
       }}
       validationSchema={() => productItemFormValidationSchema(isRfidOptional)}
       onSubmit={onSubmit}
@@ -96,7 +116,6 @@ export const EditProductItemForm: React.FC<ProductItemFormProps> = ({
                     borderColor='gray.300'
                     bgColor='gray.50'
                     color='gray.800'
-                    disabled
                   />
                 )}
               </Field>
@@ -130,8 +149,22 @@ export const EditProductItemForm: React.FC<ProductItemFormProps> = ({
                     <option value={CreateProductItemDTOStatusEnum.ToBePickedUp}>
                       TO BE PICKED UP
                     </option>
-                    <option value={CreateProductItemDTOStatusEnum.InTransit}>
-                      IN TRANSIT
+                    <option
+                      value={
+                        CreateProductItemDTOStatusEnum.InTransitToStorageFacility
+                      }
+                    >
+                      IN TRANSIT TO STORAGE FACILITY
+                    </option>
+                    <option
+                      value={CreateProductItemDTOStatusEnum.InStorageFacility}
+                    >
+                      IN STORAGE FACILITY
+                    </option>
+                    <option
+                      value={CreateProductItemDTOStatusEnum.InTransitToBuyer}
+                    >
+                      IN TRANSIT TO BUYER
                     </option>
                     <option value={CreateProductItemDTOStatusEnum.RedFlag}>
                       RED FLAG
@@ -152,6 +185,32 @@ export const EditProductItemForm: React.FC<ProductItemFormProps> = ({
                 )}
               </Field>
             )}
+
+            {!!couriers &&
+              companyType === CompanyDTOTypeEnum.StorageFacility && (
+                <Field name='courierId' type='text'>
+                  {(fieldProps: FieldProps<string, CreateProductItemDTO>) => (
+                    <Select
+                      fieldProps={fieldProps}
+                      name='courierId'
+                      label='Courier'
+                      id='courierId'
+                      borderColor='gray.300'
+                      bgColor='gray.50'
+                      color='gray.800'
+                    >
+                      <option selected hidden disabled value=''>
+                        Choose a courier
+                      </option>
+                      {couriers.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.username}
+                        </option>
+                      ))}
+                    </Select>
+                  )}
+                </Field>
+              )}
           </Box>
           <Box mb='4'>
             <Button

@@ -3,7 +3,10 @@ import { ProductItemDTO } from './product-item.dto';
 
 export class CourierProductItemsDTO {
   @ValidateNested({ each: true })
-  public inTransitProductItems: ProductItemDTO[];
+  public inTransitToStorageFacilityProductItems: ProductItemDTO[];
+
+  @ValidateNested({ each: true })
+  public inTransitToBuyerProductItems: ProductItemDTO[];
 
   @ValidateNested({ each: true })
   public toBePickedUpProductItems: ProductItemDTO[];

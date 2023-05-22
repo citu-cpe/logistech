@@ -30,13 +30,18 @@ const ProductItems = () => {
   } = useGetProductItemsByStatusAndUser(status, isCustomer);
 
   const actualLoading = isCustomer ? customerProductItemsIsLoading : isLoading;
-  let actualData = (isCustomer ? customerProductItemsData : data)?.data;
+  const actualData = (isCustomer ? customerProductItemsData : data)?.data;
   const socket = useContext(SocketContext);
   const [productItems, setProductItems] = useState<ProductItemDTO[]>([]);
 
-  if (isCourier && status === ProductItemByStatusDTOStatusEnum.InTransit) {
-    actualData = productItems;
-  }
+  // TODO: revert
+  // if (
+  //   isCourier &&
+  //   (status === ProductItemByStatusDTOStatusEnum.InTransitToStorageFacility ||
+  //     status === ProductItemByStatusDTOStatusEnum.InTransitToBuyer)
+  // ) {
+  //   actualData = productItems;
+  // }
 
   useEffect(() => {
     if (socket) {

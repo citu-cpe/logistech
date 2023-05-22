@@ -53,7 +53,7 @@ export const CourierProductItemToBePickedUp: React.FC<
   const onSubmit: SubmitHandler<CreateProductItemDTO> = async (data) => {
     setIsLoading(true);
     await axios.put(`/product/product-item/${productItem.id}`, {
-      status: UpdateProductItemStatusDTOStatusEnum.InTransit,
+      status: UpdateProductItemStatusDTOStatusEnum.InTransitToStorageFacility,
       rfid: data.rfid,
     });
     setIsLoading(false);
@@ -116,7 +116,8 @@ export const CourierProductItemToBePickedUp: React.FC<
             await axios.patch(
               `/product/product-item/${productItem.id}/status`,
               {
-                status: UpdateProductItemStatusDTOStatusEnum.InTransit,
+                status:
+                  UpdateProductItemStatusDTOStatusEnum.InTransitToStorageFacility,
               }
             );
             setIsLoading(false);

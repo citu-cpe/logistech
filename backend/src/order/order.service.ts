@@ -391,7 +391,10 @@ export class OrderService {
     if (!!courier) {
       await this.prismaService.productItem.updateMany({
         where: { id: { in: productItemIds } },
-        data: { status: ProductItemStatus.TO_BE_PICKED_UP },
+        data: {
+          status: ProductItemStatus.TO_BE_PICKED_UP,
+          courierId: courier.id,
+        },
       });
     }
 

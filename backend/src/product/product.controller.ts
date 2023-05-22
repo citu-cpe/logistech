@@ -141,6 +141,17 @@ export class ProductController {
     );
   }
 
+  @Post(ProductController.COMPANY_API_ROUTE + '/status/ordered')
+  public getOrderedProductItemsByStatus(
+    @Param('companyId') companyId: string,
+    @Body() dto: ProductItemByStatusDTO
+  ): Promise<ProductItemDTO[]> {
+    return this.productItemService.getOrderedProductItemsByStatus(
+      dto.status,
+      companyId
+    );
+  }
+
   @Post('/product-item/status/user')
   public getProductItemsByStatusAndUser(
     @Req() { user }: RequestWithUser,

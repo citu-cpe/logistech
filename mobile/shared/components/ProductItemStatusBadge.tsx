@@ -20,8 +20,14 @@ export const ProductItemStatusBadge: React.FC<ProductItemStatusBadgeProps> = ({
     case ProductItemDTOStatusEnum.ToBePickedUp:
       colorScheme = "orange";
       break;
-    case ProductItemDTOStatusEnum.InTransit:
+    case ProductItemDTOStatusEnum.InTransitToStorageFacility:
       colorScheme = "teal";
+      break;
+    case ProductItemDTOStatusEnum.InStorageFacility:
+      colorScheme = "purple";
+      break;
+    case ProductItemDTOStatusEnum.InTransitToBuyer:
+      colorScheme = "cyan";
       break;
     case ProductItemDTOStatusEnum.RedFlag:
       colorScheme = "red";
