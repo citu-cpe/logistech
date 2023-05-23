@@ -97,6 +97,9 @@ const GoogleMapPage = () => {
   const [directions, setDirections] = useState<google.maps.DirectionsResult[]>(
     []
   );
+  const [dummyDirections, setDummyDirections] = useState<
+    google.maps.DirectionsResult[]
+  >([]);
 
   const successCallback = useCallback((position: any) => {
     setCourierLatLng({
@@ -195,16 +198,16 @@ const GoogleMapPage = () => {
         socket.connect();
       }
 
-      socket.on('test', (_location: ProductItemLocationDTO) => {
-        // setCourierLatLng({ lat: location.latitude, lng: location.longitude });
+      socket.on('test', (location: ProductItemLocationDTO) => {
+        setCourierLatLng({ lat: location.latitude, lng: location.longitude });
 
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            successCallback,
-            errorCallback,
-            { maximumAge: 0, timeout: 0 }
-          );
-        }
+        // if (navigator.geolocation) {
+        //   navigator.geolocation.getCurrentPosition(
+        //     successCallback,
+        //     errorCallback,
+        //     { maximumAge: 0, timeout: 0 }
+        //   );
+        // }
       });
 
       socket.on('scan', () => {
@@ -337,6 +340,49 @@ const GoogleMapPage = () => {
     }
   }, [user, userAddressLatLng]);
 
+  useEffect(() => {
+    if (dummyDirections.length > 0) {
+      return;
+    }
+
+    if (courierLatLng) {
+      const directionsService = new google.maps.DirectionsService();
+      const dummy: google.maps.DirectionsResult[] = [];
+
+      directionsService.route(
+        {
+          origin: courierLatLng,
+          // McDo
+          destination: { lat: 10.290401, lng: 123.870964 },
+          travelMode: google.maps.TravelMode.DRIVING,
+        },
+        (result, status) => {
+          if (status === google.maps.DirectionsStatus.OK && result) {
+            dummy.push(result);
+          }
+        }
+      );
+
+      directionsService.route(
+        {
+          origin: courierLatLng,
+          // Jad's Bakeshop
+          destination: { lat: 10.293436, lng: 123.865441 },
+          travelMode: google.maps.TravelMode.DRIVING,
+        },
+        (result, status) => {
+          if (status === google.maps.DirectionsStatus.OK && result) {
+            dummy.push(result);
+          }
+        }
+      );
+
+      setTimeout(() => {
+        setDummyDirections(dummy);
+      }, 2000);
+    }
+  }, [dummyDirections.length, courierLatLng]);
+
   return (
     <Flex h='full' flexDir='column'>
       <Heading mb='6'>Map</Heading>
@@ -435,7 +481,7 @@ const GoogleMapPage = () => {
               </React.Fragment>
             ))}
 
-            {directions.map((d, i) => (
+            {dummyDirections.map((d, i) => (
               <DirectionsRenderer key={i} directions={d} />
             ))}
           </GoogleMap>
