@@ -1,11 +1,10 @@
 import { Box, Heading } from '@chakra-ui/react';
 import { SellersTable } from '../../modules/sellers/components/SellersTable';
 import { useGetSellers } from '../../modules/sellers/hooks/useGetSellers';
-import { useGlobalStore } from '../../shared/stores';
+import { useAuthStore } from '../../shared/stores';
 
 const Sellers = () => {
-  const getUser = useGlobalStore().getUser;
-  const companyId = getUser()?.company?.id;
+  const { companyId } = useAuthStore();
   const sellersQuery = useGetSellers(companyId!);
 
   return (

@@ -3,20 +3,24 @@ import { ProductItemByStatusDTOStatusEnum } from 'generated-api';
 import { useContext } from 'react';
 import { ApiContext } from '../../../shared/providers/ApiProvider';
 
-export const ORDERED_PRODUCT_ITEMS_BY_STATUS_QUERY_KEY = (
-  status: ProductItemByStatusDTOStatusEnum
-) => ['product-items', 'ordered', status];
+export const ORDERED_PRODUCT_ITEMS_BY_STATUS_QUERY_KEY = [
+  'product-items',
+  'status',
+  'ordered',
+];
 
 export const useGetOrderedProductItemsByStatus = (
   companyId?: string,
-  status?: ProductItemByStatusDTOStatusEnum
+  status?: ProductItemByStatusDTOStatusEnum | ProductItemByStatusDTOStatusEnum[]
 ) => {
   const api = useContext(ApiContext);
 
   return useQuery({
-    queryKey: ORDERED_PRODUCT_ITEMS_BY_STATUS_QUERY_KEY(status!),
+    queryKey: ORDERED_PRODUCT_ITEMS_BY_STATUS_QUERY_KEY,
     queryFn: () =>
-      api.getOrderedProductItemsByStatus(companyId!, { status: status! }),
+      api.getOrderedProductItemsByStatus(companyId!, {
+        status: Array.isArray(status!) ? status! : [status!],
+      }),
     enabled: !!companyId && !!status,
   });
 };

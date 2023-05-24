@@ -3,15 +3,15 @@ import { useContext } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { LocalStorageKeys } from '../../../shared/enums/localStorageKeys';
 import { ApiContext } from '../../../shared/providers/ApiProvider';
-import { useGlobalStore } from '../../../shared/stores';
+import { useAuthStore } from '../../../shared/stores';
 
 export const useLogout = () => {
   const api = useContext(ApiContext);
-  const removeUser = useGlobalStore((state) => state.removeUser);
+  const removeUser = useAuthStore((state) => state.removeUser);
   const router = useRouter();
-  const user = useGlobalStore((state) => state.getUser)()!;
+  const { user } = useAuthStore();
 
-  return useMutation(() => api.logOut({ id: user.id }), {
+  return useMutation(() => api.logOut({ id: user!.id }), {
     onSuccess: () => {
       removeUser();
 

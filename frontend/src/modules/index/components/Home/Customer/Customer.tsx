@@ -1,21 +1,26 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { ProductItemDTOStatusEnum } from 'generated-api';
 import { LinkCard } from '../../../../../shared/components/LinkCard';
-import { useGlobalStore } from '../../../../../shared/stores';
+import { useAuthStore } from '../../../../../shared/stores';
 import { useGetProductItemStatusQuantity } from '../../../hooks/useGetProductItemStatusQuantity';
 
 export interface CustomerProps {}
 
 export const Customer: React.FC<CustomerProps> = () => {
   const flexBasis = { base: '40%', md: '25%' };
-  const getUser = useGlobalStore((state) => state.getUser);
-  const user = getUser();
-  const { data } = useGetProductItemStatusQuantity(user?.id);
+  const { userId } = useAuthStore();
+  const { data } = useGetProductItemStatusQuantity(userId);
 
   return (
     <Box>
       {data?.data && (
         <Flex justify='center' mb='8' gap='14' flexWrap='wrap'>
+          <LinkCard
+            title='On Hold'
+            n={data.data.onHold}
+            href={`/products/product-items?status=${ProductItemDTOStatusEnum.OnHold}`}
+            flexBasis={flexBasis}
+          />
           <LinkCard
             title='In Transit To Storage Facility'
             n={data.data.inTransitToStorageFacility}
@@ -23,15 +28,15 @@ export const Customer: React.FC<CustomerProps> = () => {
             flexBasis={flexBasis}
           />
           <LinkCard
-            title='In Transit To Buyer'
-            n={data.data.inTransitToBuyer}
-            href={`/products/product-items?status=${ProductItemDTOStatusEnum.InTransitToBuyer}`}
+            title='In Storage Facility'
+            n={data.data.inStorageFacility}
+            href={`/products/product-items?status=${ProductItemDTOStatusEnum.InStorageFacility}`}
             flexBasis={flexBasis}
           />
           <LinkCard
-            title='On Hold'
-            n={data.data.onHold}
-            href={`/products/product-items?status=${ProductItemDTOStatusEnum.OnHold}`}
+            title='In Transit To Me'
+            n={data.data.inTransitToBuyer}
+            href={`/products/product-items?status=${ProductItemDTOStatusEnum.InTransitToBuyer}`}
             flexBasis={flexBasis}
           />
           <LinkCard
@@ -47,9 +52,21 @@ export const Customer: React.FC<CustomerProps> = () => {
             flexBasis={flexBasis}
           />
           <LinkCard
-            title='Returning'
-            n={data.data.returning}
-            href={`/products/product-items?status=${ProductItemDTOStatusEnum.Returning}`}
+            title='Return Requested'
+            n={data.data.returnRequested}
+            href={`/products/product-items?status=${ProductItemDTOStatusEnum.ReturnRequested}`}
+            flexBasis={flexBasis}
+          />
+          <LinkCard
+            title='Return Accepted'
+            n={data.data.returnAccepted}
+            href={`/products/product-items?status=${ProductItemDTOStatusEnum.ReturnAccepted}`}
+            flexBasis={flexBasis}
+          />
+          <LinkCard
+            title='Return Rejected'
+            n={data.data.returnRejected}
+            href={`/products/product-items?status=${ProductItemDTOStatusEnum.ReturnRejected}`}
             flexBasis={flexBasis}
           />
           <LinkCard

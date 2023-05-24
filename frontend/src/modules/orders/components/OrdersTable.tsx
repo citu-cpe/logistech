@@ -8,7 +8,7 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import { CompanyDTOTypeEnum, OrderDTO } from 'generated-api';
-import { useGlobalStore } from '../../../shared/stores';
+import { useAuthStore } from '../../../shared/stores';
 import { OrderRow } from './OrderRow';
 
 interface OrdersTableProps {
@@ -28,8 +28,8 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
   showTotal,
   billed,
 }) => {
-  const getUser = useGlobalStore().getUser;
-  const company = getUser()?.company;
+  const { user } = useAuthStore();
+  const company = user?.company;
 
   return (
     <Box height='100%'>
@@ -47,6 +47,8 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
 
               {(billed === undefined || !billed) && <Th>Order date</Th>}
 
+              <Th>Due date</Th>
+
               {(billed === undefined || !billed) && <Th>Status</Th>}
 
               {billed === undefined && <Th>Storage Facility</Th>}
@@ -55,7 +57,6 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
                 (billed !== undefined && !!billed && (
                   <>
                     <Th>Courier</Th>
-                    <Th>Due date</Th>
                   </>
                 ))}
 

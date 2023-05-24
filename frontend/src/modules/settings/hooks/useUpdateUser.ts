@@ -3,13 +3,13 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UpdateUserDTO } from 'generated-api';
 import { useContext } from 'react';
 import { ApiContext } from '../../../shared/providers/ApiProvider';
-import { useGlobalStore } from '../../../shared/stores';
+import { useAuthStore } from '../../../shared/stores';
 import { USER_QUERY_KEY } from './useGetUser';
 
 export const useUpdateUser = () => {
   const api = useContext(ApiContext);
   const queryClient = useQueryClient();
-  const setUser = useGlobalStore((state) => state.setUser);
+  const setUser = useAuthStore((state) => state.setUser);
   const toast = useToast();
 
   return useMutation((dto: UpdateUserDTO) => api.updateUser(dto), {

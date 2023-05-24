@@ -23,6 +23,7 @@ import { CreateOrderFromOrderItemsDTO } from './dto/create-order-from-order-item
 import { OrderDTO, OrderStatusEnum } from './dto/order.dto';
 import { UpdateOrderDTO } from './dto/update-order.dto';
 import { OrderItemService } from './order-item.service';
+import moment from 'moment-timezone';
 
 const ORDER_DUE_DATE_PREFIX = 'DUE DATE: ';
 
@@ -405,8 +406,8 @@ export class OrderService {
       ORDER_DUE_DATE_PREFIX + order.id
     );
 
-    const startOfToday = new Date();
-    const dueDate = new Date(dto.dueDate);
+    const startOfToday = moment.tz(new Date(), 'Asia/Manila').toDate();
+    const dueDate = moment.tz(dto.dueDate, 'Asia/Manila').toDate();
 
     if (jobExists && dto.dueDate) {
       const job = this.schedulerRegistry.getCronJob(
@@ -431,10 +432,24 @@ export class OrderService {
         }
 
         const job = new CronJob(dueDate, async () => {
-          await this.prismaService.order.update({
-            where: { id: orderId },
-            data: { status: OrderStatus.OVERDUE },
+          const productItems = await this.prismaService.productItem.findMany({
+            where: { id: { in: productItemIds } },
           });
+
+          const isProductItemNotComplete = productItems.some(
+            (p) => p.status !== ProductItemStatus.COMPLETE
+          );
+
+          if (isProductItemNotComplete) {
+            await this.prismaService.productItem.updateMany({
+              where: { id: { in: productItemIds } },
+              data: { status: ProductItemStatus.RED_FLAG },
+            });
+            await this.prismaService.order.update({
+              where: { id: orderId },
+              data: { status: OrderStatus.OVERDUE },
+            });
+          }
         });
 
         this.schedulerRegistry.addCronJob(
@@ -452,6 +467,13 @@ export class OrderService {
 
     if (order.status === OrderStatus.REJECTED && !!dto.storageFacilityId) {
       newStatus = OrderStatus.PENDING;
+    }
+
+    if (newStatus === OrderStatus.OVERDUE) {
+      await this.prismaService.productItem.updateMany({
+        where: { id: { in: productItemIds } },
+        data: { status: ProductItemStatus.RED_FLAG },
+      });
     }
 
     await this.prismaService.order.update({

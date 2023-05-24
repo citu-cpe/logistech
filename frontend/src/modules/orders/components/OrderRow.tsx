@@ -8,6 +8,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Td,
+  Text,
   Tr,
   useDisclosure,
 } from '@chakra-ui/react';
@@ -79,6 +80,12 @@ export const OrderRow: React.FC<OrderRowProps> = ({
         <Td>{new Date(order.createdAt).toLocaleDateString()}</Td>
       )}
 
+      <Td>
+        {order.dueDate && (
+          <Text>{new Date(order.dueDate).toLocaleDateString()}</Text>
+        )}
+      </Td>
+
       {(billed === undefined || !billed) && (
         <Td>
           <OrderStatusBadge status={order.status} />
@@ -91,9 +98,6 @@ export const OrderRow: React.FC<OrderRowProps> = ({
         (billed !== undefined && !!billed && (
           <>
             <Td>{order.courier?.username}</Td>
-            <Td>
-              {order.dueDate && new Date(order.dueDate).toLocaleDateString()}
-            </Td>
           </>
         ))}
 

@@ -4,13 +4,10 @@ import { AppPropsWithLayout, NextPageWithLayout } from './_app';
 import { ReactElement } from 'react';
 import { Layout } from '../shared/components/ui/Layout';
 import { CenterLayout } from '../shared/components/ui/CenterLayout';
-import { useGlobalStore } from '../shared/stores';
+import { useAuthStore } from '../shared/stores';
 
 const Index: NextPageWithLayout = ({ isAuth }: AppPropsWithLayout) => {
-  const getUser = useGlobalStore((state) => state.getUser);
-  const user = getUser();
-  const companyType = user?.company?.type;
-  const userRole = user?.role;
+  const { userRole, companyType } = useAuthStore();
 
   return isAuth && (!!companyType || userRole) ? (
     <Home companyType={companyType} userRole={userRole} />

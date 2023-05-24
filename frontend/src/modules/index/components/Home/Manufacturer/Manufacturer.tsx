@@ -5,14 +5,13 @@ import {
 } from 'generated-api';
 import { LinkCard } from '../../../../../shared/components/LinkCard';
 import { StatusList } from '../../../../../shared/components/StatusList';
-import { useGlobalStore } from '../../../../../shared/stores';
+import { useAuthStore } from '../../../../../shared/stores';
 import { useGetProductItemStatusQuantity } from '../../../hooks/useGetProductItemStatusQuantity';
 import { ManufacturerHomeChart } from './ManufacturerHomeChart';
 
 export const Manufacturer = () => {
   const flexBasis = { base: '40%', md: '25%' };
-  const getUser = useGlobalStore((state) => state.getUser);
-  const companyId = getUser()?.company?.id;
+  const { companyId } = useAuthStore();
   const { data } = useGetProductItemStatusQuantity(companyId);
 
   return (

@@ -28,7 +28,7 @@ export const RedFlagRow: React.FC<RedFlagRowProps> = ({
   return (
     <Tr>
       <Td>{productItem.product?.name}</Td>
-      <Td>{productItem.rfid}</Td>
+      <Td>{productItem.rfid ?? 'n/a'}</Td>
       {!isCustomer && (
         <Td>
           <Button onClick={onOpen}>

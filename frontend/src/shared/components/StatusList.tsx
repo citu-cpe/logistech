@@ -4,7 +4,7 @@ import {
   ProductItemDTOStatusEnum,
 } from 'generated-api';
 import { useGetProductItemsByStatus } from '../../modules/products/hooks/useGetProductItemsByStatus';
-import { useGlobalStore } from '../stores';
+import { useAuthStore } from '../stores';
 import { ProductItemStatusBadge } from './ProductItemStatusBadge';
 
 interface StatusListProps {
@@ -12,8 +12,7 @@ interface StatusListProps {
 }
 
 export const StatusList: React.FC<StatusListProps> = ({ status }) => {
-  const getUser = useGlobalStore((state) => state.getUser);
-  const companyId = getUser()?.company?.id;
+  const { companyId } = useAuthStore();
   const { data } = useGetProductItemsByStatus(companyId, status);
 
   return (

@@ -13,16 +13,14 @@ import { useGetProductItemsByStatus } from '../../modules/products/hooks/useGetP
 import { useGetProductItemsByStatusAndUser } from '../../modules/products/hooks/useGetProductItemsByStatusAndUser';
 import { ProductItemStatusBadge } from '../../shared/components/ProductItemStatusBadge';
 import { SocketContext } from '../../shared/providers/SocketProvider';
-import { useGlobalStore } from '../../shared/stores';
+import { useAuthStore } from '../../shared/stores';
 
 const ProductItems = () => {
   const router = useRouter();
   const status = router.query.status as ProductItemByStatusDTOStatusEnum;
-  const getUser = useGlobalStore((state) => state.getUser);
-  const user = getUser();
+  const { user, companyId } = useAuthStore();
   const isCustomer = user?.role === UserDTORoleEnum.Customer;
   const isCourier = user?.role === UserDTORoleEnum.Courier;
-  const companyId = user?.company?.id;
   const { data, isLoading } = useGetProductItemsByStatus(
     companyId,
     status,
@@ -60,7 +58,8 @@ const ProductItems = () => {
   if (
     isCourier &&
     (status === ProductItemByStatusDTOStatusEnum.InTransitToStorageFacility ||
-      status === ProductItemByStatusDTOStatusEnum.InTransitToBuyer)
+      status === ProductItemByStatusDTOStatusEnum.InTransitToBuyer ||
+      status === ProductItemByStatusDTOStatusEnum.InTransitToSeller)
   ) {
     actualData = productItems;
   }
@@ -117,7 +116,7 @@ const ProductItems = () => {
           allowActions={!isCustomer}
           isCustomer={isCustomer}
           isCourier={isCourier}
-          status={status}
+          status={status as unknown as ProductItemDTOStatusEnum}
           isRfidOptional={false}
         />
       )}

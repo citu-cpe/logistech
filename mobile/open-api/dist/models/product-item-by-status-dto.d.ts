@@ -17,10 +17,10 @@
 export interface ProductItemByStatusDTO {
     /**
      *
-     * @type {string}
+     * @type {Array<string>}
      * @memberof ProductItemByStatusDTO
      */
-    status: ProductItemByStatusDTOStatusEnum;
+    status: Array<ProductItemByStatusDTOStatusEnum>;
 }
 /**
  * @export
@@ -36,6 +36,9 @@ export declare enum ProductItemByStatusDTOStatusEnum {
     Complete = "COMPLETE",
     Canceled = "CANCELED",
     RedFlag = "RED_FLAG",
-    Returning = "RETURNING",
+    ReturnRequested = "RETURN_REQUESTED",
+    ReturnAccepted = "RETURN_ACCEPTED",
+    ReturnRejected = "RETURN_REJECTED",
+    InTransitToSeller = "IN_TRANSIT_TO_SELLER",
     Returned = "RETURNED"
 }

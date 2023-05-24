@@ -1012,7 +1012,7 @@ export declare const DefaultApiFp: (configuration?: Configuration) => {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    scanRfid(scanRfidDTO: ScanRfidDTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
+    scanRfid(scanRfidDTO: ScanRfidDTO, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>>;
     /**
      *
      * @param {*} [options] Override http request option.
@@ -1518,7 +1518,7 @@ export declare const DefaultApiFactory: (configuration?: Configuration, basePath
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    scanRfid(scanRfidDTO: ScanRfidDTO, options?: any): AxiosPromise<void>;
+    scanRfid(scanRfidDTO: ScanRfidDTO, options?: any): AxiosPromise<boolean>;
     /**
      *
      * @param {*} [options] Override http request option.
@@ -2089,7 +2089,7 @@ export declare class DefaultApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    scanRfid(scanRfidDTO: ScanRfidDTO, options?: any): Promise<import("axios").AxiosResponse<void>>;
+    scanRfid(scanRfidDTO: ScanRfidDTO, options?: any): Promise<import("axios").AxiosResponse<boolean>>;
     /**
      *
      * @param {*} [options] Override http request option.

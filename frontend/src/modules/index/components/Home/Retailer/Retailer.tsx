@@ -16,15 +16,14 @@ import {
 } from 'generated-api';
 import { LinkCard } from '../../../../../shared/components/LinkCard';
 import { StatusList } from '../../../../../shared/components/StatusList';
-import { useGlobalStore } from '../../../../../shared/stores';
+import { useAuthStore } from '../../../../../shared/stores';
 import { useGetProductItemStatusQuantity } from '../../../hooks/useGetProductItemStatusQuantity';
 import { RetailerHomeChart } from './RetailerHomeChart';
 
 export const Retailer = () => {
   const flexBasis = { base: '47%', md: '21%' };
   const showAccordion = useBreakpointValue({ base: true, md: false });
-  const getUser = useGlobalStore((state) => state.getUser);
-  const companyId = getUser()?.company?.id;
+  const { companyId } = useAuthStore();
   const { data } = useGetProductItemStatusQuantity(companyId);
 
   return (
@@ -38,12 +37,6 @@ export const Retailer = () => {
               title='On Hold'
               n={data.data.onHold}
               href={`/products/product-items?status=${ProductItemDTOStatusEnum.OnHold}`}
-              flexBasis={flexBasis}
-            />
-            <LinkCard
-              title='New Arrival'
-              n={data.data.toBePickedUp}
-              href={`/products/product-items?status=${ProductItemDTOStatusEnum.ToBePickedUp}`}
               flexBasis={flexBasis}
             />
             <LinkCard

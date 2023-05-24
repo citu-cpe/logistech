@@ -14,7 +14,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { CompanyDTO } from 'generated-api';
-import { useGlobalStore } from '../../../shared/stores';
+import { useAuthStore } from '../../../shared/stores';
 import { useAddStorageFacilityPartners } from '../hooks/useAddStorageFacilityPartner';
 import { useRemoveStorageFacilityPartner } from '../hooks/useRemoveStorageFacilityPartner';
 
@@ -27,8 +27,7 @@ export const StorageFacilityRow: React.FC<StorageFacilityRowProps> = ({
   storageFacility,
   available,
 }) => {
-  const getUser = useGlobalStore().getUser;
-  const companyId = getUser()?.company?.id;
+  const { companyId } = useAuthStore();
   const addStorageFacilityPartner = useAddStorageFacilityPartners(companyId!);
   const removeStorageFacilityPartnerQuery = useRemoveStorageFacilityPartner(
     companyId!

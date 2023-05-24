@@ -1,16 +1,14 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { ProductItemDTOStatusEnum } from 'generated-api';
 import { LinkCard } from '../../../../../shared/components/LinkCard';
-import { useGlobalStore } from '../../../../../shared/stores';
+import { useAuthStore } from '../../../../../shared/stores';
 import { useGetProductItemStatusQuantity } from '../../../hooks/useGetProductItemStatusQuantity';
 
 export interface CourierProps {}
 
 export const Courier: React.FC<CourierProps> = () => {
   const flexBasis = { base: '40%', md: '25%' };
-  const getUser = useGlobalStore((state) => state.getUser);
-  const user = getUser();
-  const companyId = user?.company?.id;
+  const { companyId } = useAuthStore();
   const { data } = useGetProductItemStatusQuantity(companyId);
 
   return (
@@ -42,9 +40,15 @@ export const Courier: React.FC<CourierProps> = () => {
             flexBasis={flexBasis}
           />
           <LinkCard
-            title='Returning'
-            n={data.data.returning}
-            href={`/products/product-items?status=${ProductItemDTOStatusEnum.Returning}`}
+            title='Return Accepted'
+            n={data.data.returnAccepted}
+            href={`/products/product-items?status=${ProductItemDTOStatusEnum.ReturnAccepted}`}
+            flexBasis={flexBasis}
+          />
+          <LinkCard
+            title='In Transit To Seller'
+            n={data.data.inTransitToSeller}
+            href={`/products/product-items?status=${ProductItemDTOStatusEnum.InTransitToSeller}`}
             flexBasis={flexBasis}
           />
         </Flex>
