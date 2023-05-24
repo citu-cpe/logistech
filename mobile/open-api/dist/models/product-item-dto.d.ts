@@ -87,6 +87,9 @@ export declare enum ProductItemDTOStatusEnum {
     Complete = "COMPLETE",
     Canceled = "CANCELED",
     RedFlag = "RED_FLAG",
-    Returning = "RETURNING",
+    ReturnRequested = "RETURN_REQUESTED",
+    ReturnAccepted = "RETURN_ACCEPTED",
+    ReturnRejected = "RETURN_REJECTED",
+    InTransitToSeller = "IN_TRANSIT_TO_SELLER",
     Returned = "RETURNED"
 }

@@ -12,7 +12,7 @@ import {
   ProductItemByStatusDTOStatusEnum,
   UserDTORoleEnum,
 } from 'generated-api';
-import { useGlobalStore } from '../../../shared/stores';
+import { useAuthStore } from '../../../shared/stores';
 import { useGetProductItemsByStatus } from '../../products/hooks/useGetProductItemsByStatus';
 import { useGetProductItemsByStatusAndUser } from '../../products/hooks/useGetProductItemsByStatusAndUser';
 import { RedFlagRow } from './RedFlagRow';
@@ -20,9 +20,7 @@ import { RedFlagRow } from './RedFlagRow';
 interface RedFlagTableProps {}
 
 export const RedFlagTable: React.FC<RedFlagTableProps> = () => {
-  const getUser = useGlobalStore().getUser;
-  const user = getUser();
-  const companyId = user?.company?.id;
+  const { userRole, companyId } = useAuthStore();
 
   const { data, isLoading } = useGetProductItemsByStatus(
     companyId,
@@ -36,7 +34,7 @@ export const RedFlagTable: React.FC<RedFlagTableProps> = () => {
     ProductItemByStatusDTOStatusEnum.RedFlag
   );
 
-  const isCustomer = user?.role === UserDTORoleEnum.Customer;
+  const isCustomer = userRole === UserDTORoleEnum.Customer;
 
   const actualIsLoading = isCustomer
     ? customerProductItemsIsLoading

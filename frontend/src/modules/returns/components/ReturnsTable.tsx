@@ -5,11 +5,13 @@ import { ReturnsRow } from './ReturnsRow';
 export interface ReturnsTableProps {
   productItems: ProductItemDTO[];
   couriers: UserDTO[];
+  isStorageFacility: boolean;
 }
 
 export const ReturnsTable: React.FC<ReturnsTableProps> = ({
   productItems,
   couriers,
+  isStorageFacility,
 }) => {
   return (
     <TableContainer>
@@ -29,6 +31,7 @@ export const ReturnsTable: React.FC<ReturnsTableProps> = ({
               key={productItem.id}
               productItem={productItem}
               couriers={couriers}
+              isStorageFacility={isStorageFacility}
             />
           ))}
         </Tbody>

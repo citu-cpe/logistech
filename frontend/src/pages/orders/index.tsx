@@ -23,13 +23,10 @@ import { useGetIncomingOrders } from '../../modules/orders/hooks/useGetIncomingO
 import { useGetOrdersForStorageFacility } from '../../modules/orders/hooks/useGetOrdersForStorageFacility';
 import { useGetOutgoingOrders } from '../../modules/orders/hooks/useGetOutgoingOrders';
 import { useGetOutgoingOrdersForCustomer } from '../../modules/orders/hooks/useGetOutgoingOrdersForCustomer';
-import { useGlobalStore } from '../../shared/stores';
+import { useAuthStore } from '../../shared/stores';
 
 const Orders = () => {
-  const getUser = useGlobalStore().getUser;
-  const user = getUser();
-  const companyId = user?.company?.id;
-  const companyType = getUser()?.company?.type;
+  const { user, companyId, companyType } = useAuthStore();
   const incomingOrdersQuery = useGetIncomingOrders(companyId);
   const outgoingOrdersQuery = useGetOutgoingOrders(companyId);
   const storageFacilityOrdersQuery = useGetOrdersForStorageFacility(companyId);

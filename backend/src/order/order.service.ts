@@ -431,10 +431,15 @@ export class OrderService {
         }
 
         const job = new CronJob(dueDate, async () => {
-          await this.prismaService.order.update({
+          const jobOrder = await this.prismaService.order.findUnique({
             where: { id: orderId },
-            data: { status: OrderStatus.OVERDUE },
           });
+          if (jobOrder.status !== OrderStatus.PAID) {
+            await this.prismaService.order.update({
+              where: { id: orderId },
+              data: { status: OrderStatus.OVERDUE },
+            });
+          }
         });
 
         this.schedulerRegistry.addCronJob(
@@ -452,6 +457,13 @@ export class OrderService {
 
     if (order.status === OrderStatus.REJECTED && !!dto.storageFacilityId) {
       newStatus = OrderStatus.PENDING;
+    }
+
+    if (newStatus === OrderStatus.OVERDUE) {
+      await this.prismaService.productItem.updateMany({
+        where: { id: { in: productItemIds } },
+        data: { status: ProductItemStatus.RED_FLAG },
+      });
     }
 
     await this.prismaService.order.update({

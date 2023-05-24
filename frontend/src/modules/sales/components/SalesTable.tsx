@@ -8,15 +8,14 @@ import {
   Center,
   Spinner,
 } from '@chakra-ui/react';
-import { useGlobalStore } from '../../../shared/stores';
+import { useAuthStore } from '../../../shared/stores';
 import { useGetSales } from '../../orders/hooks/useGetSales';
 import { SalesRow } from './SalesRow';
 
 interface SalesTableProps {}
 
 export const SalesTable: React.FC<SalesTableProps> = ({}) => {
-  const getUser = useGlobalStore().getUser;
-  const companyId = getUser()?.company?.id;
+  const { companyId } = useAuthStore();
   const { data, isLoading } = useGetSales(companyId!);
 
   return isLoading ? (

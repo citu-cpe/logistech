@@ -6,19 +6,17 @@ import { useGetCartCustomer } from '../../modules/cart/hooks/useGetCartCustomer'
 import { useCreateOrders } from '../../modules/orders/hooks/useCreateOrders';
 import { useCreateOrdersCustomer } from '../../modules/orders/hooks/useCreateOrdersCustomer';
 import { Peso } from '../../shared/components/Peso';
-import { useGlobalStore } from '../../shared/stores';
+import { useAuthStore } from '../../shared/stores';
 
 const Cart = () => {
-  const getUser = useGlobalStore((state) => state.getUser);
-  const user = getUser();
-  const companyId = user?.company?.id;
+  const { userRole, companyId } = useAuthStore();
   const { data, isLoading } = useGetCart(companyId);
   const { data: userCartData, isLoading: userCartDataIsLoading } =
     useGetCartCustomer();
   const createOrders = useCreateOrders(companyId!);
   const createOrdersCustomer = useCreateOrdersCustomer();
 
-  const isCustomer = user?.role === UserDTORoleEnum.Customer;
+  const isCustomer = userRole === UserDTORoleEnum.Customer;
   const actualIsLoading = isCustomer ? userCartDataIsLoading : isLoading;
   const actualData = isCustomer ? userCartData?.data : data?.data;
 

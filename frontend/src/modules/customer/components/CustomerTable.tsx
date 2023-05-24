@@ -1,13 +1,12 @@
 import { Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
-import { useGlobalStore } from '../../../shared/stores';
+import { useAuthStore } from '../../../shared/stores';
 import { useGetTopTenCustomers } from '../hooks/useGetTopTenCustomers';
 import { CustomerRow } from './CustomerRow';
 
 interface CustomerTableProps {}
 
 export const CustomerTable: React.FC<CustomerTableProps> = () => {
-  const getUser = useGlobalStore().getUser;
-  const companyId = getUser()?.company?.id;
+  const { companyId } = useAuthStore();
 
   const { data } = useGetTopTenCustomers(companyId!);
 

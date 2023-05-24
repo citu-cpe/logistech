@@ -1,8 +1,5 @@
 import { TableContainer, Table, Thead, Tr, Th, Tbody } from '@chakra-ui/react';
-import {
-  ProductItemByStatusDTOStatusEnum,
-  ProductItemDTO,
-} from 'generated-api';
+import { ProductItemDTO, ProductItemDTOStatusEnum } from 'generated-api';
 import { useEffect, useState } from 'react';
 import { ProductItemRow } from './ProductItemRow';
 
@@ -10,7 +7,8 @@ interface ProductItemTableProps {
   productItems: ProductItemDTO[];
   allowActions?: boolean;
   isCustomer?: boolean;
-  status?: ProductItemByStatusDTOStatusEnum;
+  allowReturn?: boolean;
+  status?: ProductItemDTOStatusEnum;
   isCourier?: boolean;
   isRfidOptional: boolean;
 }
@@ -19,9 +17,10 @@ export const ProductItemTable: React.FC<ProductItemTableProps> = ({
   productItems,
   allowActions,
   isCustomer,
-  status,
+  allowReturn,
   isCourier,
   isRfidOptional,
+  status,
 }) => {
   const [filteredProductItems, setFilteredProductItems] = useState<
     ProductItemDTO[]
@@ -43,6 +42,8 @@ export const ProductItemTable: React.FC<ProductItemTableProps> = ({
     setFilteredProductItems(actualProductItems);
   }, [productItems]);
 
+  const isComplete = status === ProductItemDTOStatusEnum.Complete;
+
   return (
     <TableContainer>
       <Table variant='simple'>
@@ -58,10 +59,9 @@ export const ProductItemTable: React.FC<ProductItemTableProps> = ({
                 <Th>Owning Company Type</Th>
               </>
             )}
-            {(allowActions ||
-              (isCustomer &&
-                status === ProductItemByStatusDTOStatusEnum.Complete) ||
-              isCourier) && <Th>Actions</Th>}
+            {(allowActions || allowReturn || isCourier || isComplete) && (
+              <Th>Actions</Th>
+            )}
           </Tr>
         </Thead>
         <Tbody>
@@ -72,7 +72,6 @@ export const ProductItemTable: React.FC<ProductItemTableProps> = ({
               allowActions={allowActions}
               isCustomer={isCustomer}
               isCourier={isCourier}
-              status={status}
               isRfidOptional={isRfidOptional}
             />
           ))}

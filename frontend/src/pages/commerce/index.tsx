@@ -6,7 +6,7 @@ import {
 } from 'generated-api';
 import { ItemCard } from '../../modules/commerce/components/ItemCard';
 import { useGetCommerceProducts } from '../../modules/commerce/hooks/useGetCommerceProducts';
-import { useGlobalStore } from '../../shared/stores';
+import { useAuthStore } from '../../shared/stores';
 
 const getCompanyTypes = (
   companyType: CompanyDTOTypeEnum,
@@ -33,10 +33,7 @@ const getCompanyTypes = (
 };
 
 const Commerce = () => {
-  const getUser = useGlobalStore((state) => state.getUser);
-  const user = getUser();
-  const companyId = getUser()?.company?.id;
-  const companyType = getUser()?.company?.type;
+  const { user, companyId, companyType } = useAuthStore();
   const { data, isLoading } = useGetCommerceProducts(
     getCompanyTypes(companyType!, user?.role),
     companyId! ?? user?.id

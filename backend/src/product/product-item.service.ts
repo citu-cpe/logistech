@@ -19,6 +19,7 @@ import { UpdateProductItemStatusDTO } from './dto/update-product-item-status.dto
 import { UserService } from '../user/user.service';
 import { CompanyService } from '../company/company.service';
 import { CourierIdDTO } from './dto/courier-id.dto';
+import { CourierProductItemsDTO } from './dto/courier-product-items.dto';
 
 @Injectable()
 export class ProductItemService {
@@ -105,23 +106,24 @@ export class ProductItemService {
     dto: CreateProductItemDTO,
     productItemId: string
   ) {
+    const productItem = await this.prismaService.productItem.findUnique({
+      where: { id: productItemId },
+      include: { orderItem: { include: { order: true } } },
+    });
+
+    const order = productItem.orderItem?.order;
+
+    if (
+      order &&
+      order.status !== OrderStatus.PAID &&
+      dto.status === ProductItemStatusEnum.IN_TRANSIT_TO_STORAGE_FACILITY
+    ) {
+      throw new BadRequestException(
+        'Items that are not paid cannot be picked up'
+      );
+    }
+
     try {
-      const productItem = await this.prismaService.productItem.findUnique({
-        where: { id: productItemId },
-        include: { orderItem: { include: { order: true } } },
-      });
-
-      const order = productItem.orderItem.order;
-
-      if (
-        order.status !== OrderStatus.PAID &&
-        dto.status === ProductItemStatusEnum.IN_TRANSIT_TO_STORAGE_FACILITY
-      ) {
-        throw new BadRequestException(
-          'Items that are not paid cannot be picked up'
-        );
-      }
-
       await this.prismaService.productItem.update({
         where: { id: productItemId },
         data: dto,
@@ -132,10 +134,6 @@ export class ProductItemService {
           'Product item with this RFID already exists'
         );
       }
-
-      throw new BadRequestException(
-        'Items that are not paid cannot be picked up'
-      );
     }
   }
 
@@ -145,7 +143,7 @@ export class ProductItemService {
   ) {
     const productItem = await this.prismaService.productItem.findUnique({
       where: { id: productItemId },
-      include: { orderItem: { include: { order: true } } },
+      include: { orderItem: { include: { order: true } }, buyer: true },
     });
 
     const order = productItem.orderItem.order;
@@ -168,9 +166,13 @@ export class ProductItemService {
       data: {
         status: dto.status,
         rfid:
-          dto.status === ProductItemStatusEnum.COMPLETE
+          dto.status === ProductItemStatusEnum.COMPLETE &&
+          (!!productItem.customerId ||
+            productItem.buyer.type === CompanyType.RETAILER)
             ? null
             : productItem.rfid,
+        returnedAt:
+          dto.status === ProductItemStatusEnum.RETURNED ? new Date() : null,
       },
     });
 
@@ -201,12 +203,12 @@ export class ProductItemService {
   }
 
   public async getProductItemsByStatus(
-    status: ProductItemStatusEnum,
+    status: ProductItemStatusEnum[],
     companyId: string
   ) {
     const productItems = await this.prismaService.productItem.findMany({
       where: {
-        status,
+        status: { in: status },
         OR: [
           { product: { companyId } },
           { orderItem: { order: { storageFacilityId: companyId } } },
@@ -224,12 +226,12 @@ export class ProductItemService {
   }
 
   public async getOrderedProductItemsByStatus(
-    status: ProductItemStatusEnum,
+    status: ProductItemStatusEnum[],
     companyId: string
   ) {
     const productItems = await this.prismaService.productItem.findMany({
       where: {
-        status,
+        status: { in: status },
         OR: [
           { buyerId: companyId },
           { orderItem: { order: { storageFacilityId: companyId } } },
@@ -247,11 +249,11 @@ export class ProductItemService {
   }
 
   public async getProductItemsByStatusAndUser(
-    status: ProductItemStatusEnum,
+    status: ProductItemStatusEnum[],
     userId: string
   ) {
     const productItems = await this.prismaService.productItem.findMany({
-      where: { status, customerId: userId },
+      where: { status: { in: status }, customerId: userId },
       include: { product: true, buyer: true, customer: true, courier: true },
     });
 
@@ -314,7 +316,10 @@ export class ProductItemService {
     productItemStatusQuantity.complete = 0;
     productItemStatusQuantity.canceled = 0;
     productItemStatusQuantity.redFlag = 0;
-    productItemStatusQuantity.returning = 0;
+    productItemStatusQuantity.returnRequested = 0;
+    productItemStatusQuantity.returnAccepted = 0;
+    productItemStatusQuantity.returnRejected = 0;
+    productItemStatusQuantity.inTransitToSeller = 0;
     productItemStatusQuantity.returned = 0;
     productItemStatusQuantity.orders = orders.length;
 
@@ -348,8 +353,17 @@ export class ProductItemService {
         case ProductItemStatus.RED_FLAG:
           productItemStatusQuantity.redFlag = count._count.id;
           break;
-        case ProductItemStatus.RETURNING:
-          productItemStatusQuantity.returning = count._count.id;
+        case ProductItemStatus.RETURN_REQUESTED:
+          productItemStatusQuantity.returnRequested = count._count.id;
+          break;
+        case ProductItemStatus.RETURN_ACCEPTED:
+          productItemStatusQuantity.returnAccepted = count._count.id;
+          break;
+        case ProductItemStatus.RETURN_REJECTED:
+          productItemStatusQuantity.returnRejected = count._count.id;
+          break;
+        case ProductItemStatus.IN_TRANSIT_TO_SELLER:
+          productItemStatusQuantity.inTransitToSeller = count._count.id;
           break;
         case ProductItemStatus.RETURNED:
           productItemStatusQuantity.returned = count._count.id;
@@ -371,11 +385,13 @@ export class ProductItemService {
 
     await this.prismaService.productItem.update({
       where: { id: productItemId },
-      data: { status: ProductItemStatus.RETURNING, returnedAt: new Date() },
+      data: { status: ProductItemStatus.RETURN_REQUESTED },
     });
   }
 
-  public async getCourierAssignedProductItems(userId: string) {
+  public async getCourierAssignedProductItems(
+    userId: string
+  ): Promise<CourierProductItemsDTO> {
     const orders = await this.prismaService.order.findMany({
       where: { courierId: userId },
       include: {
@@ -420,8 +436,12 @@ export class ProductItemService {
       .filter((p) => p.status === ProductItemStatusEnum.IN_TRANSIT_TO_BUYER)
       .map((p) => ProductItemService.convertToDTO(p));
 
-    const returningItems = await this.prismaService.productItem.findMany({
-      where: { courierId: userId, status: ProductItemStatus.RETURNING },
+    const inTransitToSellerProductItems = productItems
+      .filter((p) => p.status === ProductItemStatusEnum.IN_TRANSIT_TO_SELLER)
+      .map((p) => ProductItemService.convertToDTO(p));
+
+    const returnAcceptedItems = await this.prismaService.productItem.findMany({
+      where: { courierId: userId, status: ProductItemStatus.RETURN_ACCEPTED },
       include: {
         product: { include: { company: true } },
         customer: true,
@@ -430,7 +450,7 @@ export class ProductItemService {
       },
     });
 
-    const returningProductItems = returningItems.map((r) =>
+    const returnAcceptedProductItems = returnAcceptedItems.map((r) =>
       ProductItemService.convertToDTO(r)
     );
 
@@ -439,7 +459,8 @@ export class ProductItemService {
       inTransitToStorageFacilityProductItems,
       inStorageFacilityProductItems,
       inTransitToBuyerProductItems,
-      returningProductItems,
+      returnAcceptedProductItems,
+      inTransitToSellerProductItems,
     };
   }
 
@@ -448,7 +469,12 @@ export class ProductItemService {
       where: {
         customerId: userId,
         status: {
-          in: [ProductItemStatus.RETURNING, ProductItemStatus.RETURNED],
+          in: [
+            ProductItemStatus.RETURN_REQUESTED,
+            ProductItemStatus.RETURN_ACCEPTED,
+            ProductItemStatus.RETURN_REJECTED,
+            ProductItemStatus.RETURNED,
+          ],
         },
       },
       include: { product: true, buyer: true, customer: true, courier: true },

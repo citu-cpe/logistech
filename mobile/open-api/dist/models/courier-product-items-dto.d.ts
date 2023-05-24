@@ -45,5 +45,11 @@ export interface CourierProductItemsDTO {
      * @type {Array<ProductItemDTO>}
      * @memberof CourierProductItemsDTO
      */
-    returningProductItems: Array<ProductItemDTO>;
+    returnAcceptedProductItems: Array<ProductItemDTO>;
+    /**
+     *
+     * @type {Array<ProductItemDTO>}
+     * @memberof CourierProductItemsDTO
+     */
+    inTransitToSellerProductItems: Array<ProductItemDTO>;
 }

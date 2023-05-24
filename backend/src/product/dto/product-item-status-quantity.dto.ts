@@ -32,7 +32,16 @@ export class ProductItemStatusQuantityDTO {
   public orders: number;
 
   @IsNumber()
-  public returning: number;
+  public returnRequested: number;
+
+  @IsNumber()
+  public returnAccepted: number;
+
+  @IsNumber()
+  public returnRejected: number;
+
+  @IsNumber()
+  public inTransitToSeller: number;
 
   @IsNumber()
   public returned: number;

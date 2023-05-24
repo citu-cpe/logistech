@@ -4,7 +4,7 @@ import { AxiosResponse } from 'axios';
 import { LocalStorageKeys } from '../enums/localStorageKeys';
 import { TokensDTO, UserDTO } from 'generated-api';
 import { useRouter } from 'next/router';
-import { useGlobalStore } from '../stores';
+import { useAuthStore } from '../stores';
 
 interface UseAxiosOptions {
   showToastOnError?: boolean;
@@ -28,7 +28,7 @@ export const useAxios = ({
 }: UseAxiosOptions = DEFAULT_USE_AXIOS_OPTIONS) => {
   const toast = useToast();
   const router = useRouter();
-  const getUser = useGlobalStore((state) => state.getUser);
+  const { user } = useAuthStore();
   const axios = createAxiosInstance();
 
   axios.interceptors.request.use(
@@ -134,7 +134,6 @@ export const useAxios = ({
         }
 
         if (invalidRefreshToken) {
-          const user = getUser();
           if (user) {
             await axios.post<UserDTO>('/auth/logout', user);
           }

@@ -59,6 +59,7 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
     const inTransitProductItems = [
       ...(data?.data.inTransitToStorageFacilityProductItems ?? []),
       ...(data?.data.inTransitToBuyerProductItems ?? []),
+      ...(data?.data.inTransitToSellerProductItems ?? []),
     ];
 
     const actualDataRfids = inTransitProductItems.map((p) => p.rfid);
@@ -91,6 +92,11 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
     onClose: toBePickedUpOnClose,
   } = useDisclose();
   const {
+    isOpen: inStorageFacilityIsOpen,
+    onOpen: inStorageFacilityOnOpen,
+    onClose: inStorageFacilityOnClose,
+  } = useDisclose();
+  const {
     isOpen: returningIsOpen,
     onOpen: returningOnOpen,
     onClose: returningOnClose,
@@ -105,8 +111,10 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
   const inTransitProductItems = [
     ...(data?.data.inTransitToStorageFacilityProductItems ?? []),
     ...(data?.data.inTransitToBuyerProductItems ?? []),
+    ...(data?.data.inTransitToSellerProductItems ?? []),
   ];
-  const returningProductItems = data?.data.returningProductItems;
+  const inTransitToSellerProductItems =
+    data?.data.inTransitToSellerProductItems;
 
   const [location, setLocation] = useState<Location.LocationObject | undefined>(
     undefined
@@ -141,6 +149,7 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
       socket.on("scan", (dto: ScanRfidDTO) => {
         const dataRfIds = inTransitProductItems.map((p) => p.rfid);
         const productItemsRfids = productItems.map((p) => p.rfid);
+        console.log(dto);
 
         if (
           dataRfIds?.includes(dto.rfid) &&
@@ -157,10 +166,6 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
         }
       });
     }
-
-    return () => {
-      socket?.close();
-    };
   }, []);
 
   useEffect(() => {
@@ -227,10 +232,10 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
   };
 
   const getUniqueReturns = () => {
-    if (returningProductItems) {
+    if (inTransitToSellerProductItems) {
       const returnsMap = new Map<string, Directions>();
 
-      for (const p of returningProductItems) {
+      for (const p of inTransitToSellerProductItems) {
         if (
           !!p.customer &&
           p.product?.company &&
@@ -296,7 +301,7 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
         </Button>
         <Button
           m="2"
-          onPress={() => open(toBePickedUpOnOpen)}
+          onPress={() => open(inStorageFacilityOnOpen)}
           bg="blueGray.700"
         >
           In Storage Facility
@@ -305,7 +310,7 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
           Current Delivery
         </Button>
         <Button m="2" onPress={() => open(returningOnOpen)} bg="blueGray.700">
-          Returning
+          Return Accepted
         </Button>
       </Flex>
 
@@ -335,7 +340,10 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
         </Actionsheet.Content>
       </Actionsheet>
 
-      <Actionsheet isOpen={toBePickedUpIsOpen} onClose={toBePickedUpOnClose}>
+      <Actionsheet
+        isOpen={inStorageFacilityIsOpen}
+        onClose={inStorageFacilityOnClose}
+      >
         <Actionsheet.Content bg="blueGray.700">
           <Box w="full">
             <Heading color="white">In Storage Facility</Heading>
@@ -383,6 +391,10 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
                 <ProductItemStatusBadge
                   status={ProductItemDTOStatusEnum.InTransitToBuyer}
                 />{" "}
+                or{" "}
+                <ProductItemStatusBadge
+                  status={ProductItemDTOStatusEnum.InTransitToSeller}
+                />{" "}
                 product items
               </Text>
             )}
@@ -393,8 +405,8 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
       <Actionsheet isOpen={returningIsOpen} onClose={returningOnClose}>
         <Actionsheet.Content bg="blueGray.700">
           <Box w="full">
-            <Heading color="white">Returning</Heading>
-            {data?.data.returningProductItems.map((p) => (
+            <Heading color="white">Return Accepted</Heading>
+            {data?.data.returnAcceptedProductItems.map((p) => (
               <CourierProductItemInTransit
                 key={p.id}
                 productItem={p}
@@ -402,11 +414,11 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
               />
             ))}
 
-            {data?.data.returningProductItems.length === 0 && (
+            {data?.data.returnAcceptedProductItems.length === 0 && (
               <Text color="white" textAlign="center" mt="2">
                 No{" "}
                 <ProductItemStatusBadge
-                  status={ProductItemDTOStatusEnum.Returning}
+                  status={ProductItemDTOStatusEnum.ReturnAccepted}
                 />{" "}
                 product items
               </Text>

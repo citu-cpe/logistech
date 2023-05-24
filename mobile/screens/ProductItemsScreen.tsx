@@ -37,7 +37,7 @@ export const ProductItemsScreen = ({
           refreshing={isLoading && !isInitialLoading}
           onRefresh={() =>
             queryClient.invalidateQueries(
-              PRODUCT_ITEMS_BY_STATUS_AND_USER_QUERY_KEY(status)
+              PRODUCT_ITEMS_BY_STATUS_AND_USER_QUERY_KEY
             )
           }
           tintColor="white"

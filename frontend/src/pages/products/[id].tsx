@@ -18,15 +18,14 @@ import { useRouter } from 'next/router';
 import { ProductItemForm } from '../../modules/products/components/ProductItemForm';
 import { ProductItemTable } from '../../modules/products/components/ProductItemTable';
 import { useGetProductItems } from '../../modules/products/hooks/useGetProductItems';
-import { useGlobalStore } from '../../shared/stores';
+import { useAuthStore } from '../../shared/stores';
 
 const ProductItem = () => {
   const router = useRouter();
   const { id: productId } = router.query;
   const { data, isLoading } = useGetProductItems(productId as string);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const getUser = useGlobalStore().getUser;
-  const companyType = getUser()?.company?.type;
+  const { companyType } = useAuthStore();
   const isRetailer = companyType === CompanyDTOTypeEnum.Retailer;
 
   return (
