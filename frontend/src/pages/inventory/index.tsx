@@ -4,11 +4,10 @@ import { useContext, useEffect, useState } from 'react';
 import { ProductItemTable } from '../../modules/products/components/ProductItemTable';
 import { useGetProductItemsByCompany } from '../../modules/products/hooks/useGetProductItemsByCompany';
 import { SocketContext } from '../../shared/providers/SocketProvider';
-import { useGlobalStore } from '../../shared/stores';
+import { useAuthStore } from '../../shared/stores';
 
 const Inventory = () => {
-  const getUser = useGlobalStore().getUser;
-  const companyId = getUser()?.company?.id;
+  const { companyId } = useAuthStore();
   const { data, isLoading } = useGetProductItemsByCompany(
     companyId,
     (responseData) => {

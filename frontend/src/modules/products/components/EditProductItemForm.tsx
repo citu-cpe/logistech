@@ -12,7 +12,7 @@ import { useContext, useRef, useEffect } from 'react';
 import { Input } from '../../../shared/components/form/Input/Input';
 import { Select } from '../../../shared/components/form/Select/Select';
 import { SocketContext } from '../../../shared/providers/SocketProvider';
-import { useGlobalStore } from '../../../shared/stores';
+import { useAuthStore } from '../../../shared/stores';
 import { useGetCouriers } from '../../storage-facilities/hooks/useGetCouriers';
 import { useEditProductItem } from '../hooks/useEditProductItem';
 import { productItemFormValidationSchema } from './ProductItemForm';
@@ -32,14 +32,12 @@ export const EditProductItemForm: React.FC<ProductItemFormProps> = ({
   isRfidOptional,
   isCourier,
 }) => {
-  const getUser = useGlobalStore().getUser;
-  const company = getUser()?.company;
-  const companyId = company?.id;
-  const companyType = company?.type;
+  const { companyId, companyType } = useAuthStore();
   const { data } = useGetCouriers(companyId);
   const couriers = data?.data;
   const ediProductItem = useEditProductItem(productItem.id);
-  const isReturning = productItem.status === ProductItemDTOStatusEnum.Returning;
+  const isReturnAccepted =
+    productItem.status === ProductItemDTOStatusEnum.ReturnAccepted;
   const isInStorageFacility =
     productItem.status === ProductItemDTOStatusEnum.InStorageFacility;
   const isToBePickedUp =
@@ -47,15 +45,12 @@ export const EditProductItemForm: React.FC<ProductItemFormProps> = ({
 
   const onSubmit = (dto: CreateProductItemDTO) => {
     if (isCourier) {
-      if (isReturning) {
-        dto.status = CreateProductItemDTOStatusEnum.Returned;
-      } else {
-        if (isToBePickedUp) {
-          dto.status =
-            CreateProductItemDTOStatusEnum.InTransitToStorageFacility;
-        } else if (isInStorageFacility) {
-          dto.status = CreateProductItemDTOStatusEnum.InTransitToBuyer;
-        }
+      if (isReturnAccepted) {
+        dto.status = CreateProductItemDTOStatusEnum.InTransitToSeller;
+      } else if (isToBePickedUp) {
+        dto.status = CreateProductItemDTOStatusEnum.InTransitToStorageFacility;
+      } else if (isInStorageFacility) {
+        dto.status = CreateProductItemDTOStatusEnum.InTransitToBuyer;
       }
     }
 
@@ -178,8 +173,25 @@ export const EditProductItemForm: React.FC<ProductItemFormProps> = ({
                     <option value={CreateProductItemDTOStatusEnum.Returned}>
                       RETURNED
                     </option>
-                    <option value={CreateProductItemDTOStatusEnum.Returning}>
-                      RETURNING
+                    <option
+                      value={CreateProductItemDTOStatusEnum.ReturnRequested}
+                    >
+                      RETURN REQUESTED
+                    </option>
+                    <option
+                      value={CreateProductItemDTOStatusEnum.ReturnAccepted}
+                    >
+                      RETURN ACCEPTED
+                    </option>
+                    <option
+                      value={CreateProductItemDTOStatusEnum.ReturnRejected}
+                    >
+                      RETURN REJECTED
+                    </option>
+                    <option
+                      value={CreateProductItemDTOStatusEnum.InTransitToSeller}
+                    >
+                      IN TRANSIT TO SELLER
                     </option>
                   </Select>
                 )}

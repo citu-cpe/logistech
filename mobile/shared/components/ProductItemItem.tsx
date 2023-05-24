@@ -16,6 +16,11 @@ export const ProductItemItem: React.FC<ProductItemItemProps> = ({
   productItem,
 }) => {
   const updateProductItemStatus = useUpdateProductItemStatus(productItem.id);
+  const isReturnStatus =
+    productItem.status === ProductItemDTOStatusEnum.ReturnRequested ||
+    productItem.status === ProductItemDTOStatusEnum.ReturnAccepted ||
+    productItem.status === ProductItemDTOStatusEnum.ReturnRejected ||
+    productItem.status === ProductItemDTOStatusEnum.Returned;
 
   return (
     <React.Fragment key={productItem.id}>
@@ -39,15 +44,15 @@ export const ProductItemItem: React.FC<ProductItemItemProps> = ({
                 isLoading={updateProductItemStatus.isLoading}
                 onPress={() =>
                   updateProductItemStatus.mutate({
-                    status: UpdateProductItemStatusDTOStatusEnum.Returning,
+                    status:
+                      UpdateProductItemStatusDTOStatusEnum.ReturnRequested,
                   })
                 }
               >
-                Return
+                Request Return
               </Button>
             )}
-            {(productItem.status === ProductItemDTOStatusEnum.Returning ||
-              productItem.status === ProductItemDTOStatusEnum.Returned) && (
+            {isReturnStatus && (
               <ProductItemStatusBadge status={productItem.status} />
             )}
           </Box>

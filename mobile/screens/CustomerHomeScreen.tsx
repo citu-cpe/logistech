@@ -132,6 +132,21 @@ export const CustomerHomeScreen: React.FC<CustomerHomeScreenProps> = ({
               onPress={() => {
                 onClose();
                 navigation.navigate("ProductItems", {
+                  status: ProductItemByStatusDTOStatusEnum.OnHold,
+                });
+              }}
+            >
+              On Hold
+            </Button>
+
+            <Spacer />
+
+            <Button
+              mb="2"
+              bg="blueGray.700"
+              onPress={() => {
+                onClose();
+                navigation.navigate("ProductItems", {
                   status:
                     ProductItemByStatusDTOStatusEnum.InTransitToStorageFacility,
                 });
@@ -168,21 +183,6 @@ export const CustomerHomeScreen: React.FC<CustomerHomeScreenProps> = ({
               }}
             >
               In Transit To Me
-            </Button>
-
-            <Spacer />
-
-            <Button
-              mb="2"
-              bg="blueGray.700"
-              onPress={() => {
-                onClose();
-                navigation.navigate("ProductItems", {
-                  status: ProductItemByStatusDTOStatusEnum.OnHold,
-                });
-              }}
-            >
-              On Hold
             </Button>
 
             <Spacer />

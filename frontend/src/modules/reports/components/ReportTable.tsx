@@ -8,15 +8,14 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import { useGlobalStore } from '../../../shared/stores';
+import { useAuthStore } from '../../../shared/stores';
 import { useGetReports } from '../hooks/useGetReports';
 import { ReportRow } from './ReportRow';
 
 interface ReportTableProps {}
 
 export const ReportTable: React.FC<ReportTableProps> = () => {
-  const getUser = useGlobalStore().getUser;
-  const companyId = getUser()?.company?.id;
+  const { companyId } = useAuthStore();
 
   const { data, isLoading } = useGetReports(companyId!);
 

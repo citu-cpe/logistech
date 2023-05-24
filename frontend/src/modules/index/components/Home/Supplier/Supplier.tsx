@@ -2,12 +2,11 @@ import { Box, Button, Flex, Text } from '@chakra-ui/react';
 import { SupplierHomeChart } from './SupplierHomeChart';
 import NextLink from 'next/link';
 import { ProductItemByStatusDTOStatusEnum } from 'generated-api';
-import { useGlobalStore } from '../../../../../shared/stores';
+import { useAuthStore } from '../../../../../shared/stores';
 import { useGetTopTenProducts } from '../../../hooks/useGetTopTenProducts';
 
 export const Supplier = () => {
-  const getUser = useGlobalStore((state) => state.getUser);
-  const companyId = getUser()?.company?.id;
+  const { companyId } = useAuthStore();
   const { data } = useGetTopTenProducts(companyId);
 
   return (

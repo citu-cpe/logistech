@@ -454,6 +454,13 @@ export class OrderService {
       newStatus = OrderStatus.PENDING;
     }
 
+    if (newStatus === OrderStatus.OVERDUE) {
+      await this.prismaService.productItem.updateMany({
+        where: { id: { in: productItemIds } },
+        data: { status: ProductItemStatus.RED_FLAG },
+      });
+    }
+
     await this.prismaService.order.update({
       where: { id: orderId },
       data: {

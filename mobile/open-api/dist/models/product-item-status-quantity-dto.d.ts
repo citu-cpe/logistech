@@ -80,7 +80,25 @@ export interface ProductItemStatusQuantityDTO {
      * @type {number}
      * @memberof ProductItemStatusQuantityDTO
      */
-    returning: number;
+    returnRequested: number;
+    /**
+     *
+     * @type {number}
+     * @memberof ProductItemStatusQuantityDTO
+     */
+    returnAccepted: number;
+    /**
+     *
+     * @type {number}
+     * @memberof ProductItemStatusQuantityDTO
+     */
+    returnRejected: number;
+    /**
+     *
+     * @type {number}
+     * @memberof ProductItemStatusQuantityDTO
+     */
+    inTransitToSeller: number;
     /**
      *
      * @type {number}

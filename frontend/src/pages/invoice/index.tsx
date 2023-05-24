@@ -10,13 +10,12 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import { useGetPaidOrdersForStorageFacility } from '../../modules/orders/hooks/useGetPaidOrdersForStorageFacility';
-import { useGlobalStore } from '../../shared/stores';
+import { useAuthStore } from '../../shared/stores';
 import { addLeadingZeros } from '../../shared/utils/addLeadingZeros';
 import NextLink from 'next/link';
 
 const Invoice = () => {
-  const getUser = useGlobalStore().getUser;
-  const companyId = getUser()?.company?.id;
+  const { companyId } = useAuthStore();
   const { data } = useGetPaidOrdersForStorageFacility(companyId);
   const orders = data?.data;
 

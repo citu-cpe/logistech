@@ -1,14 +1,13 @@
 import { Flex, Box } from '@chakra-ui/react';
 import { ProductItemDTOStatusEnum } from 'generated-api';
 import { LinkCard } from '../../../../../shared/components/LinkCard';
-import { useGlobalStore } from '../../../../../shared/stores';
+import { useAuthStore } from '../../../../../shared/stores';
 import { useGetProductItemStatusQuantity } from '../../../hooks/useGetProductItemStatusQuantity';
 import { StorageFacilityHomeChart } from './StorageFacilityHomeChart';
 
 export const StorageFacility = () => {
   const flexBasis = { base: '40%', md: '30%' };
-  const getUser = useGlobalStore((state) => state.getUser);
-  const companyId = getUser()?.company?.id;
+  const { companyId } = useAuthStore();
   const { data } = useGetProductItemStatusQuantity(companyId);
 
   return (

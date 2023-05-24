@@ -17,14 +17,13 @@ import {
 } from '@chakra-ui/react';
 import {
   CompanyDTOTypeEnum,
-  ProductItemByStatusDTOStatusEnum,
   ProductItemDTO,
   ProductItemDTOStatusEnum,
   UpdateProductItemStatusDTOStatusEnum,
 } from 'generated-api';
 import { CompanyTypeBadge } from '../../../shared/components/CompanyTypeBadge';
 import { ProductItemStatusBadge } from '../../../shared/components/ProductItemStatusBadge';
-import { useGlobalStore } from '../../../shared/stores';
+import { useAuthStore } from '../../../shared/stores';
 import { useDeleteProductItem } from '../hooks/useDeleteProductItem';
 import { useUpdateProductItemStatus } from '../hooks/useUpdateProductItemStatus';
 import { EditProductItemForm } from './EditProductItemForm';
@@ -34,7 +33,6 @@ interface ProductItemRowProps {
   productId?: string;
   allowActions?: boolean;
   isCustomer?: boolean;
-  status?: ProductItemByStatusDTOStatusEnum;
   isCourier?: boolean;
   isRfidOptional: boolean;
 }
@@ -43,12 +41,10 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
   productItem,
   allowActions,
   isCustomer,
-  status,
   isCourier,
   isRfidOptional,
 }) => {
-  const getUser = useGlobalStore().getUser;
-  const user = getUser();
+  const { userId, companyId } = useAuthStore();
   const {
     isOpen: isEditProductItemOpen,
     onOpen: onEditProductItemOpen,
@@ -69,15 +65,23 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
     });
   };
   const updateProductItemStatus = useUpdateProductItemStatus(productItem.id);
-  const isReturning = productItem.status === ProductItemDTOStatusEnum.Returning;
+  const isReturnAccepted =
+    productItem.status === ProductItemDTOStatusEnum.ReturnAccepted;
   const isInTransitToStorageFacility =
     productItem.status === ProductItemDTOStatusEnum.InTransitToStorageFacility;
   const isInStorageFacility =
     productItem.status === ProductItemDTOStatusEnum.InStorageFacility;
   const isInTransitToBuyer =
     productItem.status === ProductItemDTOStatusEnum.InTransitToBuyer;
+  const isInTransitToSeller =
+    productItem.status === ProductItemDTOStatusEnum.InTransitToSeller;
   const isToBePickedUp =
     productItem.status === ProductItemDTOStatusEnum.ToBePickedUp;
+  const isToBeInTransit =
+    isToBePickedUp || isInStorageFacility || isReturnAccepted;
+  const isAcceptDisabled =
+    isCourier && isToBeInTransit && productItem.courier?.id !== userId;
+  const isInStorage = productItem.status === ProductItemDTOStatusEnum.InStorage;
 
   return (
     <Tr key={productItem.id}>
@@ -101,80 +105,78 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
         </>
       )}
 
-      {isCustomer && status === ProductItemByStatusDTOStatusEnum.Complete && (
-        <Td>
-          <Button
-            isLoading={updateProductItemStatus.isLoading}
-            onClick={() => {
-              updateProductItemStatus.mutate({
-                status: UpdateProductItemStatusDTOStatusEnum.Returning,
-              });
-            }}
-          >
-            Return
-          </Button>
-        </Td>
-      )}
-
-      {isCourier && (
-        <Td>
-          <Button
-            isLoading={updateProductItemStatus.isLoading}
-            onClick={() => {
-              let productItemStatus =
-                UpdateProductItemStatusDTOStatusEnum.InTransitToStorageFacility;
-
-              if (
-                (isToBePickedUp || isReturning) &&
-                productItem.product?.company?.type ===
-                  CompanyDTOTypeEnum.Retailer
-              ) {
-                onEditProductItemOpen();
-              } else {
-                if (isReturning) {
-                  productItemStatus =
-                    UpdateProductItemStatusDTOStatusEnum.Returned;
-                } else if (isInTransitToStorageFacility) {
-                  productItemStatus =
-                    UpdateProductItemStatusDTOStatusEnum.InStorageFacility;
-                } else if (isToBePickedUp) {
-                  productItemStatus =
-                    UpdateProductItemStatusDTOStatusEnum.InTransitToStorageFacility;
-                } else if (isInTransitToBuyer) {
-                  productItemStatus =
-                    UpdateProductItemStatusDTOStatusEnum.Complete;
-                } else if (isInStorageFacility) {
-                  productItemStatus =
-                    UpdateProductItemStatusDTOStatusEnum.InTransitToBuyer;
-                }
-
+      <Td>
+        {productItem.status === ProductItemDTOStatusEnum.Complete &&
+          productItem.buyer?.id === companyId && (
+            <Button
+              isLoading={updateProductItemStatus.isLoading}
+              onClick={() => {
                 updateProductItemStatus.mutate({
-                  status: productItemStatus,
+                  status: UpdateProductItemStatusDTOStatusEnum.ReturnRequested,
                 });
-              }
-            }}
-            disabled={
-              isCourier &&
-              (productItem.status === ProductItemDTOStatusEnum.ToBePickedUp ||
-                productItem.status ===
-                  ProductItemDTOStatusEnum.InStorageFacility ||
-                productItem.status === ProductItemDTOStatusEnum.Returning) &&
-              productItem.courier?.id !== user?.id
-            }
-          >
-            {isReturning && <Text>Return</Text>}
-            {isInTransitToStorageFacility && (
-              <Text>Set In Storage Facility</Text>
-            )}
-            {isInStorageFacility && <Text>Accept</Text>}
-            {isInTransitToBuyer && <Text>Complete</Text>}
-            {isToBePickedUp && <Text>Accept</Text>}
-          </Button>
-        </Td>
-      )}
+              }}
+            >
+              Request Return
+            </Button>
+          )}
 
-      {allowActions && !isCustomer && !isCourier && (
-        <Td>
+        {isCourier && (
+          <Tooltip
+            label={isAcceptDisabled && 'Product item is not assigned to you'}
+          >
+            <Button
+              isLoading={updateProductItemStatus.isLoading}
+              onClick={() => {
+                let productItemStatus =
+                  UpdateProductItemStatusDTOStatusEnum.InTransitToStorageFacility;
+
+                if (
+                  (isToBePickedUp || isReturnAccepted) &&
+                  productItem.product?.company?.type ===
+                    CompanyDTOTypeEnum.Retailer
+                ) {
+                  onEditProductItemOpen();
+                } else {
+                  if (isReturnAccepted) {
+                    productItemStatus =
+                      UpdateProductItemStatusDTOStatusEnum.InTransitToSeller;
+                  } else if (isInTransitToSeller) {
+                    productItemStatus =
+                      UpdateProductItemStatusDTOStatusEnum.Returned;
+                  } else if (isInTransitToStorageFacility) {
+                    productItemStatus =
+                      UpdateProductItemStatusDTOStatusEnum.InStorageFacility;
+                  } else if (isToBePickedUp) {
+                    productItemStatus =
+                      UpdateProductItemStatusDTOStatusEnum.InTransitToStorageFacility;
+                  } else if (isInTransitToBuyer) {
+                    productItemStatus =
+                      UpdateProductItemStatusDTOStatusEnum.Complete;
+                  } else if (isInStorageFacility) {
+                    productItemStatus =
+                      UpdateProductItemStatusDTOStatusEnum.InTransitToBuyer;
+                  }
+
+                  updateProductItemStatus.mutate({
+                    status: productItemStatus,
+                  });
+                }
+              }}
+              disabled={isAcceptDisabled}
+            >
+              {(isToBePickedUp || isInStorageFacility || isReturnAccepted) && (
+                <Text>Accept</Text>
+              )}
+              {isInTransitToSeller && <Text>Return</Text>}
+              {isInTransitToStorageFacility && (
+                <Text>Set In Storage Facility</Text>
+              )}
+              {isInTransitToBuyer && <Text>Complete</Text>}
+            </Button>
+          </Tooltip>
+        )}
+
+        {allowActions && !isCustomer && !isCourier && (
           <HStack spacing='4'>
             <Button onClick={onEditProductItemOpen}>
               <EditIcon />
@@ -182,22 +184,15 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
             <Tooltip
               label='Product items not "IN STORAGE" cannot be deleted'
               hasArrow
-              isDisabled={
-                productItem.status === ProductItemDTOStatusEnum.InStorage
-              }
+              isDisabled={!isInStorage}
             >
-              <Button
-                onClick={onDeleteProductItemOpen}
-                disabled={
-                  productItem.status !== ProductItemDTOStatusEnum.InStorage
-                }
-              >
+              <Button onClick={onDeleteProductItemOpen} disabled={!isInStorage}>
                 <DeleteIcon />
               </Button>
             </Tooltip>
           </HStack>
-        </Td>
-      )}
+        )}
+      </Td>
 
       <Modal isOpen={isEditProductItemOpen} onClose={onEditProductItemClose}>
         <ModalOverlay />

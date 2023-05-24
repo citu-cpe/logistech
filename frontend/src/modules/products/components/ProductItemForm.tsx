@@ -21,7 +21,7 @@ interface ProductItemFormProps {
 export const productItemFormValidationSchema = (isRfidOptional?: boolean) => {
   return Yup.object({
     rfid: isRfidOptional
-      ? Yup.string().min(1)
+      ? Yup.string().min(1).nullable()
       : Yup.string().min(1).required('Required'),
     status: Yup.string().min(1).required('Required'),
   });

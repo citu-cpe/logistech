@@ -3,7 +3,6 @@ import { Formik, Form, Field, FieldProps } from 'formik';
 import {
   AssignCourierToProductItemDTO,
   ProductItemDTO,
-  UpdateOrderDTO,
   UserDTO,
 } from 'generated-api';
 import { useAssignCourierToProductItem } from '../hooks/useAssignCourierToProductItem';
@@ -51,7 +50,9 @@ export const AssignCourierToProductItemForm: React.FC<ProductItemFormProps> = ({
         <Form noValidate>
           <Box mb='4'>
             <Field name='courierId' type='text'>
-              {(fieldProps: FieldProps<string, UpdateOrderDTO>) => (
+              {(
+                fieldProps: FieldProps<string, AssignCourierToProductItemDTO>
+              ) => (
                 <Select
                   fieldProps={fieldProps}
                   name='courierId'

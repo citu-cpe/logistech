@@ -21,6 +21,17 @@ export const Navbar = (props: ChakraProps) => {
   const { data } = useGetUser();
   const user = data?.data;
   const companyType = user?.company?.type;
+  const isCustomer = user?.role === UserDTORoleEnum.Customer;
+  const isCourier = user?.role === UserDTORoleEnum.Courier;
+  const isBuyer =
+    companyType === CompanyDTOTypeEnum.Retailer ||
+    companyType === CompanyDTOTypeEnum.Manufacturer;
+  const isSeller =
+    companyType === CompanyDTOTypeEnum.Supplier ||
+    companyType === CompanyDTOTypeEnum.Retailer ||
+    companyType === CompanyDTOTypeEnum.Manufacturer;
+  const isStorageFacility = companyType === CompanyDTOTypeEnum.StorageFacility;
+  const isSupplier = companyType === CompanyDTOTypeEnum.Supplier;
 
   return (
     <Flex
@@ -39,67 +50,50 @@ export const Navbar = (props: ChakraProps) => {
         <VStack as='ul' alignItems='flex-start' w='80%'>
           <NavLink href='/'>Home</NavLink>
 
-          {(companyType === CompanyDTOTypeEnum.Supplier ||
-            companyType === CompanyDTOTypeEnum.Manufacturer ||
-            companyType === CompanyDTOTypeEnum.Retailer) && (
-            <NavLink href='/products'>Products</NavLink>
-          )}
+          {isSeller && <NavLink href='/products'>Products</NavLink>}
 
-          {(companyType === CompanyDTOTypeEnum.Manufacturer ||
-            companyType === CompanyDTOTypeEnum.Retailer ||
-            user?.role === UserDTORoleEnum.Customer) && (
+          {(isCustomer || (isSeller && !isSupplier)) && (
             <NavLink href='/commerce'>Commerce</NavLink>
           )}
 
-          {(companyType === CompanyDTOTypeEnum.Retailer ||
-            companyType === CompanyDTOTypeEnum.Manufacturer ||
-            companyType === CompanyDTOTypeEnum.Supplier ||
-            (companyType === CompanyDTOTypeEnum.StorageFacility &&
-              user?.role !== UserDTORoleEnum.Courier)) && (
+          {(isSeller || (isStorageFacility && !isCourier)) && (
             <NavLink href='/inventory'>Inventory</NavLink>
           )}
 
-          {user?.role !== UserDTORoleEnum.Customer &&
-            user?.role !== UserDTORoleEnum.Courier && (
-              <NavLink href='/red-flags'>Red Flags</NavLink>
-            )}
-
-          {user?.role !== UserDTORoleEnum.Customer &&
-            user?.role !== UserDTORoleEnum.Courier && (
-              <NavLink href='/reports'>Reports</NavLink>
-            )}
-
-          {(companyType === CompanyDTOTypeEnum.Manufacturer ||
-            companyType === CompanyDTOTypeEnum.Retailer) && (
-            <NavLink href='/sales'>Sales</NavLink>
+          {isSeller && !isSupplier && (
+            <NavLink href='/complete-orders'>Complete Orders</NavLink>
           )}
 
-          {(companyType === CompanyDTOTypeEnum.Supplier ||
-            companyType === CompanyDTOTypeEnum.Manufacturer ||
-            companyType === CompanyDTOTypeEnum.Retailer) && (
+          {!isCustomer && !isCourier && (
+            <NavLink href='/red-flags'>Red Flags</NavLink>
+          )}
+
+          {!isCustomer && !isCourier && (
+            <NavLink href='/reports'>Reports</NavLink>
+          )}
+
+          {isBuyer && <NavLink href='/sales'>Sales</NavLink>}
+
+          {isSeller && (
             <NavLink href='/storage-facilities'>Storage Facilities</NavLink>
           )}
 
-          {companyType === CompanyDTOTypeEnum.StorageFacility &&
-            user?.role !== UserDTORoleEnum.Courier && (
-              <NavLink href='/sellers'>Sellers</NavLink>
-            )}
-
-          {companyType !== CompanyDTOTypeEnum.StorageFacility && (
-            <NavLink href='/orders'>Orders</NavLink>
+          {isStorageFacility && !isCourier && (
+            <NavLink href='/sellers'>Sellers</NavLink>
           )}
+
+          {!isStorageFacility && <NavLink href='/orders'>Orders</NavLink>}
 
           {companyType === CompanyDTOTypeEnum.Supplier && (
             <NavLink href='/ledger'>Ledger</NavLink>
           )}
 
-          {companyType === CompanyDTOTypeEnum.StorageFacility &&
-            user?.role !== UserDTORoleEnum.Courier && (
-              <>
-                <NavLink href='/returns'>Returns</NavLink>
-                <NavLink href='/invoice'>Invoice</NavLink>
-              </>
-            )}
+          {(isSeller || (isStorageFacility && !isCourier)) && (
+            <>
+              <NavLink href='/returns'>Returns</NavLink>
+              <NavLink href='/invoice'>Invoice</NavLink>
+            </>
+          )}
 
           <NavLink href='/map'>Map</NavLink>
 

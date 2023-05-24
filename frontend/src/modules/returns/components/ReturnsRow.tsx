@@ -1,4 +1,4 @@
-import { EditIcon } from '@chakra-ui/icons';
+import { CheckIcon, CloseIcon, EditIcon } from '@chakra-ui/icons';
 import {
   Tr,
   Td,
@@ -10,21 +10,30 @@ import {
   ModalCloseButton,
   ModalBody,
   useDisclosure,
+  HStack,
 } from '@chakra-ui/react';
-import { ProductItemDTO, UserDTO } from 'generated-api';
+import {
+  ProductItemDTO,
+  UpdateProductItemStatusDTOStatusEnum,
+  UserDTO,
+} from 'generated-api';
 import { ProductItemStatusBadge } from '../../../shared/components/ProductItemStatusBadge';
+import { useUpdateProductItemStatus } from '../../products/hooks/useUpdateProductItemStatus';
 import { AssignCourierToProductItemForm } from './AssignCourierToProductItemForm';
 
 export interface ReturnsRowProps {
   productItem: ProductItemDTO;
   couriers: UserDTO[];
+  isStorageFacility: boolean;
 }
 
 export const ReturnsRow: React.FC<ReturnsRowProps> = ({
   productItem,
   couriers,
+  isStorageFacility,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const updateProductItemStatus = useUpdateProductItemStatus(productItem.id);
 
   return (
     <Tr>
@@ -36,9 +45,35 @@ export const ReturnsRow: React.FC<ReturnsRowProps> = ({
       <Td>{productItem.courier?.username}</Td>
 
       <Td>
-        <Button onClick={onOpen}>
-          <EditIcon />
-        </Button>
+        {isStorageFacility && (
+          <Button onClick={onOpen}>
+            <EditIcon />
+          </Button>
+        )}
+        {!isStorageFacility && (
+          <HStack>
+            <Button
+              isLoading={updateProductItemStatus.isLoading}
+              onClick={() =>
+                updateProductItemStatus.mutate({
+                  status: UpdateProductItemStatusDTOStatusEnum.ReturnAccepted,
+                })
+              }
+            >
+              <CheckIcon />
+            </Button>
+            <Button
+              isLoading={updateProductItemStatus.isLoading}
+              onClick={() =>
+                updateProductItemStatus.mutate({
+                  status: UpdateProductItemStatusDTOStatusEnum.ReturnRejected,
+                })
+              }
+            >
+              <CloseIcon />
+            </Button>
+          </HStack>
+        )}
       </Td>
 
       <Modal isOpen={isOpen} onClose={onClose}>

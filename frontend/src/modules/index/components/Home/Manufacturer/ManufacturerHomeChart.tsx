@@ -1,7 +1,7 @@
 import { Box, ChakraProps, useBreakpointValue } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
-import { useGlobalStore } from '../../../../../shared/stores';
+import { useAuthStore } from '../../../../../shared/stores';
 import { getCssVariable } from '../../../../../shared/utils/cssVariables';
 import { useGetManufacturerChartData } from '../../../hooks/useGetManufacturerChartData';
 
@@ -20,8 +20,7 @@ const options = {
 
 export const ManufacturerHomeChart = (props: ChakraProps) => {
   const height = useBreakpointValue({ base: 200, md: 150 }, { ssr: false });
-  const getUser = useGlobalStore((state) => state.getUser);
-  const companyId = getUser()?.company?.id;
+  const { companyId } = useAuthStore();
   const { data } = useGetManufacturerChartData(companyId);
 
   const [chartjsData, setChartjsData] = useState<{

@@ -1,16 +1,21 @@
 import { Box, Heading } from '@chakra-ui/react';
-import { ProductItemByStatusDTOStatusEnum } from 'generated-api';
+import {
+  CompanyDTOTypeEnum,
+  ProductItemByStatusDTOStatusEnum,
+} from 'generated-api';
 import { useGetProductItemsByStatus } from '../../modules/products/hooks/useGetProductItemsByStatus';
 import { ReturnsTable } from '../../modules/returns/components/ReturnsTable';
 import { useGetCouriers } from '../../modules/storage-facilities/hooks/useGetCouriers';
-import { useGlobalStore } from '../../shared/stores';
+import { useAuthStore } from '../../shared/stores';
 
 const Returns = () => {
-  const getUser = useGlobalStore((state) => state.getUser);
-  const companyId = getUser()?.company?.id;
+  const { companyId, companyType } = useAuthStore();
+  const isStorageFacility = companyType === CompanyDTOTypeEnum.StorageFacility;
   const { data } = useGetProductItemsByStatus(
     companyId,
-    ProductItemByStatusDTOStatusEnum.Returning
+    isStorageFacility
+      ? ProductItemByStatusDTOStatusEnum.ReturnAccepted
+      : ProductItemByStatusDTOStatusEnum.ReturnRequested
   );
   const productItems = data?.data;
   const couriersQuery = useGetCouriers(companyId);
@@ -20,8 +25,12 @@ const Returns = () => {
     !!productItems &&
     !!couriers && (
       <Box>
-        <Heading>Returning</Heading>
-        <ReturnsTable productItems={productItems} couriers={couriers} />
+        <Heading>Returns</Heading>
+        <ReturnsTable
+          productItems={productItems}
+          couriers={couriers}
+          isStorageFacility={isStorageFacility}
+        />
       </Box>
     )
   );

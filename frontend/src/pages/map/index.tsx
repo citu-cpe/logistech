@@ -20,7 +20,7 @@ import {
   UserDTO,
 } from 'generated-api';
 import { SocketContext } from '../../shared/providers/SocketProvider';
-import { useGlobalStore } from '../../shared/stores';
+import { useAuthStore } from '../../shared/stores';
 import { useGetProductItemsByStatus } from '../../modules/products/hooks/useGetProductItemsByStatus';
 import { ProductItemTable } from '../../modules/products/components/ProductItemTable';
 import { useGetOrderedProductItemsByStatus } from '../../modules/products/hooks/useGetOrderedProductItemsByStatus';
@@ -34,8 +34,7 @@ interface Directions {
 
 const GoogleMapPage = () => {
   const socket = useContext(SocketContext);
-  const getUser = useGlobalStore().getUser;
-  const user = getUser();
+  const { user } = useAuthStore();
   const company = user?.company;
   const { data: inTransitToStorageFacilityData } = useGetProductItemsByStatus(
     company?.id,
@@ -45,9 +44,9 @@ const GoogleMapPage = () => {
     company?.id,
     ProductItemByStatusDTOStatusEnum.InTransitToBuyer
   );
-  const { data: returningData } = useGetProductItemsByStatus(
+  const { data: inTransitToSellerData } = useGetProductItemsByStatus(
     company?.id,
-    ProductItemByStatusDTOStatusEnum.Returning
+    ProductItemByStatusDTOStatusEnum.InTransitToSeller
   );
   const { data: orderedInTransitToStorageFacilityData } =
     useGetOrderedProductItemsByStatus(
@@ -63,8 +62,13 @@ const GoogleMapPage = () => {
     () => [
       ...(inTransitToStorageFacilityData?.data ?? []),
       ...(inTransitToBuyerData?.data ?? []),
+      ...(inTransitToSellerData?.data ?? []),
     ],
-    [inTransitToBuyerData?.data, inTransitToStorageFacilityData?.data]
+    [
+      inTransitToBuyerData?.data,
+      inTransitToStorageFacilityData?.data,
+      inTransitToSellerData?.data,
+    ]
   );
   const orderedInTransitProductItems = useMemo(
     () => [
@@ -76,7 +80,7 @@ const GoogleMapPage = () => {
       orderedInTransitToStorageFacilityData?.data,
     ]
   );
-  const returningProductItems = returningData?.data;
+  const returningProductItems = inTransitToSellerData?.data;
   const isStorageFacility =
     company?.type === CompanyDTOTypeEnum.StorageFacility;
 

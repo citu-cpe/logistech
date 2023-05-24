@@ -22,11 +22,10 @@ import {
 import { ProductForm } from '../../modules/products/components/ProductForm';
 import { ProductRow } from '../../modules/products/components/ProductRow';
 import { useGetProducts } from '../../modules/products/hooks/useGetProducts';
-import { useGlobalStore } from '../../shared/stores';
+import { useAuthStore } from '../../shared/stores';
 
 const Products = () => {
-  const getUser = useGlobalStore((state) => state.getUser);
-  const companyId = getUser()?.company?.id;
+  const { companyId } = useAuthStore();
   const { data, isLoading } = useGetProducts(companyId!);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
