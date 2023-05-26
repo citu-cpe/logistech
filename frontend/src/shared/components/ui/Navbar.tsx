@@ -1,6 +1,7 @@
 import {
   Avatar,
   Box,
+  Center,
   ChakraProps,
   Flex,
   Heading,
@@ -14,6 +15,7 @@ import {
 import { CompanyDTOTypeEnum, UserDTORoleEnum } from 'generated-api';
 import { useLogout } from '../../../modules/index/hooks/useLogout';
 import { useGetUser } from '../../../modules/settings/hooks/useGetUser';
+import { CompanyTypeBadge } from '../CompanyTypeBadge';
 import { NavLink } from './NavLink';
 
 export const Navbar = (props: ChakraProps) => {
@@ -116,10 +118,17 @@ export const Navbar = (props: ChakraProps) => {
           alignItems='center'
           data-cy='user-profile-btn'
         >
-          <Flex align='center' gap='4'>
-            <Avatar mr='2' name={user?.username} src={user?.imageUrl} />
-            <Text fontWeight='bold'>{user?.username}</Text>
-          </Flex>
+          <Box>
+            <Flex align='center' gap='4'>
+              <Avatar mr='2' name={user?.username} src={user?.imageUrl} />
+              <Text fontWeight='bold'>{user?.username}</Text>
+            </Flex>
+            {companyType && (
+              <Center mb='4'>
+                <CompanyTypeBadge companyType={companyType} />
+              </Center>
+            )}
+          </Box>
         </MenuButton>
 
         <MenuList>
