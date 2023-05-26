@@ -19,6 +19,8 @@ export class GpsService {
     this.logger.log(`Latitude: ${dto.latitude}`);
     this.logger.log(`Longitude: ${dto.longitude}`);
 
+    this.logger.log(`Missing tags: ${dto.missingTags}`);
+
     if (dto.latitude === 0 || dto.longitude === 0) {
       return;
     }

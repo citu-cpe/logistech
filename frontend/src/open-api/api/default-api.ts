@@ -5173,7 +5173,7 @@ export const DefaultApiFp = function (configuration?: Configuration) {
       scanRfidDTO: ScanRfidDTO,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.scanRfid(
         scanRfidDTO,
@@ -6241,7 +6241,7 @@ export const DefaultApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    scanRfid(scanRfidDTO: ScanRfidDTO, options?: any): AxiosPromise<boolean> {
+    scanRfid(scanRfidDTO: ScanRfidDTO, options?: any): AxiosPromise<void> {
       return localVarFp
         .scanRfid(scanRfidDTO, options)
         .then((request) => request(axios, basePath));
