@@ -2,6 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   CreateProductItemDTO,
   ProductItemDTO,
+  ProductItemLocationDTO,
   ScanRfidDTO,
   UpdateProductItemStatusDTOStatusEnum,
 } from "generated-api";
@@ -27,11 +28,12 @@ import { SocketContext } from "../providers/SocketProvider";
 interface CourierProductItemInTransit {
   productItem: ProductItemDTO;
   onChangeStatus?: () => void;
+  isRedFlag?: boolean;
 }
 
 export const CourierProductItemInTransit: React.FC<
   CourierProductItemInTransit
-> = ({ productItem, onChangeStatus }) => {
+> = ({ productItem, onChangeStatus, isRedFlag }) => {
   const updateProductItemStatus = useUpdateProductItemStatus(productItem.id);
   const queryClient = useQueryClient();
   const toast = useToast();
@@ -81,7 +83,7 @@ export const CourierProductItemInTransit: React.FC<
         socket.connect();
       }
 
-      socket.on("scan", (dto: ScanRfidDTO) => {
+      socket.on("test", (dto: ProductItemLocationDTO) => {
         setValue("rfid", dto.rfid);
       });
     }
@@ -94,6 +96,7 @@ export const CourierProductItemInTransit: React.FC<
       justifyContent="space-between"
       alignItems="center"
       mb="2"
+      bg={isRedFlag ? "red.500" : ""}
     >
       <Box flexBasis="50%">
         <Text color="white">EPC: {productItem.rfid ?? "n/a"}</Text>

@@ -35,6 +35,7 @@ interface ProductItemRowProps {
   isCustomer?: boolean;
   isCourier?: boolean;
   isRfidOptional: boolean;
+  isRedFlag?: boolean;
 }
 
 export const ProductItemRow: React.FC<ProductItemRowProps> = ({
@@ -43,6 +44,7 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
   isCustomer,
   isCourier,
   isRfidOptional,
+  isRedFlag,
 }) => {
   const { userId, companyId } = useAuthStore();
   const {
@@ -84,7 +86,7 @@ export const ProductItemRow: React.FC<ProductItemRowProps> = ({
   const isInStorage = productItem.status === ProductItemDTOStatusEnum.InStorage;
 
   return (
-    <Tr key={productItem.id}>
+    <Tr key={productItem.id} bg={isRedFlag ? 'red.500' : ''}>
       <Td>{productItem.rfid ?? 'n/a'}</Td>
       <Td>
         <ProductItemStatusBadge status={productItem.status} />

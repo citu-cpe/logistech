@@ -127,6 +127,7 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
   const { user } = useAuthStore();
   const company = user?.company;
   const [productItems, setProductItems] = useState<ProductItemDTO[]>([]);
+  const [redFlagIds, setRedFlagIds] = useState<string[]>([]);
 
   const mapViewRef = useRef<MapView>(null);
 
@@ -146,10 +147,9 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
         setLongitude(location.coords.longitude);
       });
 
-      socket.on("scan", (dto: ScanRfidDTO) => {
+      socket.on("test", (dto: ProductItemLocationDTO) => {
         const dataRfIds = inTransitProductItems.map((p) => p.rfid);
         const productItemsRfids = productItems.map((p) => p.rfid);
-        console.log(dto);
 
         if (
           dataRfIds?.includes(dto.rfid) &&
@@ -164,6 +164,13 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
             });
           }
         }
+
+        setRedFlagIds(
+          productItems
+            .filter((p) => !!p.rfid)
+            .filter((p) => dto.missingTags.split(",").includes(p.rfid!))
+            .map((p) => p.rfid!)
+        );
       });
     }
   }, []);
@@ -378,6 +385,7 @@ export const CourierHomeScreen: React.FC<CourierHomeScreenProps> = ({}) => {
                 key={p.id}
                 productItem={p}
                 onChangeStatus={toggleAnimation}
+                isRedFlag={redFlagIds.includes(p.rfid!)}
               />
             ))}
 

@@ -4,6 +4,7 @@ import {
   CreateProductItemDTO,
   ProductItemDTO,
   ProductItemDTOStatusEnum,
+  ProductItemLocationDTO,
   ScanRfidDTO,
   UpdateProductItemStatusDTOStatusEnum,
 } from "generated-api";
@@ -84,7 +85,7 @@ export const CourierProductItemToBePickedUp: React.FC<
         socket.connect();
       }
 
-      socket.on("scan", (dto: ScanRfidDTO) => {
+      socket.on("test", (dto: ProductItemLocationDTO) => {
         setValue("rfid", dto.rfid);
       });
     }

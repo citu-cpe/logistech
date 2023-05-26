@@ -6,7 +6,7 @@ import {
   CreateProductItemDTOStatusEnum,
   ProductItemDTO,
   ProductItemDTOStatusEnum,
-  ScanRfidDTO,
+  ProductItemLocationDTO,
 } from 'generated-api';
 import { useContext, useRef, useEffect } from 'react';
 import { Input } from '../../../shared/components/form/Input/Input';
@@ -72,7 +72,7 @@ export const EditProductItemForm: React.FC<ProductItemFormProps> = ({
         socket.connect();
       }
 
-      socket.on('scan', (dto: ScanRfidDTO) => {
+      socket.on('test', (dto: ProductItemLocationDTO) => {
         if (formikRef.current) {
           formikRef.current.setFieldValue('rfid', dto.rfid);
         }

@@ -3,7 +3,7 @@ import { Formik, Form, Field, FieldProps } from 'formik';
 import {
   CreateProductItemDTO,
   CreateProductItemDTOStatusEnum,
-  ScanRfidDTO,
+  ProductItemLocationDTO,
 } from 'generated-api';
 import { useContext, useEffect, useRef } from 'react';
 import * as Yup from 'yup';
@@ -43,7 +43,7 @@ export const ProductItemForm: React.FC<ProductItemFormProps> = ({
         socket.connect();
       }
 
-      socket.on('scan', (dto: ScanRfidDTO) => {
+      socket.on('test', (dto: ProductItemLocationDTO) => {
         if (formikRef.current) {
           formikRef.current.setFieldValue('rfid', dto.rfid);
         }

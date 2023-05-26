@@ -25,6 +25,7 @@ export class GpsService {
       return;
     }
 
+    dto.rfid = this.convertToHex(dto.rfid);
     this.gpsGateway.server.emit('test', dto);
   }
 

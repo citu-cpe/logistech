@@ -1,5 +1,5 @@
 import { Box, Center, Heading, Spinner } from '@chakra-ui/react';
-import { ProductItemDTO, ScanRfidDTO } from 'generated-api';
+import { ProductItemDTO, ProductItemLocationDTO } from 'generated-api';
 import { useContext, useEffect, useState } from 'react';
 import { ProductItemTable } from '../../modules/products/components/ProductItemTable';
 import { useGetProductItemsByCompany } from '../../modules/products/hooks/useGetProductItemsByCompany';
@@ -43,7 +43,7 @@ const Inventory = () => {
         socket.open();
       }
 
-      socket.on('scan', (dto: ScanRfidDTO) => {
+      socket.on('test', (dto: ProductItemLocationDTO) => {
         const dataRfIds = data?.data.map((p) => p.rfid);
         const productItemsRfids = productItems.map((p) => p.rfid);
 
