@@ -33,4 +33,10 @@ export interface ProductItemLocationDTO {
      * @memberof ProductItemLocationDTO
      */
     longitude: number;
+    /**
+     *
+     * @type {string}
+     * @memberof ProductItemLocationDTO
+     */
+    missingTags: string;
 }
