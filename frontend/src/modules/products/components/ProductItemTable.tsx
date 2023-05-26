@@ -11,6 +11,7 @@ interface ProductItemTableProps {
   status?: ProductItemDTOStatusEnum;
   isCourier?: boolean;
   isRfidOptional: boolean;
+  redFlagIds?: string[];
 }
 
 export const ProductItemTable: React.FC<ProductItemTableProps> = ({
@@ -21,6 +22,7 @@ export const ProductItemTable: React.FC<ProductItemTableProps> = ({
   isCourier,
   isRfidOptional,
   status,
+  redFlagIds,
 }) => {
   const [filteredProductItems, setFilteredProductItems] = useState<
     ProductItemDTO[]
@@ -73,6 +75,7 @@ export const ProductItemTable: React.FC<ProductItemTableProps> = ({
               isCustomer={isCustomer}
               isCourier={isCourier}
               isRfidOptional={isRfidOptional}
+              isRedFlag={redFlagIds?.includes(productItem.rfid!)}
             />
           ))}
         </Tbody>

@@ -3,7 +3,7 @@ import {
   ProductItemByStatusDTOStatusEnum,
   ProductItemDTO,
   ProductItemDTOStatusEnum,
-  ScanRfidDTO,
+  ProductItemLocationDTO,
   UserDTORoleEnum,
 } from 'generated-api';
 import { useRouter } from 'next/router';
@@ -54,6 +54,7 @@ const ProductItems = () => {
   let actualData = (isCustomer ? customerProductItemsData : data)?.data;
   const socket = useContext(SocketContext);
   const [productItems, setProductItems] = useState<ProductItemDTO[]>([]);
+  const [redFlagIds, setRedFlagIds] = useState<string[]>([]);
 
   if (
     isCourier &&
@@ -70,7 +71,7 @@ const ProductItems = () => {
         socket.open();
       }
 
-      socket.on('scan', (dto: ScanRfidDTO) => {
+      socket.on('test', (dto: ProductItemLocationDTO) => {
         const dataRfIds = data?.data.map((p) => p.rfid);
         const productItemsRfids = productItems.map((p) => p.rfid);
 
@@ -85,6 +86,13 @@ const ProductItems = () => {
             });
           }
         }
+
+        setRedFlagIds(
+          productItems
+            .filter((p) => !!p.rfid)
+            .filter((p) => dto.missingTags.split(',').includes(p.rfid!))
+            .map((p) => p.rfid!)
+        );
       });
     }
 
@@ -118,6 +126,7 @@ const ProductItems = () => {
           isCourier={isCourier}
           status={status as unknown as ProductItemDTOStatusEnum}
           isRfidOptional={false}
+          redFlagIds={redFlagIds}
         />
       )}
     </Box>

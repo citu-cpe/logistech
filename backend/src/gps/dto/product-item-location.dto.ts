@@ -15,6 +15,5 @@ export class ProductItemLocationDTO {
 
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
   public missingTags: string;
 }

@@ -485,7 +485,7 @@ const GoogleMapPage = () => {
               </React.Fragment>
             ))}
 
-            {dummyDirections.map((d, i) => (
+            {directions.map((d, i) => (
               <DirectionsRenderer key={i} directions={d} />
             ))}
           </GoogleMap>
