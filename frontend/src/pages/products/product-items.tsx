@@ -90,7 +90,12 @@ const ProductItems = () => {
         setRedFlagIds(
           productItems
             .filter((p) => !!p.rfid)
-            .filter((p) => dto.missingTags.split(',').includes(p.rfid!))
+            .filter((p) =>
+              dto.missingTags
+                .split(',')
+                .map((rfid) => rfid.toUpperCase())
+                .includes(p.rfid!)
+            )
             .map((p) => p.rfid!)
         );
       });

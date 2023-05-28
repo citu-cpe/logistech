@@ -14,6 +14,15 @@ export class GpsService {
   public async updateProductItemLocation(
     dto: ProductItemLocationDTO
   ): Promise<void> {
+    const parsedRfid = Number.parseInt(dto.rfid, 10);
+    if (
+      isNaN(parsedRfid) ||
+      parsedRfid === 0 ||
+      this.convertToHex(dto.rfid) === '0'
+    ) {
+      return;
+    }
+
     this.logger.log(`RFID ${this.counter++}: ${this.convertToHex(dto.rfid)}`);
 
     this.logger.log(`Latitude: ${dto.latitude}`);

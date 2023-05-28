@@ -36,6 +36,7 @@ const Inventory = () => {
   );
   const socket = useContext(SocketContext);
   const [productItems, setProductItems] = useState<ProductItemDTO[]>([]);
+  const [redFlagIds, setRedFlagIds] = useState<string[]>([]);
 
   useEffect(() => {
     if (socket) {
@@ -58,12 +59,20 @@ const Inventory = () => {
             });
           }
         }
+
+        setRedFlagIds(
+          productItems
+            .filter((p) => !!p.rfid)
+            .filter((p) =>
+              dto.missingTags
+                .split(',')
+                .map((rfid) => rfid.toUpperCase())
+                .includes(p.rfid!)
+            )
+            .map((p) => p.rfid!)
+        );
       });
     }
-
-    return () => {
-      socket?.close();
-    };
   }, [socket, data, productItems]);
 
   return (
@@ -81,6 +90,7 @@ const Inventory = () => {
           isCustomer={false}
           isCourier={false}
           isRfidOptional={false}
+          redFlagIds={redFlagIds}
         />
       )}
     </Box>
