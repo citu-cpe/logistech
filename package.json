@@ -46,6 +46,8 @@
   },
   "homepage": "https://github.com/princhcanal/logistech#readme",
   "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.9.3",
     "concurrently": "^7.6.0",
     "dotenv-cli": "^6.0.0"
   }

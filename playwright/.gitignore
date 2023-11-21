@@ -1,12 +1,4 @@
 node_modules/
-build/
-.npm/
-.config/
-.ash_history
-.vscode
-.env
-.vim
-.vercel
 /test-results/
 /playwright-report/
 /blob-report/
